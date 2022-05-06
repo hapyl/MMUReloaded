@@ -2,8 +2,6 @@ package me.hapyl.mmu3.feature.statechanger;
 
 import kz.hapyl.spigotutils.module.chat.Chat;
 import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
-import kz.hapyl.spigotutils.module.inventory.gui.GUI;
-import kz.hapyl.spigotutils.module.inventory.gui.GUIClick;
 import kz.hapyl.spigotutils.module.inventory.gui.PlayerGUI;
 import kz.hapyl.spigotutils.module.player.PlayerLib;
 import me.hapyl.mmu3.Message;
@@ -16,6 +14,7 @@ import org.bukkit.block.data.*;
 import org.bukkit.block.data.type.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Locale;
 import java.util.Set;
@@ -44,15 +43,15 @@ public class StateChangerGUI extends PlayerGUI {
                 new ItemBuilder(Material.COMMAND_BLOCK)
                         .setName("&aRestore Block")
                         .setSmartLore("Restores blocks to it's original form, before opening the menu.")
-                        .build()
+                        .build(),
+                player -> {
+                    data.restoreOriginalBlockData();
+                    player.closeInventory();
+                    Message.success(player, "Restored.");
+                }
         );
 
-        setClick(52, player -> {
-            data.restoreOriginalBlockData();
-            player.closeInventory();
-            Message.success(player, "Restored.");
-        });
-
+        this.setItem(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName("&aNo Modifier").build(), 10, 19, 28, 16, 25, 34);
     }
 
     public void updateMenu() {
@@ -68,7 +67,7 @@ public class StateChangerGUI extends PlayerGUI {
             setItem(
                     28,
                     new ItemBuilder(waterlogged ? Material.WATER_BUCKET : Material.BUCKET)
-                            .setName((waterlogged ? "&a&l" : "&c&l") + "Waterlogged")
+                            .setName((waterlogged ? "&a" : "&c") + "Waterlogged")
                             .addSmartLore("Whether this block has fluid in it")
                             .build()
             );
@@ -91,7 +90,7 @@ public class StateChangerGUI extends PlayerGUI {
                 setItem(
                         slot,
                         new ItemBuilder(type)
-                                .setName((enabled ? "&a&l" : "&c&l") + faceName)
+                                .setName((enabled ? "&a" : "&c") + faceName)
                                 .setSmartLore("Whether block is connected to the &l%s&7.".formatted(faceName))
                                 .predicate(enabled, ItemBuilder::glow)
                                 .build()
@@ -111,7 +110,7 @@ public class StateChangerGUI extends PlayerGUI {
             setItem(
                     22,
                     new ItemBuilder(type)
-                            .setName((isUp ? "&a&l" : "&c&l") + "Is Up")
+                            .setName((isUp ? "&a" : "&c") + "Is Up")
                             .addSmartLore("Whether the well has a center post.")
                             .predicate(isUp, ItemBuilder::glow)
                             .build()
@@ -129,9 +128,8 @@ public class StateChangerGUI extends PlayerGUI {
                 final String faceName = Chat.capitalize(face);
 
                 final ItemBuilder builder = new ItemBuilder(type)
-                        .setName("&a&l" + faceName)
-                        .setSmartLore("The different heights a face of a wall may have.")
-                        .addLore();
+                        .setName("&a" + faceName)
+                        .setSmartLore("The different heights a face of a wall may have.");
 
                 switchAddLore(slot, Wall.Height.values(), height, builder);
                 switchAddClick(slot, blockData, Wall.Height.values(), height, (d, h) -> d.setHeight(face, h));
@@ -144,8 +142,7 @@ public class StateChangerGUI extends PlayerGUI {
             final Slab.Type slabType = blockData.getType();
             final ItemBuilder builder = new ItemBuilder(type)
                     .setName("&aSlab Type")
-                    .addSmartLore("Represents what state the slab is in - either top, bottom, or a double slab.")
-                    .addLore();
+                    .addSmartLore("Represents what state the slab is in - either top, bottom, or a double slab.");
 
             switchAddLore(22, Slab.Type.values(), slabType, builder);
             switchAddClick(22, blockData, Slab.Type.values(), slabType, Slab::setType);
@@ -159,7 +156,7 @@ public class StateChangerGUI extends PlayerGUI {
             setItem(
                     10,
                     new ItemBuilder(type)
-                            .setName("&a&l" + (half == Bisected.Half.TOP ? "Top" : "Bottom"))
+                            .setName("&a" + (half == Bisected.Half.TOP ? "Top" : "Bottom"))
                             .setSmartLore("Denotes which half of a two block tall material this block is.")
                             .build()
             );
@@ -185,7 +182,7 @@ public class StateChangerGUI extends PlayerGUI {
                 setItem(
                         slot,
                         new ItemBuilder(type)
-                                .setName((isFacing ? "&a&l" : "&c&l") + faceName)
+                                .setName((isFacing ? "&a" : "&c") + faceName)
                                 .addSmartLore("Whenever block is pointing to the &l%s&7.".formatted(faceName))
                                 .predicate(isFacing, ItemBuilder::glow)
                                 .build()
@@ -204,9 +201,8 @@ public class StateChangerGUI extends PlayerGUI {
             final Stairs.Shape shape = blockData.getShape();
 
             final ItemBuilder builder = new ItemBuilder(type)
-                    .setName("&a&lStairs Shape")
-                    .addSmartLore("Represents the texture and bounding box shape of these stairs.")
-                    .addLore();
+                    .setName("&aStairs Shape")
+                    .addSmartLore("Represents the texture and bounding box shape of these stairs.");
 
             switchAddLore(16, Stairs.Shape.values(), shape, builder);
             switchAddClick(16, blockData, Stairs.Shape.values(), shape, Stairs::setShape);
@@ -227,7 +223,7 @@ public class StateChangerGUI extends PlayerGUI {
                 setItem(
                         slot,
                         new ItemBuilder(type)
-                                .setName((hasFace ? "&a&l" : "&c&l") + faceName)
+                                .setName((hasFace ? "&a" : "&c") + faceName)
                                 .setSmartLore("Whether block is connected to the &l%s&7.".formatted(faceName))
                                 .predicate(hasFace, ItemBuilder::glow)
                                 .build()
@@ -243,7 +239,7 @@ public class StateChangerGUI extends PlayerGUI {
             final int maximumAge = blockData.getMaximumAge();
 
             final ItemBuilder builder = new ItemBuilder(Material.WHEAT_SEEDS)
-                    .setName("&a&lAge")
+                    .setName("&aAge")
                     .addSmartLore("Represents the different growth stages that a crop-like block can go through.");
 
             levelableAddLore(19, "Age", age, maximumAge, builder);
@@ -259,19 +255,19 @@ public class StateChangerGUI extends PlayerGUI {
                 setItem(
                         slot,
                         new ItemBuilder(Material.JUNGLE_LEAVES)
-                                .setName("&a&l%s Leaves", Chat.capitalize(value))
+                                .setName("&a%s Leaves", Chat.capitalize(value))
                                 .setAmount(slot - 20)
+                                .predicate(leaves.equals(value), ItemBuilder::glow)
                                 .setSmartLore("Represents the size of the leaves on this bamboo block.")
                                 .build()
                 );
 
-                ++slot;
 
-                if (leaves == value) {
-                    continue;
+                if (!leaves.equals(value)) {
+                    setClick(slot, player -> applyState(blockData, d -> d.setLeaves(value)));
                 }
 
-                setClick(slot, player -> applyState(blockData, d -> d.setLeaves(value)));
+                ++slot;
             }
         }
 
@@ -282,7 +278,7 @@ public class StateChangerGUI extends PlayerGUI {
             setItem(
                     25,
                     new ItemBuilder(type)
-                            .setName("&a&l%s Part", Chat.capitalize(part))
+                            .setName("&a%s Part", Chat.capitalize(part))
                             .setSmartLore("Denotes which half of the bed this block corresponds to.")
                             .build()
             );
@@ -295,10 +291,7 @@ public class StateChangerGUI extends PlayerGUI {
             final Rail.Shape shape = blockData.getShape();
             final Rail.Shape[] allowedTypes = blockData.getShapes().toArray(new Rail.Shape[] {});
 
-            final ItemBuilder builder = new ItemBuilder(type)
-                    .setName("&a&lShape")
-                    .addSmartLore("Represents the current layout of a rail.")
-                    .addLore();
+            final ItemBuilder builder = new ItemBuilder(type).setName("&aShape").addSmartLore("Represents the current layout of a rail.");
 
             switchAddLore(34, allowedTypes, shape, builder);
             switchAddClick(34, blockData, allowedTypes, shape, Rail::setShape);
@@ -311,7 +304,7 @@ public class StateChangerGUI extends PlayerGUI {
             final int maxPower = blockData.getMaximumPower();
 
             final ItemBuilder builder = new ItemBuilder(Material.REDSTONE)
-                    .setName("&a&lRedstone Power")
+                    .setName("&aRedstone Power")
                     .addSmartLore("Represents the redstone power level currently being emitted or transmitted via this block.");
 
             levelableAddLore(10, "Power", power, maxPower, builder);
@@ -324,27 +317,316 @@ public class StateChangerGUI extends PlayerGUI {
             final int maximumHoneyLevel = blockData.getMaximumHoneyLevel();
 
             final ItemBuilder builder = new ItemBuilder(Material.HONEYCOMB)
-                    .setName("&a&lHoney Level")
+                    .setName("&aHoney Level")
                     .addSmartLore("Represents the amount of honey stored in the hive.");
 
             levelableAddLore(10, "Honey", honeyLevel, maximumHoneyLevel, builder);
             levelableAddClick(10, blockData, honeyLevel, maximumHoneyLevel, Beehive::setHoneyLevel);
         }
 
+        // Bell
         if (blockRawData instanceof Bell blockData) {
             final Bell.Attachment attachment = blockData.getAttachment();
 
             final ItemBuilder builder = new ItemBuilder(Material.BELL)
-                    .setName("&a&lAttachment")
+                    .setName("&aAttachment")
                     .setSmartLore("Denotes how the bell is attached to its block.");
 
             switchAddLore(10, Bell.Attachment.values(), attachment, builder);
             switchAddClick(10, blockData, Bell.Attachment.values(), attachment, Bell::setAttachment);
         }
 
+        // Big Dripleaf
+        if (blockRawData instanceof BigDripleaf blockData) {
+            final BigDripleaf.Tilt tilt = blockData.getTilt();
+
+            final ItemBuilder builder = new ItemBuilder(Material.BIG_DRIPLEAF)
+                    .setName("&aTilt")
+                    .setSmartLore("Indicates how far the leaf is tilted.");
+
+            switchAddLore(10, BigDripleaf.Tilt.values(), tilt, builder);
+            switchAddClick(10, blockData, BigDripleaf.Tilt.values(), tilt, BigDripleaf::setTilt);
+        }
+
+        // Cake
+        if (blockRawData instanceof Cake blockData) {
+            final int bites = blockData.getBites();
+            final int maximumBites = blockData.getMaximumBites();
+
+            final ItemBuilder builder = new ItemBuilder(Material.CAKE)
+                    .setName("&aBites")
+                    .setSmartLore("Represents the amount of bites which have been taken from this slice of cake.");
+
+            levelableAddLore(10, "Bites", bites, maximumBites, builder);
+            levelableAddClick(10, blockData, bites, maximumBites, Cake::setBites);
+        }
+
+        // Cave Vines
+        if (blockRawData instanceof CaveVines blockData) {
+            final boolean hasBerries = blockData.isBerries();
+
+            setItem(
+                    10,
+                    new ItemBuilder(Material.GLOW_BERRIES)
+                            .setName((hasBerries ? "&a" : "&c") + "Berries")
+                            .addSmartLore("Indicates whether the block has berries.")
+                            .build()
+            );
+
+            setClick(10, player -> applyState(blockData, d -> d.setBerries(!hasBerries)));
+        }
+
+        // Farmland
+        if (blockRawData instanceof Farmland blockData) {
+            final int moisture = blockData.getMoisture();
+            final int maximumMoisture = blockData.getMaximumMoisture();
+
+            final ItemBuilder builder = new ItemBuilder(Material.POTION)
+                    .setName("&a&Moisture")
+                    .setSmartLore(
+                            "Indicates how close it is to a water source (if any). A higher moisture level leads, to faster growth of crops on this block.");
+
+            levelableAddLore(10, "Moisture", moisture, maximumMoisture, builder);
+            levelableAddClick(10, blockData, moisture, maximumMoisture, Farmland::setMoisture);
+        }
+
+        // Gate
+        if (blockRawData instanceof Gate blockData) {
+            final boolean inWall = blockData.isInWall();
+
+            setItem(
+                    10,
+                    new ItemBuilder(type)
+                            .setName((inWall ? "&a" : "&c") + "In Wall")
+                            .addSmartLore(
+                                    "indicates if the fence gate is attached to a wall, and if true the texture is lowered by a small amount to blend in better.")
+                            .build()
+            );
+
+            setClick(10, player -> applyState(blockData, d -> d.setInWall(!inWall)));
+        }
+
+        // Levelled
+        if (blockRawData instanceof Levelled blockData) {
+            final int level = blockData.getLevel();
+            final int maximumLevel = blockData.getMaximumLevel();
+
+            final ItemBuilder builder = new ItemBuilder(Material.RAIL)
+                    .setName("&aevel")
+                    .setSmartLore(
+                            "Represents the amount of fluid contained within this block, either by itself or inside a cauldron. In the case of water and lava blocks the levels have special meanings: a level of 0 corresponds to a source block, 1-7 regular fluid heights, and 8-15 to \"falling\" fluids. All falling fluids have the same behaviour, but the level corresponds to that of the block above them.")
+                    .addSmartLore(
+                            "Note that counterintuitively, an adjusted level of 1 is the highest level, whilst 7 is the lowest.",
+                            "&7&o"
+                    );
+            levelableAddLore(10, "Level", level, maximumLevel, builder);
+            levelableAddClick(10, blockData, level, maximumLevel, Levelled::setLevel);
+        }
+
+        // Piston
+        if (blockRawData instanceof Piston blockData) {
+            final boolean extended = blockData.isExtended();
+            setItem(
+                    10,
+                    new ItemBuilder(type)
+                            .setName((extended ? "&a" : "&c") + "Extended")
+                            .setSmartLore("Denotes whether the piston head is currently extended or not.")
+                            .predicate(extended, ItemBuilder::glow)
+                            .build(),
+                    player -> applyState(blockData, d -> d.setExtended(!extended))
+            );
+        }
+
+        // Piston Head
+        if (blockRawData instanceof PistonHead blockData) {
+            final boolean isShort = blockData.isShort();
+            setItem(
+                    10,
+                    new ItemBuilder(Material.PISTON)
+                            .setName((isShort ? "&a" : "&c") + "Short")
+                            .setSmartLore("Denotes this piston head is shorter than the usual amount because it is currently retracting.")
+                            .predicate(isShort, ItemBuilder::glow)
+                            .build(),
+                    player -> applyState(blockData, d -> d.setShort(!isShort))
+            );
+        }
+
+        if (blockRawData instanceof PointedDripstone blockData) {
+            final PointedDripstone.Thickness thickness = blockData.getThickness();
+            final BlockFace verticalDirection = blockData.getVerticalDirection();
+
+            for (BlockFace face : blockData.getVerticalDirections()) {
+                if (!StateConstants.FACE_SLOT_MAP.containsKey(face)) {
+                    continue;
+                }
+
+                final String faceName = Chat.capitalize(face);
+                final boolean isFacing = face == verticalDirection;
+                final int slot = StateConstants.FACE_SLOT_MAP.get(face);
+
+                setItem(
+                        slot,
+                        new ItemBuilder(type)
+                                .setName((isFacing ? "&a" : "&c") + faceName)
+                                .addSmartLore("Represents the dripstone orientation.")
+                                .predicate(isFacing, ItemBuilder::glow)
+                                .build()
+                );
+
+                if (!isFacing) {
+                    setClick(slot, player -> applyState(blockData, d -> d.setVerticalDirection(face)));
+                }
+            }
+
+            final ItemBuilder builder = new ItemBuilder(Material.DRIPSTONE_BLOCK)
+                    .setName("&aThickness")
+                    .setSmartLore(
+                            "Represents the thickness of the dripstone, corresponding to its position within a multi-block dripstone formation.");
+
+            switchAddLore(10, PointedDripstone.Thickness.values(), thickness, builder);
+            switchAddClick(10, blockData, PointedDripstone.Thickness.values(), thickness, PointedDripstone::setThickness);
+        }
+
+        if (blockRawData instanceof RedstoneWire blockData) {
+            for (BlockFace face : blockData.getAllowedFaces()) {
+                if (!StateConstants.FACE_SLOT_MAP.containsKey(face)) {
+                    continue;
+                }
+
+                final RedstoneWire.Connection connection = blockData.getFace(face);
+                final int slot = StateConstants.FACE_SLOT_MAP.get(face);
+                final String faceName = Chat.capitalize(face);
+
+                switchAddLore(
+                        slot/*powerable takes slot 10*/,
+                        RedstoneWire.Connection.values(),
+                        connection,
+                        new ItemBuilder(Material.REDSTONE)
+                                .setName("&a" + faceName)
+                                .addSmartLore("The way in which a redstone wire can connect to an adjacent block face.")
+                );
+
+                switchAddClick(slot, blockData, RedstoneWire.Connection.values(), connection, (d, c) -> d.setFace(face, c));
+            }
+        }
+
+        if (blockRawData instanceof Rotatable blockData) {
+            final BlockFace rotation = blockData.getRotation();
+
+            switchAddLore(
+                    22,
+                    StateConstants.FLOOR_SIGN_VALID_FACES,
+                    rotation,
+                    new ItemBuilder(type).setName("&aRotation").setSmartLore("Represents the current rotation of this block.")
+            );
+
+            switchAddClick(22, blockData, StateConstants.FLOOR_SIGN_VALID_FACES, rotation, Rotatable::setRotation);
+        }
+
+        if (blockRawData instanceof Sapling blockData) {
+            final int stage = blockData.getStage();
+            final int maximumStage = blockData.getMaximumStage();
+
+            levelableAddLore(
+                    22,
+                    "Age",
+                    stage,
+                    maximumStage,
+                    new ItemBuilder(type)
+                            .setName("&aSapling Age")
+                            .setSmartLore(
+                                    "Represents the growth stage of a sapling. When the sapling reaches %s it will attempt to grow into a tree as the next stage.".formatted(
+                                            maximumStage))
+            );
+
+            levelableAddClick(22, blockData, stage, maximumStage, Sapling::setStage);
+        }
+
+        if (blockRawData instanceof Scaffolding blockData) {
+            final int distance = blockData.getDistance();
+            final int maximumDistance = blockData.getMaximumDistance();
+            final boolean bottom = blockData.isBottom();
+
+            setItem(
+                    21,
+                    new ItemBuilder(Material.SPRUCE_SLAB)
+                            .setName((bottom ? "&a" : "&c") + "Bottom")
+                            .setSmartLore("Indicates whether the scaffolding is floating or not.")
+                            .predicate(bottom, ItemBuilder::glow)
+                            .build(),
+                    player -> applyState(blockData, d -> d.setBottom(!bottom))
+            );
+
+            levelableAddLore(
+                    23,
+                    "Distance",
+                    distance,
+                    maximumDistance,
+                    new ItemBuilder(Material.SCAFFOLDING)
+                            .setName("&aDistance")
+                            .setSmartLore(
+                                    "Indicates the distance from a scaffolding block placed above a 'bottom' scaffold. When 'distance' reaches %s the block will drop.".formatted(
+                                            maximumDistance))
+            );
+
+            levelableAddClick(23, blockData, distance, maximumDistance, Scaffolding::setDistance);
+        }
+
+        if (blockRawData instanceof SculkSensor blockData) {
+            final SculkSensor.Phase phase = blockData.getPhase();
+            switchAddLore(
+                    22,
+                    SculkSensor.Phase.values(),
+                    phase,
+                    new ItemBuilder(Material.SCULK_SENSOR)
+                            .setName("Phase")
+                            .setSmartLore("Indicates the current operational phase of the sensor.")
+            );
+            switchAddClick(22, blockData, SculkSensor.Phase.values(), phase, SculkSensor::setPhase);
+        }
+
+        if (blockRawData instanceof Snow blockData) {
+            final int layers = blockData.getLayers();
+            final int maximumLayers = blockData.getMaximumLayers();
+
+            levelableAddLore(
+                    22,
+                    "Layer",
+                    layers,
+                    maximumLayers,
+                    new ItemBuilder(Material.SNOW)
+                            .setName("&aSnow Layers")
+                            .addSmartLore("Represents the amount of layers of snow which are present in this block.")
+            );
+            levelableAddClick(22, blockData, blockData.getMinimumLayers(), layers, maximumLayers, Snow::setLayers);
+        }
+
+        if (blockRawData instanceof Snowable blockData) {
+            final boolean snowy = blockData.isSnowy();
+
+            setItem(
+                    22,
+                    new ItemBuilder(type)
+                            .setName((snowy ? "&a" : "&c") + "Snowy")
+                            .setSmartLore(
+                                    "Denotes whether this block has a snow covered side and top texture (normally because the block above is snow).")
+                            .predicate(snowy, ItemBuilder::glow)
+                            .build(), player -> applyState(blockData, d -> d.setSnowy(!snowy))
+            );
+
+        }
 
         // Open Inventory
         openInventory();
+    }
+
+    /////////////
+    // Helpers //
+    /////////////
+    private void setItem(ItemStack item, int... slots) {
+        for (int slot : slots) {
+            setItem(slot, item);
+        }
     }
 
     private void levelableAddLore(int slot, String name, int currentLeve, int maxLevel, ItemBuilder builder) {
@@ -360,11 +642,17 @@ public class StateChangerGUI extends PlayerGUI {
     }
 
     private <T extends BlockData> void levelableAddClick(int slot, T t, int level, int maxLevel, BiConsumer<T, Integer> consumer) {
-        setClick(slot, player -> applyState(t, d -> consumer.accept(d, level + 1 > maxLevel ? 0 : level + 1)), ClickType.LEFT);
-        setClick(slot, player -> applyState(t, d -> consumer.accept(d, level - 1 < 0 ? maxLevel : level - 1)), ClickType.RIGHT);
+        levelableAddClick(slot, t, 0, level, maxLevel, consumer);
+    }
+
+    private <T extends BlockData> void levelableAddClick(int slot, T t, int minLevel, int level, int maxLevel, BiConsumer<T, Integer> consumer) {
+        setClick(slot, player -> applyState(t, d -> consumer.accept(d, level + 1 > maxLevel ? minLevel : level + 1)), ClickType.LEFT);
+        setClick(slot, player -> applyState(t, d -> consumer.accept(d, level - 1 < minLevel ? maxLevel : level - 1)), ClickType.RIGHT);
     }
 
     private <T> void switchAddLore(int slot, T[] values, T value, ItemBuilder builder) {
+        builder.addLore();
+
         for (T t : values) {
             builder.addLore("&b" + (value.equals(t) ? " ➥ &l" : "") + Chat.capitalize(t.toString()));
         }
@@ -396,10 +684,5 @@ public class StateChangerGUI extends PlayerGUI {
         PlayerLib.playSound(getPlayer(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0f);
         updateMenu();
     }
-
-    private enum SwitchType {
-        NEXT, PREVIOUS
-    }
-
 
 }

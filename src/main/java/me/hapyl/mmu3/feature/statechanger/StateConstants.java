@@ -7,6 +7,13 @@ import java.util.Map;
 
 public final class StateConstants {
 
+    public static final BlockFace[] FLOOR_SIGN_VALID_FACES = { BlockFace.SOUTH, BlockFace.SOUTH_WEST,
+                                                               BlockFace.WEST_SOUTH_WEST, BlockFace.WEST, BlockFace.WEST_NORTH_WEST,
+                                                               BlockFace.NORTH_WEST, BlockFace.NORTH_NORTH_WEST, BlockFace.NORTH,
+                                                               BlockFace.NORTH_NORTH_EAST, BlockFace.NORTH_EAST, BlockFace.EAST_NORTH_EAST,
+                                                               BlockFace.EAST, BlockFace.EAST_SOUTH_EAST, BlockFace.SOUTH_EAST,
+                                                               BlockFace.SOUTH_SOUTH_EAST };
+
     public static final Map<BlockFace, Integer> FACE_SLOT_MAP = Maps.newHashMap();
 
     static {

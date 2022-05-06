@@ -4,7 +4,6 @@ import kz.hapyl.spigotutils.module.chat.Chat;
 import kz.hapyl.spigotutils.module.chat.Gradient;
 import kz.hapyl.spigotutils.module.chat.gradient.Interpolators;
 import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
-import kz.hapyl.spigotutils.module.inventory.gui.GUI;
 import kz.hapyl.spigotutils.module.util.ThreadRandom;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.Message;
@@ -87,16 +86,22 @@ public class StateChanger extends Feature {
         );
     }
 
+    @SuppressWarnings("all")
     public boolean isAllowedBlock(Block block) {
         final BlockData data = block.getBlockData();
         return data instanceof Waterlogged || data instanceof Fence || data instanceof Slab || data instanceof Bisected ||
                 data instanceof Directional || data instanceof MultipleFacing || data instanceof Stairs || data instanceof Ageable ||
-                data instanceof Bamboo || data instanceof Bed || data instanceof Rail || data instanceof AnaloguePowerable;
+                data instanceof Bamboo || data instanceof Bed || data instanceof Rail || data instanceof AnaloguePowerable ||
+                data instanceof Beehive || data instanceof Bell || data instanceof BigDripleaf || data instanceof Cake ||
+                data instanceof CaveVines || data instanceof Farmland || data instanceof Gate || data instanceof Levelled ||
+                data instanceof Piston || data instanceof PistonHead || data instanceof PointedDripstone || data instanceof Rotatable ||
+                data instanceof Sapling || data instanceof Scaffolding || data instanceof SculkSensor || data instanceof Snow ||
+                data instanceof Snowable;
     }
 
     public boolean isBannedBlock(Material material) {
         return switch (material) {
-            case KELP_PLANT, KELP -> true;
+            //            case KELP_PLANT, KELP -> true;
             default -> false;
         };
     }
