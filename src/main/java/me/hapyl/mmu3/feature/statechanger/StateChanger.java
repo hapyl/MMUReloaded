@@ -95,13 +95,14 @@ public class StateChanger extends Feature {
                 data instanceof Beehive || data instanceof Bell || data instanceof BigDripleaf || data instanceof Cake ||
                 data instanceof CaveVines || data instanceof Farmland || data instanceof Gate || data instanceof Levelled ||
                 data instanceof Piston || data instanceof PistonHead || data instanceof PointedDripstone || data instanceof Rotatable ||
-                data instanceof Sapling || data instanceof Scaffolding || data instanceof SculkSensor || data instanceof Snow ||
+                data instanceof Scaffolding || data instanceof SculkSensor || data instanceof Snow ||
                 data instanceof Snowable;
     }
 
+    // TODO: 007. 07/05/2022 - add config support
     public boolean isBannedBlock(Material material) {
         return switch (material) {
-            //            case KELP_PLANT, KELP -> true;
+            case BEDROCK -> true;
             default -> false;
         };
     }

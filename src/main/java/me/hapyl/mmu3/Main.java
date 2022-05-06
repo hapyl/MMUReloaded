@@ -3,6 +3,8 @@ package me.hapyl.mmu3;
 import kz.hapyl.spigotutils.EternaAPI;
 import kz.hapyl.spigotutils.module.command.CommandProcessor;
 import me.hapyl.mmu3.command.StateChangerCommand;
+import me.hapyl.mmu3.feature.standeditor.StandEditor;
+import me.hapyl.mmu3.feature.standeditor.StandEditorListener;
 import me.hapyl.mmu3.feature.statechanger.StateChanger;
 import me.hapyl.mmu3.feature.statechanger.StateChangerListener;
 import org.bukkit.Bukkit;
@@ -31,9 +33,6 @@ public class Main extends JavaPlugin {
             return;
         }
 
-        // Register Events
-        registerEvent(new StateChangerListener());
-
         // Register Commands
         final CommandProcessor processor = new CommandProcessor(this);
         processor.registerCommand(new StateChangerCommand("statechagner"));
@@ -43,15 +42,25 @@ public class Main extends JavaPlugin {
 
         // Initiate features
         stateChanger = new StateChanger(this);
+        standEditor = new StandEditor(this);
+
+        // Register features events
+        new StandEditorListener(this);
+        new StateChangerListener(this);
 
     }
 
     // Features
     private StateChanger stateChanger;
+    private StandEditor standEditor;
 
     // Features getter
     public StateChanger getStateChanger() {
         return stateChanger;
+    }
+
+    public StandEditor getStandEditor() {
+        return standEditor;
     }
 
     @Override

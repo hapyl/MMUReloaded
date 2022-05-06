@@ -523,25 +523,6 @@ public class StateChangerGUI extends PlayerGUI {
             switchAddClick(22, blockData, StateConstants.FLOOR_SIGN_VALID_FACES, rotation, Rotatable::setRotation);
         }
 
-        if (blockRawData instanceof Sapling blockData) {
-            final int stage = blockData.getStage();
-            final int maximumStage = blockData.getMaximumStage();
-
-            levelableAddLore(
-                    22,
-                    "Age",
-                    stage,
-                    maximumStage,
-                    new ItemBuilder(type)
-                            .setName("&aSapling Age")
-                            .setSmartLore(
-                                    "Represents the growth stage of a sapling. When the sapling reaches %s it will attempt to grow into a tree as the next stage.".formatted(
-                                            maximumStage))
-            );
-
-            levelableAddClick(22, blockData, stage, maximumStage, Sapling::setStage);
-        }
-
         if (blockRawData instanceof Scaffolding blockData) {
             final int distance = blockData.getDistance();
             final int maximumDistance = blockData.getMaximumDistance();
