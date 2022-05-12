@@ -3,6 +3,7 @@ package me.hapyl.mmu3.feature.standeditor;
 import kz.hapyl.spigotutils.module.chat.Chat;
 import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
 import kz.hapyl.spigotutils.module.inventory.SignGUI;
+import kz.hapyl.spigotutils.module.inventory.gui.CancelType;
 import kz.hapyl.spigotutils.module.inventory.gui.PlayerGUI;
 import kz.hapyl.spigotutils.module.util.Runnables;
 import me.hapyl.mmu3.Main;
@@ -33,7 +34,7 @@ public class StandEditorGUI extends PlayerGUI {
         super(player, "Editing " + data.getStandName(), 6);
         this.data = data;
         data.setTaken(true);
-        setOnlyCancelGUI(true);
+        setCancelType(CancelType.GUI);
         setCloseEvent(p -> {
             if (!data.isTaken()) {
                 return;
@@ -46,7 +47,7 @@ public class StandEditorGUI extends PlayerGUI {
     }
 
     private void updateInventory() {
-        final StandEditor editor = Main.getInstance().getStandEditor();
+        final StandEditor editor = Main.getStandEditor();
         final ArmorStand stand = data.getStand();
         clearEverything();
 
@@ -181,7 +182,7 @@ public class StandEditorGUI extends PlayerGUI {
             }
 
             // Pose Tuning
-            if (slot % 9 == 8) {
+            if (slot % 9 == 8 && slot <= getSize()) {
                 final TuneData.Axis axis = data.getAxis();
 
                 // Switch axis mode
@@ -222,7 +223,7 @@ public class StandEditorGUI extends PlayerGUI {
             }
 
             // Equipment
-            if (slot % 9 == 0) {
+            if (slot % 9 == 0 && slot < getSize()) {
                 final EntityEquipment equipment = stand.getEquipment();
                 if (equipment == null) {
                     return;
@@ -285,7 +286,6 @@ public class StandEditorGUI extends PlayerGUI {
                 }
             }
         }));
-
     }
 
     private ItemStack buildTuningItem(TuneData.Part part) {
@@ -333,7 +333,7 @@ public class StandEditorGUI extends PlayerGUI {
     }
 
     private ItemStack buildLoadoutItem(Material material, String name, String lore) {
-        final StandEditor editor = Main.getInstance().getStandEditor();
+        final StandEditor editor = Main.getStandEditor();
         final ItemBuilder builder = new ItemBuilder(material).setName("&a" + name).addSmartLore(lore);
         builder.addLore("");
         builder.addLore("&7Your Loadouts:");

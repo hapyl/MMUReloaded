@@ -4,6 +4,7 @@ import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.utils.InjectListener;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,7 +27,9 @@ public class StateChangerListener extends InjectListener {
         final Action action = ev.getAction();
         final Block clickedBlock = ev.getClickedBlock();
 
-        if (clickedBlock == null
+        if (!player.isOp()
+                || player.getGameMode() != GameMode.CREATIVE
+                || clickedBlock == null
                 || action == Action.PHYSICAL
                 || item == null
                 || !ItemBuilder.itemContainsId(item, "state_changer")) {
@@ -41,8 +44,10 @@ public class StateChangerListener extends InjectListener {
     // temp for testing
     @EventHandler()
     public void handleInventoryClickEvent(InventoryClickEvent ev) {
-        if (ev.getClick() == ClickType.MIDDLE && ev.getWhoClicked().isOp()) {
+        final ClickType click = ev.getClick();
+        if (click == ClickType.SHIFT_RIGHT && ev.getWhoClicked().isOp()) {
             final int rawSlot = ev.getRawSlot();
+            ev.setCancelled(true);
             ev.getWhoClicked().sendMessage("Clicked " + ChatColor.BOLD + rawSlot);
         }
     }

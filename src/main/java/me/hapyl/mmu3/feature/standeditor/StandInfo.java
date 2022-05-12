@@ -34,7 +34,7 @@ public class StandInfo {
     public StandInfo(ArmorStand stand) {
         this.customName = stand.getCustomName() == null ? "Armor Stand" : stand.getCustomName();
         this.isNameVisible = stand.isCustomNameVisible();
-        this.hasSlots = !Main.getInstance().getStandEditor().isLocked(stand);
+        this.hasSlots = !Main.getStandEditor().isLocked(stand);
         this.hasArms = stand.hasArms();
         this.isVisible = stand.isVisible();
         this.hasGravity = stand.hasGravity();
@@ -68,7 +68,7 @@ public class StandInfo {
     public void applyToStand(ArmorStand stand) {
         stand.setCustomName(this.customName);
         stand.setCustomNameVisible(this.isNameVisible);
-        Main.getInstance().getStandEditor().setLock(stand, !this.hasSlots);
+        Main.getStandEditor().setLock(stand, !this.hasSlots);
         stand.setVisible(this.isVisible);
         stand.setGravity(this.hasGravity);
         stand.setArms(this.hasArms);

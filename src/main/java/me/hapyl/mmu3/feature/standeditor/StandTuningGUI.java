@@ -14,7 +14,7 @@ public class StandTuningGUI extends PlayerGUI {
     }
 
     private void updateInventory() {
-        final StandEditor editor = Main.getInstance().getStandEditor();
+        final StandEditor editor = Main.getStandEditor();
         final Player player = getPlayer();
 
         final TuneData data = editor.getTuneDataOrNew(player);
@@ -55,7 +55,7 @@ public class StandTuningGUI extends PlayerGUI {
 
     private void applyData(TuneData data, String message, Object... objects) {
         final Player player = getPlayer();
-        Main.getInstance().getStandEditor().setTuneData(player, data);
+        Main.getStandEditor().setTuneData(player, data);
         player.closeInventory();
 
         Message.success(player, message, objects);

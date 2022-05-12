@@ -6,5 +6,5 @@ public enum MoveDirection {
     Z_PLUS,
     Z_MINUS,
     UP,
-    DOWN;
+    DOWN
 }

@@ -25,7 +25,7 @@ public class Data {
 
     public void applyData(BlockData data, StateChangerGUI gui) {
         applyData(data);
-        gui.updateMenu();
+        gui.updateInventory();
     }
 
     public BlockData getBlockData() {

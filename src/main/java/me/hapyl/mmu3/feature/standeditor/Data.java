@@ -68,11 +68,11 @@ public class Data {
     }
 
     public void setTaken(boolean flag) {
-        Main.getInstance().getStandEditor().setTaken(this, flag);
+        Main.getStandEditor().setTaken(this, flag);
     }
 
     public boolean isTaken() {
-        return Main.getInstance().getStandEditor().isTaken(stand);
+        return Main.getStandEditor().isTaken(stand);
     }
 
     public void nextAxis() {

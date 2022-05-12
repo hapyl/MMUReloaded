@@ -2,10 +2,10 @@ package me.hapyl.mmu3.feature.statechanger;
 
 import kz.hapyl.spigotutils.module.chat.Chat;
 import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
-import kz.hapyl.spigotutils.module.inventory.gui.PlayerGUI;
 import kz.hapyl.spigotutils.module.player.PlayerLib;
 import me.hapyl.mmu3.Message;
 import me.hapyl.mmu3.utils.Enums;
+import me.hapyl.mmu3.utils.PanelGUI;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -21,25 +21,23 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class StateChangerGUI extends PlayerGUI {
+public class StateChangerGUI extends PanelGUI {
 
     private final Data data;
 
     public StateChangerGUI(Player player, String name, Data data) {
-        super(player, name, 6);
+        super(player, name, Size.FIVE);
         this.data = data;
         setBottomPanel();
-        updateMenu();
+        updateInventory();
     }
 
     private void setBottomPanel() {
-        fillItem(45, getSize() - 1, new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName("&0").build());
-
-        setItem(49, new ItemBuilder(Material.BARRIER).setName("&aClose Menu").build(), Player::closeInventory);
+        setPanelCloseMenu();
 
         // Restore
-        setItem(
-                52,
+        setPanelItem(
+                7,
                 new ItemBuilder(Material.COMMAND_BLOCK)
                         .setName("&aRestore Block")
                         .setSmartLore("Restores blocks to it's original form, before opening the menu.")
@@ -54,10 +52,9 @@ public class StateChangerGUI extends PlayerGUI {
         this.setItem(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName("&aNo Modifier").build(), 10, 19, 28, 16, 25, 34);
     }
 
-    public void updateMenu() {
+    public void updateInventory() {
         final Block block = data.getBlock();
         final Material type = block.getType();
-        final String blockName = Chat.capitalize(type);
         final BlockData blockRawData = data.getBlockData();
 
         // Waterlogged
@@ -73,7 +70,6 @@ public class StateChangerGUI extends PlayerGUI {
             );
 
             setClick(28, player -> applyState(blockData, d -> d.setWaterlogged(!waterlogged)));
-
         }
 
         if (blockRawData instanceof Fence blockData) {
@@ -663,7 +659,7 @@ public class StateChangerGUI extends PlayerGUI {
 
     private void playPlingSound() {
         PlayerLib.playSound(getPlayer(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0f);
-        updateMenu();
+        updateInventory();
     }
 
 }

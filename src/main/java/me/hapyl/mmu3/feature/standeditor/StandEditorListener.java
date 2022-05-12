@@ -29,12 +29,12 @@ public class StandEditorListener extends InjectListener {
         final EquipmentSlot hand = ev.getHand();
         final Action action = ev.getAction();
 
-        if (hand == EquipmentSlot.OFF_HAND) {
+        if (!player.isOp() || hand == EquipmentSlot.OFF_HAND) {
             return;
         }
 
         if ((action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR)) {
-            if (Main.getInstance().getStandEditor().isEditingItem(ev.getItem())) {
+            if (Main.getStandEditor().isEditingItem(ev.getItem())) {
                 new StandTuningGUI(player);
             }
         }
@@ -51,7 +51,7 @@ public class StandEditorListener extends InjectListener {
         final Player player = ev.getPlayer();
         final Entity rightClicked = ev.getRightClicked();
 
-        if (ev.getHand() == EquipmentSlot.OFF_HAND || !(rightClicked instanceof ArmorStand stand)) {
+        if (!player.isOp() || ev.getHand() == EquipmentSlot.OFF_HAND || !(rightClicked instanceof ArmorStand stand)) {
             return;
         }
 
@@ -81,7 +81,7 @@ public class StandEditorListener extends InjectListener {
 
     @EventHandler()
     public void handleEntityDamageByEntityEvent(EntityDamageByEntityEvent ev) {
-        if (!(ev.getDamager() instanceof Player player) || !(ev.getEntity() instanceof ArmorStand stand)) {
+        if (!(ev.getDamager() instanceof Player player) || !player.isOp() || !(ev.getEntity() instanceof ArmorStand stand)) {
             return;
         }
 
@@ -106,7 +106,7 @@ public class StandEditorListener extends InjectListener {
     public void handleToggleSneakEvent(PlayerToggleSneakEvent ev) {
         Player player = ev.getPlayer();
         final Data data = standEditor().getData(player);
-        if (data == null || !data.isWaitForMove() || !player.isSneaking()) {
+        if (!player.isOp() || data == null || !data.isWaitForMove() || !player.isSneaking()) {
             return;
         }
 
@@ -117,7 +117,7 @@ public class StandEditorListener extends InjectListener {
     public void handlePlayerSwapHandEvent(PlayerSwapHandItemsEvent ev) {
         Player player = ev.getPlayer();
         final Data data = standEditor().getData(player);
-        if (data == null || !data.isWaitForMove()) {
+        if (!player.isOp() || data == null || !data.isWaitForMove()) {
             return;
         }
 
@@ -125,11 +125,18 @@ public class StandEditorListener extends InjectListener {
         double nextSpeed = moveSpeed == 0.1 ? 0.01 : (moveSpeed == 0.01 ? 1.0 : 0.1);
         data.setSpeed(nextSpeed);
 
-        Chat.sendTitle(player, "&aCurrent Speed", "%s[0.1] %s[0.01] %s[1.0]".formatted(
-                nextSpeed == 0.1 ? "&b&l" : "&8",
-                nextSpeed == 0.01 ? "&b&l" : "&8",
-                nextSpeed == 1.0 ? "&b&l" : "&8"
-        ), 0, 20, 0);
+        Chat.sendTitle(
+                player,
+                "&aCurrent Speed",
+                "%s[0.1] %s[0.01] %s[1.0]".formatted(
+                        nextSpeed == 0.1 ? "&b&l" : "&8",
+                        nextSpeed == 0.01 ? "&b&l" : "&8",
+                        nextSpeed == 1.0 ? "&b&l" : "&8"
+                ),
+                0,
+                20,
+                0
+        );
 
         Message.sound(player, Sound.UI_BUTTON_CLICK, 1.0F);
     }
@@ -169,7 +176,7 @@ public class StandEditorListener extends InjectListener {
     public void handlePlayerMoveEvent(PlayerMoveEvent ev) {
         final Player player = ev.getPlayer();
         final Data data = standEditor().getData(player);
-        if (data == null || !data.isWaitForMove()) {
+        if (!player.isOp() || data == null || !data.isWaitForMove()) {
             return;
         }
 

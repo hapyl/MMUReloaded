@@ -110,6 +110,11 @@ public class StandEditor extends Feature {
         }
     }
 
+
+    public boolean isEditable(ArmorStand stand) {
+        return true;
+    }
+
     public void saveLoadout(int slot, Data data) {
         final Map<Integer, StandInfo> map = loadoutMap.computeIfAbsent(data.getPlayer().getUniqueId(), a -> Maps.newHashMap());
         map.put(slot, new StandInfo(data.getStand()));

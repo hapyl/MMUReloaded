@@ -7,10 +7,11 @@ import org.bukkit.entity.Player;
 public class StateChangerCommand extends SimplePlayerAdminCommand {
     public StateChangerCommand(String name) {
         super(name);
+        setDescription("Gives state changer item.");
     }
 
     @Override
     protected void execute(Player player, String[] strings) {
-        Main.getInstance().getStateChanger().giveItem(player);
+        Main.getStateChanger().giveItem(player);
     }
 }
