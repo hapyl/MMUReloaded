@@ -1,8 +1,8 @@
 package me.hapyl.mmu3.command;
 
 import com.google.common.collect.Maps;
-import kz.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
 import me.hapyl.mmu3.Message;
+import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.NumberConversions;

@@ -1,7 +1,7 @@
-name: MapmakerUtilitiesReloaded
-version: '${project.version}'
-main: me.hapyl.mmu3.Main
+name: "MapmakerUtilitiesReloaded"
+main: "me.hapyl.mmu3.Main"
+version: ${version}
 api-version: 1.18
-softdepend: [ EternaAPI ]
-authors: [ hapyl ]
-description: A utilities plugin for mapmakers by mapmakers.
+softdepend: [ "EternaAPI" ]
+authors: [ "hapyl" ]
+description: ${description}

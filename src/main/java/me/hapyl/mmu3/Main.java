@@ -1,9 +1,5 @@
 package me.hapyl.mmu3;
 
-import kz.hapyl.spigotutils.EternaAPI;
-import kz.hapyl.spigotutils.module.command.CommandProcessor;
-import kz.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
-import kz.hapyl.spigotutils.module.config.DataField;
 import me.hapyl.mmu3.command.*;
 import me.hapyl.mmu3.feature.Calculate;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreatorFeature;
@@ -17,6 +13,11 @@ import me.hapyl.mmu3.feature.statechanger.StateChanger;
 import me.hapyl.mmu3.feature.statechanger.StateChangerListener;
 import me.hapyl.mmu3.listener.EntityRemovalListener;
 import me.hapyl.mmu3.listener.PlayerListener;
+import me.hapyl.mmu3.test.Test;
+import me.hapyl.spigotutils.EternaAPI;
+import me.hapyl.spigotutils.module.command.CommandProcessor;
+import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
+import me.hapyl.spigotutils.module.config.DataField;
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -73,6 +74,10 @@ public class Main extends JavaPlugin {
         processor.registerCommand(new SightBlockCommand("sightBlock"));
         processor.registerCommand(new RawCommand("raw"));
         processor.registerCommand(new LockCommand("lock"));
+        processor.registerCommand(new HatCommand("hat"));
+        processor.registerCommand(new SpeedCommand("speed"));
+        processor.registerCommand(new CandleCommand("candle"));
+        processor.registerCommand(new ActionCommand("action"));
 
         processor.registerCommand(new SimplePlayerAdminCommand("testdatafields") {
             @Override
@@ -121,6 +126,9 @@ public class Main extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             PersistentPlayerData.createData(player);
         }
+
+        // Test
+        new Test();
     }
 
     // Features getter

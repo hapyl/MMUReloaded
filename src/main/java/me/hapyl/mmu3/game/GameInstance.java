@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.game;
 
-import kz.hapyl.spigotutils.module.util.Runnables;
+import me.hapyl.spigotutils.module.util.Runnables;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 

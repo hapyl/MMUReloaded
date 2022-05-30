@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.game;
 
-import kz.hapyl.spigotutils.module.inventory.gui.CancelType;
 import me.hapyl.mmu3.utils.PanelGUI;
+import me.hapyl.spigotutils.module.inventory.gui.CancelType;
 import org.bukkit.entity.Player;
 
 public class GameGUI extends PanelGUI {

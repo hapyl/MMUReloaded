@@ -1,9 +1,9 @@
 package me.hapyl.mmu3.feature.specialblocks;
 
-import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
-import kz.hapyl.spigotutils.module.math.Numbers;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.Message;
+import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.math.Numbers;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -121,8 +121,8 @@ public class SpecialBlock {
             door.setHalf(half);
         }
 
-        if (data instanceof Directional directional) {
-            directional.setFacing(directional.getFacing());
+        if (data instanceof Directional directional && event.getBlock().getBlockData() instanceof Directional actualData) {
+            directional.setFacing(actualData.getFacing());
         }
 
         setBlock(state, data);

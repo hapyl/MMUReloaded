@@ -2,12 +2,15 @@ package me.hapyl.mmu3.feature.specialblocks;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import kz.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
+import me.hapyl.spigotutils.module.block.BlockTag;
+import me.hapyl.spigotutils.module.chat.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.data.Bisected;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Snow;
 import org.bukkit.event.block.BlockPlaceEvent;
 
@@ -53,6 +56,7 @@ public class SpecialBlocks extends Feature {
         doorToTrapdoorMap.put(Material.WARPED_DOOR, Material.WARPED_TRAPDOOR);
     }
 
+    @SuppressWarnings("all")
     private void createItems() {
         if (!perType.isEmpty()) {
             throw new IllegalStateException("special items already created");
@@ -84,7 +88,6 @@ public class SpecialBlocks extends Feature {
                 (self, event) -> self.setBlock(event.getBlockReplacedState(), Material.CACTUS)
         );
 
-
         createBlock(25, Material.DEAD_BUSH, Material.SOUL_SAND, "Dead Bush");
 
         createBlock(2, Material.RED_MUSHROOM, Material.RED_MUSHROOM_BLOCK, "Red Mushroom");
@@ -93,87 +96,119 @@ public class SpecialBlocks extends Feature {
         createBlock(5, Material.WARPED_FUNGUS, Material.WARPED_WART_BLOCK, "Warped Fungus");
 
         // Create Doors
-        int slotDoors = 9;
-        for (Material door : doorToTrapdoorMap.keySet()) {
-            final Material trapdoor = doorToTrapdoorMap.get(door);
-            create(
-                    Type.DOOR,
-                    slotDoors,
-                    door,
-                    trapdoor,
-                    Chat.capitalize(door.name()) + " Top",
-                    1,
-                    (self, event) -> self.setDoor(event, door, Bisected.Half.TOP),
-                    true
-            );
-            create(
-                    Type.DOOR,
-                    slotDoors + 9,
-                    door,
-                    trapdoor,
-                    Chat.capitalize(door.name()) + " Bottom",
-                    1,
-                    (self, event) -> self.setDoor(event, door, Bisected.Half.BOTTOM),
-                    false
-            );
-            ++slotDoors;
+        doors:
+        {
+            int slot = 9;
+            for (Material door : doorToTrapdoorMap.keySet()) {
+                final Material trapdoor = doorToTrapdoorMap.get(door);
+                create(
+                        Type.DOOR,
+                        slot,
+                        door,
+                        trapdoor,
+                        Chat.capitalize(door.name()) + " Top",
+                        1,
+                        (self, event) -> self.setDoor(event, door, Bisected.Half.TOP),
+                        true
+                );
+                create(
+                        Type.DOOR,
+                        slot + 9,
+                        door,
+                        trapdoor,
+                        Chat.capitalize(door.name()) + " Bottom",
+                        1,
+                        (self, event) -> self.setDoor(event, door, Bisected.Half.BOTTOM),
+                        false
+                );
+                ++slot;
+            }
         }
 
         // Create Snow Layers
-        int slotSnow = 11;
-        final Snow snowData = (Snow) Bukkit.createBlockData(Material.SNOW);
-        for (int i = snowData.getMinimumLayers(); i <= snowData.getMaximumLayers(); i++) {
-            final int pos = i;
-            create(
-                    Type.SNOW,
-                    slotSnow,
-                    Material.SNOW,
-                    Material.SNOW_BLOCK,
-                    "Snow Layer " + pos,
-                    pos,
-                    (self, event) -> self.setLevelled(event, Material.SNOW, pos),
-                    false
-            );
+        snow_layers:
+        {
+            int slot = 11;
+            final Snow snowData = (Snow) Bukkit.createBlockData(Material.SNOW);
+            for (int i = snowData.getMinimumLayers(); i <= snowData.getMaximumLayers(); i++) {
+                final int pos = i;
+                create(
+                        Type.SNOW,
+                        slot,
+                        Material.SNOW,
+                        Material.SNOW_BLOCK,
+                        "Snow Layer " + pos,
+                        pos,
+                        (self, event) -> self.setLevelled(event, Material.SNOW, pos),
+                        false
+                );
 
-            slotSnow += (slotSnow % 9 == 6) ? 6 : 1;
+                slot += (slot % 9 == 6) ? 6 : 1;
+            }
         }
 
         // Create fluids
-        int slotFluids = 10;
-        for (int i = 0; i < 15; i++) {
-            final int plusOne = i + 1;
-            create(
-                    Type.FLUID_WATER,
-                    slotFluids,
-                    Material.WATER_BUCKET,
-                    Material.BLUE_CONCRETE,
-                    "Levelled Water " + plusOne,
-                    plusOne,
-                    (self, event) -> self.setLevelled(event, Material.WATER, plusOne - 1),
-                    false
-            );
-            create(
-                    Type.FLUID_LAVA,
-                    slotFluids,
-                    Material.LAVA_BUCKET,
-                    Material.ORANGE_CONCRETE,
-                    "Levelled Lava " + plusOne,
-                    plusOne,
-                    (self, event) -> self.setLevelled(event, Material.LAVA, plusOne - 1),
-                    false
-            );
+        fluids:
+        {
+            int slot = 10;
+            for (int i = 0; i < 15; i++) {
+                final int plusOne = i + 1;
+                create(
+                        Type.FLUID_WATER,
+                        slot,
+                        Material.WATER_BUCKET,
+                        Material.BLUE_CONCRETE,
+                        "Levelled Water " + plusOne,
+                        plusOne,
+                        (self, event) -> self.setLevelled(event, Material.WATER, plusOne - 1),
+                        false
+                );
+                create(
+                        Type.FLUID_LAVA,
+                        slot,
+                        Material.LAVA_BUCKET,
+                        Material.ORANGE_CONCRETE,
+                        "Levelled Lava " + plusOne,
+                        plusOne,
+                        (self, event) -> self.setLevelled(event, Material.LAVA, plusOne - 1),
+                        false
+                );
 
-            if (slotFluids == 16) {
-                slotFluids += 4;
-            }
-            else if (slotFluids == 24) {
-                slotFluids += 6;
-            }
-            else {
-                slotFluids++;
+                slot += (slot == 16 ? 4 : slot == 24 ? 6 : 1);
             }
         }
-    }
+
+        // Create corals
+        corals:
+        {
+            int row = 0;
+            for (BlockTag.Coral value : BlockTag.Coral.values()) {
+                int slot = 2;
+                for (final Material coral : value.getCorals()) {
+                    create(
+                            Type.CORAL,
+                            slot + (9 * row),
+                            coral,
+                            slot > 3 ? value.getCoralDeadBlock() : value.getCoralBlock(),
+                            Chat.capitalize(coral),
+                            1,
+                            (self, event) -> {
+                                final BlockData data = coral.createBlockData();
+                                if (data instanceof Waterlogged waterlogged) {
+                                    waterlogged.setWaterlogged(false);
+                                }
+                                self.setBlock(event.getBlockReplacedState(), data);
+                            },
+                            false
+                    );
+                    slot += slot == 3 ? 2 : 1;
+                }
+                row++;
+            }
+        }
+
+
+    } // end of the method
 
     @Nullable
     public SpecialBlock byId(String id) {

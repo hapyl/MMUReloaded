@@ -1,9 +1,9 @@
 package me.hapyl.mmu3.utils;
 
-import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
-import kz.hapyl.spigotutils.module.inventory.gui.Action;
-import kz.hapyl.spigotutils.module.inventory.gui.PlayerGUI;
-import kz.hapyl.spigotutils.module.math.Numbers;
+import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.inventory.gui.Action;
+import me.hapyl.spigotutils.module.inventory.gui.PlayerGUI;
+import me.hapyl.spigotutils.module.math.Numbers;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -13,7 +13,6 @@ import javax.annotation.Nullable;
 
 /**
  * This implementation will add extra inventory line if possible, to have consistent panel.
- * {@link PanelGUI#setPanelItem(int, ItemStack, Action)} - to put items into panel.
  */
 public abstract class PanelGUI extends PlayerGUI {
 
@@ -83,30 +82,14 @@ public abstract class PanelGUI extends PlayerGUI {
         setPanelItem(slot, item, null);
     }
 
-    public final void setPanelItem(PanelSlot slot, ItemStack stack) {
-        setPanelItem(slot.i, stack);
-    }
-
-    public final void setPanelItem(PanelSlot slot, ItemStack stack, Action action) {
-        setPanelItem(slot.i, stack, action);
-    }
-
     public abstract void updateInventory();
 
-    public enum PanelSlot {
-        FIRST(0),
-        CENTER(4),
-        LAST(8);
+    public static class PanelSlot {
 
-        private final int i;
+        public static final int FIRST = 0;
+        public static final int CENTER = 4;
+        public static final int LAST = 8;
 
-        PanelSlot(int i) {
-            this.i = i;
-        }
-
-        public int getNumeric() {
-            return i;
-        }
     }
 
     public enum Size {

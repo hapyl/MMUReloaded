@@ -1,10 +1,10 @@
 package me.hapyl.mmu3.feature.standeditor;
 
 import com.google.common.collect.Maps;
-import kz.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.Message;
 import me.hapyl.mmu3.feature.Feature;
+import me.hapyl.spigotutils.module.chat.Chat;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;

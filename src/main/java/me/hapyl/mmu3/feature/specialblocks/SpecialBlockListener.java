@@ -1,8 +1,8 @@
 package me.hapyl.mmu3.feature.specialblocks;
 
-import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.utils.InjectListener;
+import me.hapyl.spigotutils.module.inventory.ItemBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockPlaceEvent;

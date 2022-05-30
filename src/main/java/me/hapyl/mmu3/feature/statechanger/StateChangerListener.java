@@ -1,8 +1,8 @@
 package me.hapyl.mmu3.feature.statechanger;
 
-import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.utils.InjectListener;
+import me.hapyl.spigotutils.module.inventory.ItemBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.block.Block;

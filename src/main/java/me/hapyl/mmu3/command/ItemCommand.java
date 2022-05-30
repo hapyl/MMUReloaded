@@ -1,10 +1,10 @@
 package me.hapyl.mmu3.command;
 
-import kz.hapyl.spigotutils.module.chat.Chat;
-import kz.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
-import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
-import kz.hapyl.spigotutils.module.util.Validate;
 import me.hapyl.mmu3.Message;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
+import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.util.Validate;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -30,6 +30,14 @@ public class ItemCommand extends SimplePlayerAdminCommand {
         super(name);
         setAliases("i");
         setDescription("Allows to create semi-complicated items. Use /i help for help.");
+
+        for (Material value : Material.values()) {
+            if (value.isItem()) {
+                addCompleterValue(1, value.name().toLowerCase());
+            }
+        }
+
+        addCompleterValues(2, "name()", "lore()", "smart()", "enchant()");
     }
 
     @Override

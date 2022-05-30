@@ -1,11 +1,11 @@
 package me.hapyl.mmu3.feature.statechanger;
 
-import kz.hapyl.spigotutils.module.chat.Chat;
-import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
-import kz.hapyl.spigotutils.module.player.PlayerLib;
 import me.hapyl.mmu3.Message;
 import me.hapyl.mmu3.utils.Enums;
 import me.hapyl.mmu3.utils.PanelGUI;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.player.PlayerLib;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;

@@ -2,10 +2,10 @@ package me.hapyl.mmu3.feature.itemcreator;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import kz.hapyl.spigotutils.module.chat.Chat;
-import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
-import kz.hapyl.spigotutils.module.math.Numbers;
 import me.hapyl.mmu3.Message;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.math.Numbers;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;

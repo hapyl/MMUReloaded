@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.command;
 
-import kz.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
 import me.hapyl.mmu3.Main;
+import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
 import org.bukkit.entity.Player;
 
 public class StateChangerCommand extends SimplePlayerAdminCommand {

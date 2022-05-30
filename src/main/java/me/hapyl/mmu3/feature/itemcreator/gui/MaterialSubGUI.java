@@ -1,13 +1,13 @@
 package me.hapyl.mmu3.feature.itemcreator.gui;
 
 import com.google.common.collect.Lists;
-import kz.hapyl.spigotutils.module.chat.Chat;
-import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
-import kz.hapyl.spigotutils.module.inventory.SignGUI;
-import kz.hapyl.spigotutils.module.util.Runnables;
 import me.hapyl.mmu3.Message;
 import me.hapyl.mmu3.PersistentPlayerData;
 import me.hapyl.mmu3.feature.itemcreator.Category;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.inventory.SignGUI;
+import me.hapyl.spigotutils.module.util.Runnables;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

@@ -1,10 +1,10 @@
 package me.hapyl.mmu3.command;
 
 import com.google.common.collect.Lists;
-import kz.hapyl.spigotutils.module.chat.Chat;
-import kz.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
-import kz.hapyl.spigotutils.module.util.Validate;
 import me.hapyl.mmu3.Message;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
+import me.hapyl.spigotutils.module.util.Validate;
 import org.bukkit.WeatherType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

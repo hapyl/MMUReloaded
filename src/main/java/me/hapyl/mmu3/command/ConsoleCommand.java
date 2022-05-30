@@ -1,8 +1,8 @@
 package me.hapyl.mmu3.command;
 
-import kz.hapyl.spigotutils.module.chat.Chat;
-import kz.hapyl.spigotutils.module.command.SimplePlayerCommand;
 import me.hapyl.mmu3.Message;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.command.SimplePlayerCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

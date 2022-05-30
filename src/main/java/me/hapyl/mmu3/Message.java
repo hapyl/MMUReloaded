@@ -1,7 +1,7 @@
 package me.hapyl.mmu3;
 
-import kz.hapyl.spigotutils.module.chat.Chat;
-import kz.hapyl.spigotutils.module.player.PlayerLib;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.player.PlayerLib;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -44,6 +44,21 @@ public enum Message {
         this.sound = sound;
         this.pitch = pitch;
         this.expectedReplacements = StringUtils.countMatches(value, "%s");
+    }
+
+    public static boolean checkError(boolean condition, Player player, String string, Object... replacements) {
+        if (!condition) {
+            error(player, string, replacements);
+        }
+        return condition;
+    }
+
+    public static boolean checkNull(Object nullCheck, Player player, String string, Object... replacements) {
+        if (nullCheck == null) {
+            error(player, string, replacements);
+            return true;
+        }
+        return false;
     }
 
     public void send(Player player, Object... replacements) {
@@ -123,7 +138,10 @@ public enum Message {
     }
 
     public enum Type {
-        INFO, ERROR, SUCCESS, SEVERE
+        INFO,
+        ERROR,
+        SUCCESS,
+        SEVERE
     }
 
 }

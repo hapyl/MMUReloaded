@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import me.hapyl.mmu3.feature.Calculate;
 import me.hapyl.mmu3.feature.Feature;
 import me.hapyl.mmu3.feature.ServerPro;
+import me.hapyl.mmu3.feature.candle.CandleController;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreatorFeature;
 import me.hapyl.mmu3.feature.lastlocation.LastLocation;
 import me.hapyl.mmu3.feature.specialblocks.SpecialBlocks;
@@ -16,13 +17,14 @@ public final class FeatureRegistry {
 
     private final Map<Feature, Boolean> featureStatus;
 
-    public StateChanger stateChanger;
-    public StandEditor standEditor;
-    public SpecialBlocks specialBlocks;
-    public Calculate calculate;
-    public LastLocation lastLocation;
-    public ServerPro serverPro;
-    public ItemCreatorFeature itemCreator;
+    public final StateChanger stateChanger;
+    public final StandEditor standEditor;
+    public final SpecialBlocks specialBlocks;
+    public final Calculate calculate;
+    public final LastLocation lastLocation;
+    public final ServerPro serverPro;
+    public final ItemCreatorFeature itemCreator;
+    public final CandleController candleController;
 
     public FeatureRegistry(Main main) {
         featureStatus = Maps.newHashMap();
@@ -32,7 +34,9 @@ public final class FeatureRegistry {
         specialBlocks = new SpecialBlocks(main);
         calculate = new Calculate(main);
         lastLocation = new LastLocation(main);
+        serverPro = new ServerPro(main);
         itemCreator = new ItemCreatorFeature(main);
+        candleController = new CandleController(main);
     }
 
     public void setFeatureStatus(Feature feature, boolean flag) {

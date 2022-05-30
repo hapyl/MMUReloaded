@@ -1,9 +1,9 @@
 package me.hapyl.mmu3.command;
 
-import kz.hapyl.spigotutils.module.chat.Chat;
-import kz.hapyl.spigotutils.module.command.SimpleCommand;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.ServerPro;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.command.SimpleCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 

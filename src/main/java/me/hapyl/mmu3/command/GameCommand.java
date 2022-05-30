@@ -1,10 +1,10 @@
 package me.hapyl.mmu3.command;
 
-import kz.hapyl.spigotutils.module.command.SimplePlayerCommand;
-import kz.hapyl.spigotutils.module.util.Validate;
 import me.hapyl.mmu3.Message;
 import me.hapyl.mmu3.game.Arguments;
 import me.hapyl.mmu3.game.Games;
+import me.hapyl.spigotutils.module.command.SimplePlayerCommand;
+import me.hapyl.spigotutils.module.util.Validate;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

@@ -6,6 +6,7 @@ public enum Type {
     DOOR,
     SNOW,
     FLUID_WATER,
-    FLUID_LAVA
+    FLUID_LAVA,
+    CORAL
 
 }

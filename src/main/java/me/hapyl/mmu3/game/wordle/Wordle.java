@@ -1,16 +1,16 @@
 package me.hapyl.mmu3.game.wordle;
 
 import com.google.common.collect.Lists;
-import kz.hapyl.spigotutils.module.chat.Chat;
-import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
-import kz.hapyl.spigotutils.module.inventory.SignGUI;
-import kz.hapyl.spigotutils.module.player.PlayerLib;
-import kz.hapyl.spigotutils.module.util.Runnables;
 import me.hapyl.mmu3.Message;
 import me.hapyl.mmu3.game.Arguments;
 import me.hapyl.mmu3.game.Game;
 import me.hapyl.mmu3.game.GameInstance;
 import me.hapyl.mmu3.utils.PanelGUI;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.inventory.SignGUI;
+import me.hapyl.spigotutils.module.player.PlayerLib;
+import me.hapyl.spigotutils.module.util.Runnables;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

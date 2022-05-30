@@ -1,13 +1,13 @@
 package me.hapyl.mmu3.feature.standeditor;
 
-import kz.hapyl.spigotutils.module.chat.Chat;
-import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
-import kz.hapyl.spigotutils.module.inventory.SignGUI;
-import kz.hapyl.spigotutils.module.inventory.gui.CancelType;
-import kz.hapyl.spigotutils.module.inventory.gui.PlayerGUI;
-import kz.hapyl.spigotutils.module.util.Runnables;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.Message;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.inventory.SignGUI;
+import me.hapyl.spigotutils.module.inventory.gui.CancelType;
+import me.hapyl.spigotutils.module.inventory.gui.PlayerGUI;
+import me.hapyl.spigotutils.module.util.Runnables;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -49,7 +49,6 @@ public class StandEditorGUI extends PlayerGUI {
     private void updateInventory() {
         final StandEditor editor = Main.getStandEditor();
         final ArmorStand stand = data.getStand();
-        clearEverything();
 
         setItem(31, colorItem(ITEM_DISABLED_SLOTS, editor.isLocked(stand)), player -> {
             editor.setLock(stand, !editor.isLocked(stand));

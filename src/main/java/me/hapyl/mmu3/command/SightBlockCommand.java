@@ -1,10 +1,10 @@
 package me.hapyl.mmu3.command;
 
 import com.google.common.collect.Sets;
-import kz.hapyl.spigotutils.module.chat.Chat;
-import kz.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
-import kz.hapyl.spigotutils.module.util.Validate;
 import me.hapyl.mmu3.Message;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
+import me.hapyl.spigotutils.module.util.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -136,7 +136,13 @@ public class SightBlockCommand extends SimplePlayerAdminCommand {
     }
 
     private enum Shift {
-        NONE("§"), UP("u"), DOWN("d"), NORTH("n"), SOUTH("s"), WEST("w"), EAST("e");
+        NONE("§"),
+        UP("u"),
+        DOWN("d"),
+        NORTH("n"),
+        SOUTH("s"),
+        WEST("w"),
+        EAST("e");
 
         private final String value;
 

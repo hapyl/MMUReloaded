@@ -1,11 +1,11 @@
 package me.hapyl.mmu3.feature.openinventory;
 
 import com.google.common.collect.Maps;
-import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
-import kz.hapyl.spigotutils.module.inventory.gui.CancelType;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.Message;
 import me.hapyl.mmu3.utils.PanelGUI;
+import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.inventory.gui.CancelType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

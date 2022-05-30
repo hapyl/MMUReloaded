@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger;
 
-import kz.hapyl.spigotutils.module.player.PlayerLib;
+import me.hapyl.spigotutils.module.player.PlayerLib;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;

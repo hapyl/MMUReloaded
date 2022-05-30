@@ -1,14 +1,14 @@
 package me.hapyl.mmu3.feature;
 
-import kz.hapyl.spigotutils.module.chat.Chat;
-import kz.hapyl.spigotutils.module.entity.Entities;
-import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
-import kz.hapyl.spigotutils.module.player.PlayerLib;
-import kz.hapyl.spigotutils.module.util.BukkitUtils;
-import kz.hapyl.spigotutils.module.util.Nulls;
-import kz.hapyl.spigotutils.module.util.Runnables;
-import kz.hapyl.spigotutils.module.util.ThreadRandom;
 import me.hapyl.mmu3.Main;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.entity.Entities;
+import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.player.PlayerLib;
+import me.hapyl.spigotutils.module.util.BukkitUtils;
+import me.hapyl.spigotutils.module.util.Nulls;
+import me.hapyl.spigotutils.module.util.Runnables;
+import me.hapyl.spigotutils.module.util.ThreadRandom;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;

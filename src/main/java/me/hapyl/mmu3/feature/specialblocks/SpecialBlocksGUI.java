@@ -1,8 +1,8 @@
 package me.hapyl.mmu3.feature.specialblocks;
 
-import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.utils.PanelGUI;
+import me.hapyl.spigotutils.module.inventory.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -42,23 +42,33 @@ public class SpecialBlocksGUI extends PanelGUI {
                 specialBlocks.getByType(Type.SNOW)
         );
 
-
         // Fluids
         createSubMenuItemAndSet(
                 37,
                 Material.WATER_BUCKET,
                 "Levelled Water",
                 "Opens menu with levelled water blocks.",
-                specialBlocks.getByType(Type.FLUID_WATER), Size.FIVE
+                specialBlocks.getByType(Type.FLUID_WATER),
+                Size.FIVE
         );
         createSubMenuItemAndSet(
                 38,
                 Material.LAVA_BUCKET,
                 "Levelled Lava",
                 "Opens menu with levelled lava blocks.",
-                specialBlocks.getByType(Type.FLUID_LAVA), Size.FIVE
+                specialBlocks.getByType(Type.FLUID_LAVA),
+                Size.FIVE
         );
 
+        // Corals
+        createSubMenuItemAndSet(
+                43,
+                Material.FIRE_CORAL,
+                "Corals",
+                "Open menu with corals stems.",
+                specialBlocks.getByType(Type.CORAL),
+                Size.FIVE
+        );
 
         openInventory();
     }

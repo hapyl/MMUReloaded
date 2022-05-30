@@ -1,8 +1,8 @@
 package me.hapyl.mmu3.feature;
 
-import kz.hapyl.spigotutils.module.player.SoundQueue;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.Message;
+import me.hapyl.spigotutils.module.player.SoundQueue;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

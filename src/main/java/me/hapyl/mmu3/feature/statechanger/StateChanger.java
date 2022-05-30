@@ -1,13 +1,13 @@
 package me.hapyl.mmu3.feature.statechanger;
 
-import kz.hapyl.spigotutils.module.chat.Chat;
-import kz.hapyl.spigotutils.module.chat.Gradient;
-import kz.hapyl.spigotutils.module.chat.gradient.Interpolators;
-import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
-import kz.hapyl.spigotutils.module.util.ThreadRandom;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.Message;
 import me.hapyl.mmu3.feature.Feature;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.chat.Gradient;
+import me.hapyl.spigotutils.module.chat.gradient.Interpolators;
+import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.util.ThreadRandom;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;

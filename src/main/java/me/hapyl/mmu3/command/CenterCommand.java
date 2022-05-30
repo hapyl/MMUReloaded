@@ -1,11 +1,11 @@
 package me.hapyl.mmu3.command;
 
-import kz.hapyl.spigotutils.module.chat.Chat;
-import kz.hapyl.spigotutils.module.chat.LazyClickEvent;
-import kz.hapyl.spigotutils.module.chat.LazyHoverEvent;
-import kz.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
-import kz.hapyl.spigotutils.module.util.BukkitUtils;
 import me.hapyl.mmu3.Message;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.chat.LazyClickEvent;
+import me.hapyl.spigotutils.module.chat.LazyHoverEvent;
+import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
+import me.hapyl.spigotutils.module.util.BukkitUtils;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

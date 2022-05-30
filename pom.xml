@@ -6,12 +6,12 @@
 
     <groupId>MapmakerUtilitiesReloaded</groupId>
     <artifactId>MapmakerUtilitiesReloaded</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>MapmakerUtilitiesReloaded</name>
-
+    <version>1.2-SNAPSHOT</version>
     <description>A utilities plugin for mapmakers by mapmakers.</description>
+
     <properties>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -1,8 +1,8 @@
 package me.hapyl.mmu3;
 
 import com.google.common.collect.Maps;
-import kz.hapyl.spigotutils.module.config.Config;
-import kz.hapyl.spigotutils.module.config.DataField;
+import me.hapyl.spigotutils.module.config.Config;
+import me.hapyl.spigotutils.module.config.DataField;
 import org.bukkit.entity.Player;
 
 import java.util.Map;

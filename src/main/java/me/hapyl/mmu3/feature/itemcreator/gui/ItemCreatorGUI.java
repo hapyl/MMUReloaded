@@ -1,14 +1,14 @@
 package me.hapyl.mmu3.feature.itemcreator.gui;
 
-import kz.hapyl.spigotutils.module.chat.Chat;
-import kz.hapyl.spigotutils.module.chat.LazyClickEvent;
-import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
-import kz.hapyl.spigotutils.module.inventory.SignGUI;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.Message;
 import me.hapyl.mmu3.feature.itemcreator.Category;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreator;
 import me.hapyl.mmu3.utils.PanelGUI;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.chat.LazyClickEvent;
+import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.inventory.SignGUI;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;

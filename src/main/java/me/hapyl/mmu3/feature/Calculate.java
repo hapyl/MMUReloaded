@@ -1,10 +1,10 @@
 package me.hapyl.mmu3.feature;
 
-import kz.hapyl.spigotutils.module.chat.Chat;
-import kz.hapyl.spigotutils.module.chat.LazyClickEvent;
-import kz.hapyl.spigotutils.module.chat.LazyHoverEvent;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.Message;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.chat.LazyClickEvent;
+import me.hapyl.spigotutils.module.chat.LazyHoverEvent;
 import org.bukkit.entity.Player;
 
 public class Calculate extends Feature {

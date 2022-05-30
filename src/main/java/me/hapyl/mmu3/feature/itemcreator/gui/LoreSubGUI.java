@@ -1,12 +1,12 @@
 package me.hapyl.mmu3.feature.itemcreator.gui;
 
-import kz.hapyl.spigotutils.module.chat.Chat;
-import kz.hapyl.spigotutils.module.chat.LazyClickEvent;
-import kz.hapyl.spigotutils.module.chat.LazyHoverEvent;
-import kz.hapyl.spigotutils.module.inventory.ItemBuilder;
-import kz.hapyl.spigotutils.module.inventory.SignGUI;
 import me.hapyl.mmu3.Message;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreator;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.chat.LazyClickEvent;
+import me.hapyl.spigotutils.module.chat.LazyHoverEvent;
+import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.inventory.SignGUI;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -40,7 +40,7 @@ public class LoreSubGUI extends ICSubGUI {
 
     public LoreSubGUI(Player player) {
         super(player, "Modify Lore", Size.FIVE);
-        setPanelGoBack(PanelSlot.CENTER.getNumeric(), "Item Creator", ItemCreatorGUI::new);
+        setPanelGoBack(PanelSlot.CENTER, "Item Creator", ItemCreatorGUI::new);
     }
 
     public void updateInventory(int start) {
