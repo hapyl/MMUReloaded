@@ -5,6 +5,7 @@ import me.hapyl.spigotutils.module.config.Config;
 import me.hapyl.spigotutils.module.config.DataField;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.UUID;
 
@@ -74,6 +75,7 @@ public class PersistentPlayerData extends Config {
         new PersistentPlayerData(player);
     }
 
+    @Nonnull
     public static PersistentPlayerData getData(Player player) {
         if (!hasData(player)) {
             new PersistentPlayerData(player);

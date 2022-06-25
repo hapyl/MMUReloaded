@@ -1,11 +1,11 @@
 package me.hapyl.mmu3.feature.statechanger;
 
 import me.hapyl.mmu3.Message;
-import me.hapyl.mmu3.utils.Enums;
 import me.hapyl.mmu3.utils.PanelGUI;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
 import me.hapyl.spigotutils.module.player.PlayerLib;
+import me.hapyl.spigotutils.module.util.CollectionUtils;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -639,15 +639,17 @@ public class StateChangerGUI extends PanelGUI {
     }
 
     private <T extends BlockData, V> void switchAddClick(int slot, T blockData, V[] values, V currentValue, BiConsumer<T, V> consumer) {
-        setClick(slot, player -> applyState(blockData, d -> {
-            final V nextValue = Enums.getNextValue(values, currentValue);
-            consumer.accept(d, nextValue);
-        }), ClickType.LEFT);
+        setClick(
+                slot,
+                player -> applyState(blockData, d -> consumer.accept(d, CollectionUtils.getNextValue(values, currentValue))),
+                ClickType.LEFT
+        );
 
-        setClick(slot, player -> applyState(blockData, d -> {
-            final V nextValue = Enums.getPreviousValue(values, currentValue);
-            consumer.accept(d, nextValue);
-        }), ClickType.RIGHT);
+        setClick(
+                slot,
+                player -> applyState(blockData, d -> consumer.accept(d, CollectionUtils.getPreviousValue(values, currentValue))),
+                ClickType.RIGHT
+        );
     }
 
     private <T extends BlockData> void applyState(T t, Consumer<T> consumer) {

@@ -10,14 +10,26 @@ import org.bukkit.entity.Player;
 
 public enum Message {
 
+    // ** Errors ** //
     NO_PERMISSIONS(Type.ERROR, "No permissions."),
+
     NOT_ENOUGH_ARGUMENTS(Type.ERROR, "Not enough arguments."),
     NOT_ENOUGH_ARGUMENTS_EXPECTED(Type.ERROR, NOT_ENOUGH_ARGUMENTS.value + " Expected %s."),
     NOT_ENOUGH_ARGUMENTS_EXPECTED_AT_LEAST(Type.ERROR, NOT_ENOUGH_ARGUMENTS.value + " Expected at least %s."),
+
     TOO_MANY_ARGUMENTS(Type.ERROR, "Too many arguments."),
     TOO_MANY_ARGUMENTS_EXPECTED(Type.ERROR, TOO_MANY_ARGUMENTS.value + " Expected %s."),
     TOO_MANY_ARGUMENTS_EXPECTED_NOT_MORE_THAN(Type.ERROR, TOO_MANY_ARGUMENTS.value + " Expected not more than %s."),
+
     INVALID_ARGUMENT_SIZE(Type.ERROR, "Invalid arguments length. Expected %s."),
+    INVALID_ARGUMENT(Type.ERROR, "%s is not a valid argument!"),
+    INVALID_ARGUMENT_TYPE(Type.ERROR, "%s is expected to be %s, not %s!"),
+
+    PLAYER_NOT_ONLINE(Type.ERROR, "%s is not online!"),
+
+    // ** Success Messages ** //
+    LOGIN_SUCCESSFUL(Type.SUCCESS, "Successfully logged in!"),
+
 
     ;
 

@@ -1,6 +1,5 @@
 package me.hapyl.mmu3;
 
-import me.hapyl.mmu3.command.*;
 import me.hapyl.mmu3.feature.Calculate;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreatorFeature;
 import me.hapyl.mmu3.feature.lastlocation.LastLocation;
@@ -15,17 +14,11 @@ import me.hapyl.mmu3.listener.EntityRemovalListener;
 import me.hapyl.mmu3.listener.PlayerListener;
 import me.hapyl.mmu3.test.Test;
 import me.hapyl.spigotutils.EternaAPI;
-import me.hapyl.spigotutils.module.command.CommandProcessor;
-import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
-import me.hapyl.spigotutils.module.config.DataField;
-import org.apache.commons.lang.reflect.FieldUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.lang.reflect.Field;
 
 public class Main extends JavaPlugin {
 
@@ -53,61 +46,7 @@ public class Main extends JavaPlugin {
         eternaAPI = new EternaAPI(this);
 
         // Register Commands
-        final CommandProcessor processor = new CommandProcessor(this);
-        processor.registerCommand(new StateChangerCommand("stateChanger"));
-        processor.registerCommand(new EditStandCommand("editStand"));
-        processor.registerCommand(new SpecialBlocksCommand("specialBlocks"));
-        processor.registerCommand(new CalculateCommand("calculate"));
-        processor.registerCommand(new BackCommand("back"));
-        processor.registerCommand(new CenterCommand("center"));
-        processor.registerCommand(new ConsoleCommand("console"));
-        processor.registerCommand(new SayCommand("say"));
-        processor.registerCommand(new ItemCreatorCommand("itemCreator"));
-        processor.registerCommand(new EntityRemovalCommand("entityRemoval"));
-        processor.registerCommand(new GameModeCommand("gm"));
-        processor.registerCommand(new OpenInventoryCommand("openInventory"));
-        processor.registerCommand(new RollCommand("roll"));
-        processor.registerCommand(new PersonalTimeCommandCommand("personalTime"));
-        processor.registerCommand(new PersonalWeatherCommand("personalWeather"));
-        processor.registerCommand(new ItemCommand("getItem"));
-        processor.registerCommand(new GameCommand("game"));
-        processor.registerCommand(new SightBlockCommand("sightBlock"));
-        processor.registerCommand(new RawCommand("raw"));
-        processor.registerCommand(new LockCommand("lock"));
-        processor.registerCommand(new HatCommand("hat"));
-        processor.registerCommand(new SpeedCommand("speed"));
-        processor.registerCommand(new CandleCommand("candle"));
-        processor.registerCommand(new ActionCommand("action"));
-
-        processor.registerCommand(new SimplePlayerAdminCommand("testdatafields") {
-            @Override
-            protected void execute(Player player, String[] strings) {
-                final PersistentPlayerData data = PersistentPlayerData.getData(player);
-
-                player.showDemoScreen();
-
-                try {
-                    for (Field field : data.getClass().getDeclaredFields()) {
-                        final DataField annotation = field.getAnnotation(DataField.class);
-                        if (annotation == null) {
-                            continue;
-                        }
-
-                        final Object value = FieldUtils.readField(field, data, true);
-                        Message.debug(
-                                player,
-                                "%s %s: %s",
-                                "&7" + field.getName(),
-                                "&e(" + field.getType().getSimpleName() + ")",
-                                value == null ? "null" : value
-                        );
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
+        new CommandRegistry(this).registerCommands();
 
         // Register events
         pluginManager.registerEvents(new PlayerListener(), this);

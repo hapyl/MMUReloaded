@@ -43,10 +43,6 @@ public class Dice {
             BukkitUtils.lockArmorStand(self);
             Nulls.runIfNotNull(self.getEquipment(), eq -> eq.setHelmet(diceTextures[number]));
         });
-        roll();
-    }
-
-    public void roll() {
         playAnimation();
     }
 

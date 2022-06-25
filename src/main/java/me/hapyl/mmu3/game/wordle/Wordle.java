@@ -236,11 +236,16 @@ public class Wordle extends Game {
     }
 
     private enum Status {
-        GUESSING, WAIT_RESPONSE, WON, LOST
+        GUESSING,
+        WAIT_RESPONSE,
+        WON,
+        LOST
     }
 
     private enum CharacterValue {
-        CORRECT, INCORRECT, PRESENT
+        CORRECT,
+        INCORRECT,
+        PRESENT
     }
 
 }
