@@ -14,6 +14,8 @@ public class PacketCommand extends SimplePlayerAdminCommand {
     public PacketCommand(String name) {
         super(name);
         addCompleterValues(1, Enums.getValuesNames(PlayerPacket.class));
+        setDescription("Allows to send 'fun' packets to players.");
+        setAliases("pk");
     }
 
     @Override

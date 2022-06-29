@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import me.hapyl.mmu3.feature.Calculate;
 import me.hapyl.mmu3.feature.Feature;
 import me.hapyl.mmu3.feature.ServerPro;
+import me.hapyl.mmu3.feature.brush.BrushManager;
 import me.hapyl.mmu3.feature.candle.CandleController;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreatorFeature;
 import me.hapyl.mmu3.feature.lastlocation.LastLocation;
@@ -25,6 +26,7 @@ public final class FeatureRegistry {
     public final ServerPro serverPro;
     public final ItemCreatorFeature itemCreator;
     public final CandleController candleController;
+    public final BrushManager brushManager;
 
     public FeatureRegistry(Main main) {
         featureStatus = Maps.newHashMap();
@@ -37,6 +39,7 @@ public final class FeatureRegistry {
         serverPro = new ServerPro(main);
         itemCreator = new ItemCreatorFeature(main);
         candleController = new CandleController(main);
+        brushManager = new BrushManager(main);
     }
 
     public void setFeatureStatus(Feature feature, boolean flag) {

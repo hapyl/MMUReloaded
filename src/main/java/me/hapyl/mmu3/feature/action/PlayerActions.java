@@ -3,6 +3,7 @@ package me.hapyl.mmu3.feature.action;
 import com.google.common.collect.Maps;
 import me.hapyl.mmu3.Message;
 import me.hapyl.spigotutils.module.entity.Entities;
+import me.hapyl.spigotutils.module.util.Nulls;
 import org.bukkit.Location;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Entity;
@@ -34,8 +35,11 @@ public enum PlayerActions {
 
         @Override
         public void stopPerforming(Player player) {
-            arrows.get(player).remove();
-            Message.info(player, "You are no longer sitting.");
+            Nulls.runIfNotNull(arrows.get(player), (entity) -> {
+                entity.remove();
+                Message.info(player, "You are no longer sitting.");
+                arrows.remove(player);
+            });
         }
     }),
 

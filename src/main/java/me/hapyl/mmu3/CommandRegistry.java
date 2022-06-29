@@ -1,13 +1,14 @@
 package me.hapyl.mmu3;
 
 import me.hapyl.mmu3.command.*;
+import me.hapyl.mmu3.command.brush.BrushCommand;
+import me.hapyl.mmu3.test.CommandWithArguments;
 import me.hapyl.spigotutils.module.command.CommandProcessor;
 import me.hapyl.spigotutils.module.command.SimpleCommand;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
 import me.hapyl.spigotutils.module.config.DataField;
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
 import java.util.function.BiConsumer;
@@ -16,7 +17,7 @@ public class CommandRegistry {
 
     private final CommandProcessor processor;
 
-    public CommandRegistry(JavaPlugin plugin) {
+    public CommandRegistry(Main plugin) {
         this.processor = new CommandProcessor(plugin);
     }
 
@@ -45,12 +46,16 @@ public class CommandRegistry {
         register(new SpeedCommand("speed"));
         register(new CandleCommand("candle"));
         register(new ActionCommand("action"));
-        register(new PacketCommand("packet"));
+        register(new PacketCommand("playerpacket"));
         register(new CalculateRelative("relative"));
+        register(new PingCommand("ping"));
+        register(new BrushCommand("tinybrush"));
+
+        // TEST
+        register(new CommandWithArguments("_testcommandwitharguments"));
 
         registerTestCommand("datafields", (player, strings) -> {
             final PersistentPlayerData data = PersistentPlayerData.getData(player);
-            player.showDemoScreen();
 
             try {
                 for (Field field : data.getClass().getDeclaredFields()) {
@@ -75,8 +80,8 @@ public class CommandRegistry {
 
     }
 
-    private void registerTestCommand(String test, BiConsumer<Player, String[]> consumer) {
-        register(new SimplePlayerAdminCommand("test" + test) {
+    private void registerTestCommand(String command, BiConsumer<Player, String[]> consumer) {
+        register(new SimplePlayerAdminCommand("_test" + command) {
             @Override
             protected void execute(Player player, String[] strings) {
                 consumer.accept(player, strings);
