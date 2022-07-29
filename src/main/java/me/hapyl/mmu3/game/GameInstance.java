@@ -22,16 +22,16 @@ public abstract class GameInstance {
     }
 
     /**
+     * Called once upon starting the game.
+     */
+    public abstract void onGameStart();
+
+    /**
      * Called every time player clicked at a slot.
      *
      * @param slot - Clicked slot.
      */
     public abstract void onClick(int slot);
-
-    /**
-     * Called once upon starting the game.
-     */
-    public abstract void onGameStart();
 
     /**
      * Called whenever player closes inventory.

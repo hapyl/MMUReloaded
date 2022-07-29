@@ -1,4 +1,4 @@
-package me.hapyl.mmu3.game.wordle;
+package me.hapyl.mmu3.game.games.wordle;
 
 import com.google.common.collect.Lists;
 import me.hapyl.mmu3.Message;

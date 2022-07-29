@@ -9,8 +9,8 @@ import org.bukkit.entity.Player;
 
 public class ServerPro extends Feature {
 
-    private final String stringTenMinutes = "Server will expire in 10 minutes.";
-    private final String stringFiveMinutes = "Server will expire in 5 minutes.";
+    private final String stringTenMinutes = "§6Server §6will §6expire §6in §610 §6minutes.";
+    private final String stringFiveMinutes = "§6Server §6will §6expire §6in §65 §6minutes.";
 
     private final SoundQueue soundTenMinutes;
     private final SoundQueue soundFiveMinutes;

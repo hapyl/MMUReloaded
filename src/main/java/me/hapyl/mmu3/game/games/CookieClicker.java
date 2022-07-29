@@ -1,7 +1,10 @@
-package me.hapyl.mmu3.game;
+package me.hapyl.mmu3.game.games;
 
 import com.google.common.collect.Maps;
 import me.hapyl.mmu3.PersistentPlayerData;
+import me.hapyl.mmu3.game.Arguments;
+import me.hapyl.mmu3.game.Game;
+import me.hapyl.mmu3.game.GameInstance;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
 import me.hapyl.spigotutils.module.math.Numbers;
 import me.hapyl.spigotutils.module.player.PlayerLib;

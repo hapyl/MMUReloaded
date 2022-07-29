@@ -1,12 +1,15 @@
 package me.hapyl.mmu3.game;
 
-import me.hapyl.mmu3.game.wordle.Wordle;
+import me.hapyl.mmu3.game.games.BenchmarkReaction;
+import me.hapyl.mmu3.game.games.CookieClicker;
+import me.hapyl.mmu3.game.games.wordle.Wordle;
 import org.bukkit.entity.Player;
 
 public enum Games {
 
     COOKIE_CLICKER(new CookieClicker()),
     WORDLE(new Wordle()),
+    REACTION_TIME(new BenchmarkReaction()),
 
     ;
 

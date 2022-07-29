@@ -1,4 +1,4 @@
-package me.hapyl.mmu3.game.wordle;
+package me.hapyl.mmu3.game.games.wordle;
 
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
 import org.bukkit.inventory.ItemStack;
