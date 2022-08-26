@@ -1,6 +1,5 @@
 package me.hapyl.mmu3.game.games.wordle;
 
-import com.google.common.collect.Lists;
 import me.hapyl.mmu3.Message;
 import me.hapyl.mmu3.game.Arguments;
 import me.hapyl.mmu3.game.Game;
@@ -17,7 +16,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 import java.util.Locale;
 
 public class Wordle extends Game {
@@ -52,15 +50,15 @@ public class Wordle extends Game {
 
             private final String hiddenWord = getWord(arguments.getInt(0, -1));
             private final int wordId = dictionary.getIndexOf(hiddenWord);
-            private final List<String> guessedWords = Lists.newArrayList();
+            private final WordleCollector collector = new WordleCollector(hiddenWord);
 
             private Status status = Status.GUESSING;
 
             private void updateWordleGuesses() {
                 int line = 0;
-                for (String word : guessedWords) {
+                for (String word : collector.getGuessedWords()) {
                     final char[] chars = word.toCharArray();
-                    final CharacterValue[] values = getValues(chars);
+                    final CharacterValue[] values = CharacterValue.calculateValues(hiddenWord, chars);
                     int slot = 2;
 
                     for (int i = 0; i < chars.length; i++) {
@@ -81,7 +79,7 @@ public class Wordle extends Game {
                     }
 
                     // Check for lose
-                    if (guessedWords.size() >= 6) {
+                    if (collector.hasLost()) {
                         status = Status.LOST;
                         fillBorders(Material.RED_STAINED_GLASS_PANE);
                         setItem(
@@ -105,7 +103,7 @@ public class Wordle extends Game {
                                         .setName("&aYou Won!")
                                         .addLore("The word was &e%s&7!", hiddenWord)
                                         .addLore("")
-                                        .addSmartLore("You guessed it within %s tries.".formatted(guessedWords.size()))
+                                        .addSmartLore("You guessed it within %s tries.".formatted(collector.getGuessedWords().size()))
                                         .addLore()
                                         .addLore("&eClick to flex")
                                         .build()
@@ -115,6 +113,9 @@ public class Wordle extends Game {
 
                     line++;
                 }
+
+                // update sign with alphabet
+                gui.setItem(36, buildGuessSign());
             }
 
             private void fillBorders(Material stack) {
@@ -125,26 +126,6 @@ public class Wordle extends Game {
                 gui.fillColumn(8, item);
             }
 
-            private CharacterValue[] getValues(char[] chars) {
-                final char[] hiddenChars = hiddenWord.toCharArray();
-                final CharacterValue[] values = new CharacterValue[5];
-
-                for (int i = 0; i < hiddenChars.length; i++) {
-                    final char c = chars[i];
-                    if (hiddenChars[i] == c) {
-                        values[i] = CharacterValue.CORRECT;
-                    }
-                    else if (hiddenWord.contains(Character.toString(c).toLowerCase())) {
-                        values[i] = CharacterValue.PRESENT;
-                    }
-                    else {
-                        values[i] = CharacterValue.INCORRECT;
-                    }
-                }
-
-                return values;
-            }
-
             @Override
             public void onClick(int slot) {
                 if (slot != 36) {
@@ -152,7 +133,12 @@ public class Wordle extends Game {
                 }
 
                 if (status == Status.WON) {
-                    Chat.broadcast("&a&lWORDLE! &7%s guessed wordle #%s in %s tries.", getPlayer().getName(), wordId, guessedWords.size());
+                    Chat.broadcast(
+                            "&a&lWORDLE! &7%s guessed wordle #%s in %s tries.",
+                            getPlayer().getName(),
+                            wordId,
+                            collector.getGuessedWords().size()
+                    );
                     getPlayer().closeInventory();
                     return;
                 }
@@ -177,12 +163,12 @@ public class Wordle extends Game {
                             Message.error(player, "This word is not in dictionary!");
                             Message.sound(player, Sound.ENTITY_VILLAGER_NO);
                         }
-                        else if (guessedWords.contains(word)) {
+                        else if (collector.hasGuessed(word)) {
                             Message.error(player, "You already guessed this word!");
                             Message.sound(player, Sound.ENTITY_VILLAGER_NO);
                         }
                         else {
-                            guessedWords.add(word);
+                            collector.addGuessed(word);
                             Message.sound(player, Sound.ENTITY_VILLAGER_YES);
                         }
 
@@ -203,14 +189,25 @@ public class Wordle extends Game {
             @Override
             public void onGameStart() {
                 fillBorders(Material.BLACK_STAINED_GLASS_PANE);
-                gui.setItem(
-                        36,
-                        new ItemBuilder(Material.OAK_SIGN)
-                                .setName("&aGuess Word")
-                                .addSmartLore("Click to enter 5 letter word you wish to guess.")
-                                .build()
-                );
                 updateWordleGuesses();
+            }
+
+            public ItemStack buildGuessSign() {
+                final ItemBuilder sign = new ItemBuilder(Material.OAK_SIGN)
+                        .setName("&aGuess Word")
+                        .addSmartLore("Click to enter 5 letter word you wish to guess.").addLore();
+
+                // add alphabet
+                StringBuilder builder = new StringBuilder();
+                for (char c = 'A'; c <= 'Z'; c++) {
+                    builder.append(collector.getCharColor(c)).append(c).append(" ");
+                    if (c == 'I' || c == 'R' || c == 'Z') {
+                        sign.addLore((c == 'Z' ? "        " : "       ") + builder.toString().trim());
+                        builder = new StringBuilder();
+                    }
+                }
+
+                return sign.addLore().addLore("&eClick to enter guess!").build();
             }
 
             @Override
@@ -233,19 +230,6 @@ public class Wordle extends Game {
             }
 
         };
-    }
-
-    private enum Status {
-        GUESSING,
-        WAIT_RESPONSE,
-        WON,
-        LOST
-    }
-
-    private enum CharacterValue {
-        CORRECT,
-        INCORRECT,
-        PRESENT
     }
 
 }

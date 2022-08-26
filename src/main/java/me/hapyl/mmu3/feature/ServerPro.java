@@ -2,6 +2,7 @@ package me.hapyl.mmu3.feature;
 
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.Message;
+import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.player.SoundQueue;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -38,7 +39,16 @@ public class ServerPro extends Feature {
     }
 
     public void announce(boolean ten) {
-        Message.broadcastAdmins("%s minutes before expires!%s", ten ? 10 : 5, ten ? "" : " &c&lHurry Up!");
+        Message.broadcastAdmins("%s minutes before server expires!%s", ten ? 10 : 5, ten ? "" : " &c&lHurry Up!");
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (!player.isOp()) {
+                continue;
+            }
+
+            Chat.sendTitle(player, "&cServer Expires", String.format("&4&lin %s minutes!", ten ? 10 : 5), 5, 40, 5);
+        }
+
         addListenersAndPlay(ten ? soundTenMinutes : soundFiveMinutes);
     }
 

@@ -109,20 +109,21 @@ public class SightBlockCommand extends SimplePlayerAdminCommand {
             targetBlock = location.getBlock();
         }
 
-
         final String blockName = Chat.capitalize(material);
         targetBlock.setType(material, false);
         Message.info(player, "Replaced sight block to %s.", blockName);
 
         // Parse and apply block data
-        final String validData = Bukkit.createBlockData(material).getAsString();
-        try {
-            final BlockData data = Bukkit.createBlockData(material, blockDataString);
-            targetBlock.setBlockData(data, false);
-            Message.info(player, "Applied %s data to %s.", blockDataString, blockName);
-        } catch (IllegalArgumentException e) {
-            Message.error(player, "%s is not a valid data for %s.", blockDataString, blockName);
-            Message.error(player, "%s only supports %s block data!", blockName, validData.substring(validData.lastIndexOf("[")));
+        if (blockDataString != null) {
+            final String validData = Bukkit.createBlockData(material).getAsString();
+            try {
+                final BlockData data = Bukkit.createBlockData(material, blockDataString);
+                targetBlock.setBlockData(data, false);
+                Message.info(player, "Applied %s data to %s.", blockDataString, blockName);
+            } catch (IllegalArgumentException e) {
+                Message.error(player, "%s is not a valid data for %s.", blockDataString, blockName);
+                Message.error(player, "%s only supports %s block data!", blockName, validData.substring(validData.lastIndexOf("[")));
+            }
         }
 
     }

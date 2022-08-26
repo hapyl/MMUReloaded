@@ -50,6 +50,7 @@ public class CommandRegistry {
         register(new CalculateRelative("relative"));
         register(new PingCommand("ping"));
         register(new BrushCommand("tinybrush"));
+        register(new SelfTeleportCommand("self"));
 
         // TEST
         register(new CommandWithArguments("_testcommandwitharguments"));
