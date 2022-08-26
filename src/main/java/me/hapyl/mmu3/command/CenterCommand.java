@@ -23,7 +23,7 @@ public class CenterCommand extends SimplePlayerAdminCommand {
                 location.getWorld(),
                 location.getBlockX() + 0.5d,
                 location.getY(),
-                location.getBlockX() + 0.5d,
+                location.getBlockZ() + 0.5d,
                 location.getYaw(),
                 location.getPitch()
         );
