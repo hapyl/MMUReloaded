@@ -26,7 +26,7 @@ public abstract class PanelGUI extends PlayerGUI {
         fillPanel();
     }
 
-    private void fillPanel() {
+    public void fillPanel() {
         if (!panel) {
             return;
         }

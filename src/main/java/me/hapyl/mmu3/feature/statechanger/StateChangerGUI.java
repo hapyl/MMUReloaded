@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger;
 
-import me.hapyl.mmu3.Message;
+import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.utils.PanelGUI;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;

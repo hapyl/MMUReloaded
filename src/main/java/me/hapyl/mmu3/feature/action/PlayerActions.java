@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.feature.action;
 
 import com.google.common.collect.Maps;
-import me.hapyl.mmu3.Message;
+import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.entity.Entities;
 import me.hapyl.spigotutils.module.util.Nulls;
 import org.bukkit.Location;

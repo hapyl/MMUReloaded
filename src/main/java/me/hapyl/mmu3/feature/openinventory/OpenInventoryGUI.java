@@ -2,7 +2,7 @@ package me.hapyl.mmu3.feature.openinventory;
 
 import com.google.common.collect.Maps;
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.Message;
+import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.utils.PanelGUI;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
 import me.hapyl.spigotutils.module.inventory.gui.CancelType;

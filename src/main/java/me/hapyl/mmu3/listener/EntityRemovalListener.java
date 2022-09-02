@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.listener;
 
-import me.hapyl.mmu3.Message;
 import me.hapyl.mmu3.PersistentPlayerData;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

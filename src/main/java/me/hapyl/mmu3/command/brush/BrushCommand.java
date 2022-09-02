@@ -2,10 +2,10 @@ package me.hapyl.mmu3.command.brush;
 
 import com.google.common.collect.Lists;
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.Message;
 import me.hapyl.mmu3.feature.brush.Brush;
 import me.hapyl.mmu3.feature.brush.BrushManager;
 import me.hapyl.mmu3.feature.brush.PlayerBrush;
+import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
 import me.hapyl.spigotutils.module.util.CollectionUtils;

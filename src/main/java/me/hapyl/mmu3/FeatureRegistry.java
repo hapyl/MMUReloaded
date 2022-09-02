@@ -2,10 +2,12 @@ package me.hapyl.mmu3;
 
 import com.google.common.collect.Maps;
 import me.hapyl.mmu3.feature.Calculate;
+import me.hapyl.mmu3.feature.ColoredSign;
 import me.hapyl.mmu3.feature.Feature;
 import me.hapyl.mmu3.feature.ServerPro;
 import me.hapyl.mmu3.feature.brush.BrushManager;
 import me.hapyl.mmu3.feature.candle.CandleController;
+import me.hapyl.mmu3.feature.designer.Designer;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreatorFeature;
 import me.hapyl.mmu3.feature.lastlocation.LastLocation;
 import me.hapyl.mmu3.feature.specialblocks.SpecialBlocks;
@@ -27,6 +29,8 @@ public final class FeatureRegistry {
     public final ItemCreatorFeature itemCreator;
     public final CandleController candleController;
     public final BrushManager brushManager;
+    public final Designer designer;
+    public final ColoredSign coloredSign;
 
     public FeatureRegistry(Main main) {
         featureStatus = Maps.newHashMap();
@@ -40,6 +44,8 @@ public final class FeatureRegistry {
         itemCreator = new ItemCreatorFeature(main);
         candleController = new CandleController(main);
         brushManager = new BrushManager(main);
+        designer = new Designer(main);
+        coloredSign = new ColoredSign(main);
     }
 
     public void setFeatureStatus(Feature feature, boolean flag) {

@@ -22,7 +22,17 @@ public class CookieClicker extends Game {
     public CookieClicker() {
         super("Cookie Clicker");
         milestoneString = Maps.newHashMap();
-        milestoneString.put(0, new String[] { "Noob", "Do you even know how to click?" });
+        setMilestone(0, "Noob", "Do you even know how to click?");
+        setMilestone(1, "Apprentice", "You are getting better...");
+        setMilestone(2, "Cookie Enthusiast", "You won't get any cookies for this.");
+        setMilestone(3, "Cookie Liker", "I was serious about the cookies.");
+        setMilestone(4, "Cookie Enjoyer", "Who cookies are called that is you bake them?");
+        setMilestone(5, "Cooker", "Most I can do is to give this cookie recipe.");
+        setMilestone(6, "Cooking Failed", "I was kidding about the recipe.");
+        setMilestone(7, "Cookor", "- What did a cookie said to a cook?");
+        setMilestone(8, "Cookornator", "- \"Cook\"");
+        setMilestone(9, "Cookie Nom-Nomer", "Nom?");
+        setMilestone(10, "Cookie Monster", "Sure, take one.");
     }
 
     private String[] getMilestone(int clicks) {
@@ -76,5 +86,9 @@ public class CookieClicker extends Game {
                 stopPlaying();
             }
         };
+    }
+
+    private void setMilestone(int milestone, String title, String subtitle) {
+        milestoneString.put(milestone, new String[] { title, subtitle });
     }
 }

@@ -1,4 +1,4 @@
-package me.hapyl.mmu3;
+package me.hapyl.mmu3.message;
 
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.player.PlayerLib;
@@ -29,7 +29,6 @@ public enum Message {
 
     // ** Success Messages ** //
     LOGIN_SUCCESSFUL(Type.SUCCESS, "Successfully logged in!"),
-
 
     ;
 

@@ -49,7 +49,7 @@ public class SpecialBlocksGUI extends PanelGUI {
                 "Levelled Water",
                 "Opens menu with levelled water blocks.",
                 specialBlocks.getByType(Type.FLUID_WATER),
-                Size.FIVE
+                Size.FOUR
         );
         createSubMenuItemAndSet(
                 38,
@@ -57,7 +57,7 @@ public class SpecialBlocksGUI extends PanelGUI {
                 "Levelled Lava",
                 "Opens menu with levelled lava blocks.",
                 specialBlocks.getByType(Type.FLUID_LAVA),
-                Size.FIVE
+                Size.FOUR
         );
 
         // Corals

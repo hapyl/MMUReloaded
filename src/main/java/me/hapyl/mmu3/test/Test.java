@@ -14,8 +14,6 @@ public class Test {
 
     public Test() {
         processor = new CommandProcessor(Main.getPlugin());
-
-        addTestCommand("timetohunt", (player, args) -> SkyWolf.test(player));
     }
 
     private void addTestCommand(String command, BiConsumer<Player, String[]> consumer) {

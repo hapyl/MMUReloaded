@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.game;
 
-import me.hapyl.mmu3.game.games.BenchmarkReaction;
 import me.hapyl.mmu3.game.games.CookieClicker;
+import me.hapyl.mmu3.game.games.benchmark.react.BenchmarkReaction;
 import me.hapyl.mmu3.game.games.wordle.Wordle;
 import org.bukkit.entity.Player;
 

@@ -1,9 +1,10 @@
 package me.hapyl.mmu3.game.games.wordle;
 
-import me.hapyl.mmu3.Message;
+import com.google.common.collect.Lists;
 import me.hapyl.mmu3.game.Arguments;
 import me.hapyl.mmu3.game.Game;
 import me.hapyl.mmu3.game.GameInstance;
+import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.utils.PanelGUI;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
@@ -16,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Locale;
 
 public class Wordle extends Game {
@@ -78,23 +80,8 @@ public class Wordle extends Game {
                         ++slot;
                     }
 
-                    // Check for lose
-                    if (collector.hasLost()) {
-                        status = Status.LOST;
-                        fillBorders(Material.RED_STAINED_GLASS_PANE);
-                        setItem(
-                                36,
-                                new ItemBuilder(Material.BARRIER)
-                                        .setName("&aYou Lost!")
-                                        .addLore("The word was &e%s&7!", hiddenWord)
-                                        .addLore()
-                                        .addLore("&eClick to cry")
-                                        .build()
-                        );
-                        PlayerLib.playSound(getPlayer(), Sound.ENTITY_PLAYER_BURP, 0.0f);
-                    }
                     // Check for win
-                    else if (hiddenWord.equalsIgnoreCase(word)) {
+                    if (hiddenWord.equalsIgnoreCase(word)) {
                         status = Status.WON;
                         fillBorders(Material.LIME_STAINED_GLASS_PANE);
                         setItem(
@@ -109,6 +96,22 @@ public class Wordle extends Game {
                                         .build()
                         );
                         PlayerLib.playSound(getPlayer(), Sound.ENTITY_PLAYER_LEVELUP, 1.25f);
+                    }
+
+                    // Check for lose
+                    else if (collector.hasLost()) {
+                        status = Status.LOST;
+                        fillBorders(Material.RED_STAINED_GLASS_PANE);
+                        setItem(
+                                36,
+                                new ItemBuilder(Material.BARRIER)
+                                        .setName("&aYou Lost!")
+                                        .addLore("The word was &e%s&7!", hiddenWord)
+                                        .addLore()
+                                        .addLore("&eClick to cry")
+                                        .build()
+                        );
+                        PlayerLib.playSound(getPlayer(), Sound.ENTITY_PLAYER_BURP, 0.0f);
                     }
 
                     line++;
@@ -134,11 +137,13 @@ public class Wordle extends Game {
 
                 if (status == Status.WON) {
                     Chat.broadcast(
-                            "&a&lWORDLE! &7%s guessed wordle #%s in %s tries.",
+                            "&a&lWORDLE! &a%s &7guessed wordle &a#%s &7in &a%s &7tries.",
                             getPlayer().getName(),
                             wordId,
                             collector.getGuessedWords().size()
                     );
+
+                    generateCubes().forEach(cube -> Chat.broadcast("  " + cube));
                     getPlayer().closeInventory();
                     return;
                 }
@@ -195,7 +200,8 @@ public class Wordle extends Game {
             public ItemStack buildGuessSign() {
                 final ItemBuilder sign = new ItemBuilder(Material.OAK_SIGN)
                         .setName("&aGuess Word")
-                        .addSmartLore("Click to enter 5 letter word you wish to guess.").addLore();
+                        .addSmartLore("Click to enter 5 letter word you wish to guess.")
+                        .addLore();
 
                 // add alphabet
                 StringBuilder builder = new StringBuilder();
@@ -224,9 +230,19 @@ public class Wordle extends Game {
                 stopPlaying();
             }
 
-            private String buildCubes() {
-                // TODO: 012. 12/05/2022
-                return null;
+            private List<String> generateCubes() {
+                final List<String> cubes = Lists.newArrayList();
+                StringBuilder builder = new StringBuilder();
+
+                for (String word : collector.getGuessedWords()) {
+                    final CharacterValue[] values = CharacterValue.calculateValues(hiddenWord, word.toCharArray());
+                    for (CharacterValue value : values) {
+                        builder.append(value.getColor()).append("■");
+                    }
+                    cubes.add(builder.toString());
+                    builder = new StringBuilder();
+                }
+                return cubes;
             }
 
         };

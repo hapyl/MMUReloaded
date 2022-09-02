@@ -2,6 +2,7 @@ package me.hapyl.mmu3;
 
 import me.hapyl.mmu3.command.*;
 import me.hapyl.mmu3.command.brush.BrushCommand;
+import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.test.CommandWithArguments;
 import me.hapyl.spigotutils.module.command.CommandProcessor;
 import me.hapyl.spigotutils.module.command.SimpleCommand;
@@ -51,6 +52,7 @@ public class CommandRegistry {
         register(new PingCommand("ping"));
         register(new BrushCommand("tinybrush"));
         register(new SelfTeleportCommand("self"));
+        register(new DesignerCommand("designer"));
 
         // TEST
         register(new CommandWithArguments("_testcommandwitharguments"));

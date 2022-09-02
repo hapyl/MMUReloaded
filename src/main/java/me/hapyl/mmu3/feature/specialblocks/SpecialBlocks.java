@@ -147,11 +147,10 @@ public class SpecialBlocks extends Feature {
             }
         }
 
-        // Create fluids
         fluids:
         {
-            int slot = 10;
-            for (int i = 0; i < 15; i++) {
+            int slot = 11;
+            for (int i = 0; i < 8; i++) {
                 final int plusOne = i + 1;
                 create(
                         Type.FLUID_WATER,
@@ -173,8 +172,7 @@ public class SpecialBlocks extends Feature {
                         (self, event) -> self.setLevelled(event, Material.LAVA, plusOne - 1),
                         false
                 );
-
-                slot += (slot == 16 ? 4 : slot == 24 ? 6 : 1);
+                slot += (slot == 15 ? 6 : 1);
             }
         }
 

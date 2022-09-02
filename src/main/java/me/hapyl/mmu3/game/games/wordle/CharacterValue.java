@@ -1,10 +1,22 @@
 package me.hapyl.mmu3.game.games.wordle;
 
+import org.bukkit.ChatColor;
+
 public enum CharacterValue {
 
-    CORRECT,
-    INCORRECT,
-    PRESENT;
+    CORRECT(ChatColor.GREEN),
+    INCORRECT(ChatColor.DARK_GRAY),
+    PRESENT(ChatColor.YELLOW);
+
+    private final ChatColor color;
+
+    CharacterValue(ChatColor color) {
+        this.color = color;
+    }
+
+    public ChatColor getColor() {
+        return color;
+    }
 
     public static CharacterValue[] calculateValues(String hiddenWord, char[] chars) {
         final char[] hiddenChars = hiddenWord.toCharArray();

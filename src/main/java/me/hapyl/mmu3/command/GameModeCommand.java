@@ -2,7 +2,7 @@ package me.hapyl.mmu3.command;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import me.hapyl.mmu3.Message;
+import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
 import org.bukkit.Bukkit;

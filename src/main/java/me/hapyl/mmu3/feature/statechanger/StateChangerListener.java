@@ -3,14 +3,11 @@ package me.hapyl.mmu3.feature.statechanger;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.utils.InjectListener;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -39,17 +36,6 @@ public class StateChangerListener extends InjectListener {
         ev.setCancelled(true);
         stateChanger().openEditor(player, clickedBlock);
 
-    }
-
-    // temp for testing
-    @EventHandler()
-    public void handleInventoryClickEvent(InventoryClickEvent ev) {
-        final ClickType click = ev.getClick();
-        if (click == ClickType.SHIFT_RIGHT && ev.getWhoClicked().isOp()) {
-            final int rawSlot = ev.getRawSlot();
-            ev.setCancelled(true);
-            ev.getWhoClicked().sendMessage("Clicked " + ChatColor.BOLD + rawSlot);
-        }
     }
 
 }

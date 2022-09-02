@@ -2,6 +2,7 @@ package me.hapyl.mmu3.feature;
 
 import me.hapyl.mmu3.Main;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class Feature {
 
@@ -16,6 +17,15 @@ public class Feature {
 
     public final boolean isListener() {
         return this instanceof Listener;
+    }
+
+    protected void runTaskLater(Runnable runnable, long delay) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                runnable.run();
+            }
+        }.runTaskLater(mmu3plugin, delay);
     }
 
     public final Main getPlugin() {

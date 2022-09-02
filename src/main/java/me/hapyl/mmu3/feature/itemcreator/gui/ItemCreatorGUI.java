@@ -1,12 +1,10 @@
 package me.hapyl.mmu3.feature.itemcreator.gui;
 
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.Message;
 import me.hapyl.mmu3.feature.itemcreator.Category;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreator;
+import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.utils.PanelGUI;
-import me.hapyl.spigotutils.module.chat.Chat;
-import me.hapyl.spigotutils.module.chat.LazyClickEvent;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
 import me.hapyl.spigotutils.module.inventory.SignGUI;
 import org.bukkit.GameMode;
@@ -18,22 +16,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 public class ItemCreatorGUI extends PanelGUI {
-
-    private final ItemStack ITEM_INCREASE_AMOUNT = ItemBuilder
-            .playerHead(
-                    "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2VkZDIwYmU5MzUyMDk0OWU2Y2U3ODlkYzRmNDNlZmFlYjI4YzcxN2VlNmJmY2JiZTAyNzgwMTQyZjcxNiJ9fX0=")
-            .setName("&aIncrease Amount")
-            .addLore("&eLeft Click to increase by 1.")
-            .addLore("&eRight Click to increase by 10.")
-            .toItemStack();
-
-    private final ItemStack ITEM_DECREASE_AMOUNT = ItemBuilder
-            .playerHead(
-                    "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ4YTk5ZGIyYzM3ZWM3MWQ3MTk5Y2Q1MjYzOTk4MWE3NTEzY2U5Y2NhOTYyNmEzOTM2Zjk2NWIxMzExOTMifX19")
-            .setName("&aDecrease Amount")
-            .addLore("&eLeft Click to decrease by 1.")
-            .addLore("&eRight Click to decrease by 10.")
-            .toItemStack();
 
     public ItemCreatorGUI(Player player) {
         this(player, false, true);
@@ -65,41 +47,22 @@ public class ItemCreatorGUI extends PanelGUI {
     public void updateInventory() {
         setItem(13, buildPreviewItem());
         setClick(13, player -> new MaterialSubGUI(player, Category.BLOCKS), ClickType.LEFT);
-        setClick(13, player -> new ICSubGUI(player, "Set Amount", Size.THREE) {
-            @Override
-            public void updateInventory() {
-                final ItemCreator creator = creator();
 
-                this.setItem(
-                        13,
-                        new ItemBuilder(creator.getMaterial())
-                                .setName("&a" + creator.getName())
-                                .setAmount(creator.getAmount())
-                                .addSmartLore("Item may have any amount between 1 and 64.")
-                                .addLore()
-                                .addLore("&eClick to confirm")
-                                .build(),
-                        ItemCreatorGUI::new
-                );
+        setClick(
+                13,
+                player -> new AmountSubGUI(player, "Amount", "Choose new amount for the item. (1-64)", creator().getMaterial(), 64) {
+                    @Override
+                    public void onClose(int amount) {
+                        creator().setAmount(amount);
+                    }
 
-                setItemChangeAmount(15, ITEM_INCREASE_AMOUNT, true);
-                setItemChangeAmount(11, ITEM_DECREASE_AMOUNT, false);
-            }
-
-            private void setItemChangeAmount(int slot, ItemStack item, boolean increase) {
-                setItem(slot, item);
-                setClick(slot, p -> {
-                    creator().setAmount(creator().getAmount() + (increase ? 1 : -1));
-                    Message.sound(getPlayer(), Sound.UI_BUTTON_CLICK, 1.75f);
-                    updateInventory();
-                }, ClickType.LEFT);
-                setClick(slot, p -> {
-                    creator().setAmount(creator().getAmount() + (increase ? 10 : -10));
-                    Message.sound(getPlayer(), Sound.UI_BUTTON_CLICK, 2.0f);
-                    updateInventory();
-                }, ClickType.RIGHT);
-            }
-        }, ClickType.RIGHT);
+                    @Override
+                    public PanelGUI returnToGUI() {
+                        return new ItemCreatorGUI(getPlayer());
+                    }
+                },
+                ClickType.RIGHT
+        );
 
         // Custom Name
         setItem(
@@ -136,7 +99,10 @@ public class ItemCreatorGUI extends PanelGUI {
         // Build Item
         setPanelItem(
                 7,
-                new ItemBuilder(Material.LIME_DYE).setName("&aBuild Item").addLore("Finalize your item and get it.").build(),
+                new ItemBuilder(Material.LIME_DYE)
+                        .setName("Build Item")
+                        .addSmartLore("Finalize the item and get it. You can still modify the item later!")
+                        .build(),
                 player -> {
                     final PlayerInventory inventory = player.getInventory();
                     if (inventory.firstEmpty() == -1) {
@@ -152,21 +118,41 @@ public class ItemCreatorGUI extends PanelGUI {
                 }
         );
 
+        setPanelItem(
+                6,
+                new ItemBuilder(Material.COMPARATOR)
+                        .setName("Complex Build")
+                        .setSmartLore("Generate a minecraft command or ItemBuilder code.")
+                        .build(),
+                this::notImplemented
+        );
+
         // Import/Export
-        setPanelItem(1, new ItemBuilder(Material.MAP).setName("&aExport").build(), player -> Chat.sendClickableMessage(
-                player,
-                LazyClickEvent.COPY_TO_CLIPBOARD.of(creator().exportCode()),
-                Message.PREFIX + "&e&lCLICK HERE &7to copy export code!"
-        ));
+        //        setPanelItem(1, new ItemBuilder(Material.MAP).setName("&aExport").build(), player -> Chat.sendClickableMessage(
+        //                player,
+        //                LazyClickEvent.COPY_TO_CLIPBOARD.of(creator().exportCode()),
+        //                Message.PREFIX + "&e&lCLICK HERE &7to copy export code!"
+        //        ));
+        setPanelItem(1, new ItemBuilder(Material.MAP).setName("&aExport").build(), this::notImplemented);
         setPanelItem(2, new ItemBuilder(Material.WRITABLE_BOOK).setName("&aImport").build(), this::notImplemented);
 
         // Lore
         setItem(
                 30,
-                new ItemBuilder(Material.BOOK).setName("&aModify Lore").addSmartLore("Add or remove lore from your item.").build(),
+                new ItemBuilder(Material.BOOK).setName("Lore").addSmartLore("Add or remove lore from the item.").build(),
                 LoreSubGUI::new
         );
 
+        // Enchants
+        setItem(
+                32,
+                new ItemBuilder(Material.LAPIS_LAZULI)
+                        .setName("Enchantments")
+                        .addSmartLore("Manager enchantments of the item.").build(),
+                EnchantSubGUI::new
+        );
+
+        setItem(34, new ItemBuilder(Material.STRUCTURE_VOID).setName("Attributes").build(), this::notImplemented);
         // TODO: 009. 09/05/2022 - Finish enchant, attributes etc
 
         // Add listener for creative item replace

@@ -2,8 +2,8 @@ package me.hapyl.mmu3.feature.brush;
 
 import com.google.common.collect.Maps;
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.Message;
 import me.hapyl.mmu3.feature.Feature;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

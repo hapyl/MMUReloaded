@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.command;
 
-import me.hapyl.mmu3.Message;
+import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
 import me.hapyl.spigotutils.module.math.Numbers;
 import me.hapyl.spigotutils.module.util.Validate;

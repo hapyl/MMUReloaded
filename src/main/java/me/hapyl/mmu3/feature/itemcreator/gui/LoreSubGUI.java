@@ -1,7 +1,8 @@
 package me.hapyl.mmu3.feature.itemcreator.gui;
 
-import me.hapyl.mmu3.Message;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreator;
+import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.utils.StaticItemIcon;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.chat.LazyClickEvent;
 import me.hapyl.spigotutils.module.chat.LazyHoverEvent;
@@ -17,30 +18,10 @@ import java.util.List;
 
 public class LoreSubGUI extends ICSubGUI {
 
-    private static final ItemStack ITEM_DESTROY_LORE = new ItemBuilder(Material.RED_GLAZED_TERRACOTTA)
-            .setName("&cClear Lore")
-            .addSmartLore("Clears all all from the item.")
-            .addSmartLore("&c&lWarning! &7This action cannot be undone.")
-            .build();
-
-    private static final ItemStack ITEM_ADD_SMART_LORE = new ItemBuilder(Material.ROSE_BUSH)
-            .setName("&aAdd Smart Lore")
-            .addSmartLore("Adds smart lore to the item.")
-            .addSmartLore("Smart lore automatically splits lines for you in the best spots. You can also use '_&7_' to put a manual split.")
-            .build();
-
-    private static final ItemStack ITEM_PAGE_NEXT = new ItemBuilder(Material.ARROW).setName("&aNext Page").build();
-    private static final ItemStack ITEM_PAGE_PREVIOUS = new ItemBuilder(Material.ARROW).setName("&aPrevious Page").build();
-    private static final ItemStack ITEM_PAGE_LAST = new ItemBuilder(Material.REDSTONE_BLOCK)
-            .setName("&aLast Page!")
-            .addSmartLore("Lines are limited because lore will not fit screen of a player if there would have been more than 28 lines!")
-            .build();
-
     private static final int MAX_LORE_LINES = 21;
 
     public LoreSubGUI(Player player) {
         super(player, "Modify Lore", Size.FIVE);
-        setPanelGoBack(PanelSlot.CENTER, "Item Creator", ItemCreatorGUI::new);
     }
 
     public void updateInventory(int start) {
@@ -101,21 +82,21 @@ public class LoreSubGUI extends ICSubGUI {
 
         // Page Arrows
         if (start >= 7) {
-            setItem(18, ITEM_PAGE_PREVIOUS, player -> updateInventory(start - 7));
+            setItem(18, StaticItemIcon.PAGE_PREVIOUS, player -> updateInventory(start - 7));
         }
         else {
             setItem(18, null);
         }
 
         if (start < MAX_LORE_LINES) {
-            setItem(26, ITEM_PAGE_NEXT, player -> updateInventory(start + 7));
+            setItem(26, StaticItemIcon.PAGE_NEXT, player -> updateInventory(start + 7));
         }
         else {
-            setItem(26, ITEM_PAGE_LAST);
+            setItem(26, StaticItemIcon.LoreEditor.PAGE_LIMIT);
         }
 
         // Destroy Lore
-        setItem(29, ITEM_DESTROY_LORE, player -> {
+        setItem(29, StaticItemIcon.LoreEditor.CLEAR, player -> {
             creator.getLore().clear();
             Message.sound(player, Sound.ENTITY_CAT_HISS, 2.0f);
             updateInventory(0);
@@ -156,7 +137,7 @@ public class LoreSubGUI extends ICSubGUI {
             );
         }
         else {
-            setItem(33, ITEM_ADD_SMART_LORE, player -> {
+            setItem(33, StaticItemIcon.LoreEditor.EDIT, player -> {
                 player.closeInventory();
                 Chat.sendClickableHoverableMessage(
                         player,

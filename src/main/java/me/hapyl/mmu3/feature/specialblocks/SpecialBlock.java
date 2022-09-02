@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.feature.specialblocks;
 
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.Message;
+import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
 import me.hapyl.spigotutils.module.math.Numbers;
 import org.bukkit.ChatColor;
@@ -28,9 +28,7 @@ public class SpecialBlock {
     private final int slot;
     private final String name;
     private final Material icon;
-    private final Material block;
     private final boolean glow;
-    private final int amount;
     private final String id;
     private final ItemStack itemIcon;
     private final ItemStack itemReal;
@@ -39,10 +37,7 @@ public class SpecialBlock {
         this.slot = slot;
         this.name = ChatColor.GREEN + name;
         this.icon = icon;
-        this.block = block;
         this.glow = glow;
-        this.amount = amount;
-
         this.id = "sb." + id;
 
         this.itemIcon = new ItemBuilder(icon)

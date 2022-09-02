@@ -2,7 +2,7 @@ package me.hapyl.mmu3.game;
 
 import com.google.common.collect.Sets;
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.Message;
+import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.utils.PanelGUI;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
