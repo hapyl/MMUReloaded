@@ -14,6 +14,8 @@ public class Test {
 
     public Test() {
         processor = new CommandProcessor(Main.getPlugin());
+
+        addTestCommand("guicd", TestGUI::new);
     }
 
     private void addTestCommand(String command, BiConsumer<Player, String[]> consumer) {

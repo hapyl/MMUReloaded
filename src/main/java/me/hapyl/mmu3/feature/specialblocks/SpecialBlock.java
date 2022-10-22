@@ -3,6 +3,7 @@ package me.hapyl.mmu3.feature.specialblocks;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.inventory.ItemEventHandler;
 import me.hapyl.spigotutils.module.math.Numbers;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -54,6 +55,14 @@ public class SpecialBlock {
                 .addSmartLore(SPECIAL_BLOCK_INFO[0])
                 .addSmartLore(SPECIAL_BLOCK_INFO[1].formatted(this.name))
                 .addLore().addSmartLore(SPECIAL_BLOCK_INFO[2])
+                .setEventHandler(new ItemEventHandler() {
+                    @Override
+                    public void onBlockPlace(Player player, BlockPlaceEvent ev) {
+                        ev.setCancelled(true);
+                        ev.setBuild(false);
+                        SpecialBlock.this.acceptEvent(ev);
+                    }
+                })
                 .predicate(glow, ItemBuilder::glow)
                 .build();
     }

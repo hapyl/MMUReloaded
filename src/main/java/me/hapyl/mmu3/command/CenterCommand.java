@@ -33,7 +33,7 @@ public class CenterCommand extends SimplePlayerAdminCommand {
         Message.sound(player, Sound.ENTITY_ENDERMAN_TELEPORT);
 
         sendMessage(player, centerLocation, "minecraft command", "/tp @s %s %s %s");
-        sendMessage(player, centerLocation, "spigot code.", "%sd, %sd, %sd");
+        sendMessage(player, centerLocation, "spigot code", "%sd, %sd, %sd");
     }
 
     private void sendMessage(Player player, Location location, String message, String toCopy) {

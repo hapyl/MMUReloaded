@@ -16,7 +16,9 @@ public class PersistentPlayerData extends Config {
     private final UUID playerUUID;
     @DataField(path = "query.item_creator") private String lastItemCreatorQuery;
     @DataField(path = "feature.entity_removal") private boolean entityRemoval;
+    @DataField(path = "feature.command_preview") private boolean commandPreview;
     @DataField(path = "game.cookie") private int cookieClicks;
+    @DataField(path = "game.ultrasequencer") private int ultraSequencer;
 
     private PersistentPlayerData(UUID uuid) {
         super(Main.getInstance(), "/players", uuid.toString());
@@ -27,6 +29,14 @@ public class PersistentPlayerData extends Config {
         this(player.getUniqueId());
         loadData();
         persistentData.put(player.getUniqueId(), this);
+    }
+
+    public boolean isCommandPreview() {
+        return commandPreview;
+    }
+
+    public void setCommandPreview(boolean commandPreview) {
+        this.commandPreview = commandPreview;
     }
 
     public int getCookieClicks() {
@@ -87,4 +97,9 @@ public class PersistentPlayerData extends Config {
         return persistentData.containsKey(player.getUniqueId());
     }
 
+    public void setUltrasequencerRound(int round) {
+        if (round > ultraSequencer) {
+            this.ultraSequencer = round;
+        }
+    }
 }

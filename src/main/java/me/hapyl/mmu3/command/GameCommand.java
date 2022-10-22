@@ -1,9 +1,9 @@
 package me.hapyl.mmu3.command;
 
-import me.hapyl.mmu3.game.Arguments;
-import me.hapyl.mmu3.game.GameSelectGUI;
-import me.hapyl.mmu3.game.Games;
 import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.outcast.game.Arguments;
+import me.hapyl.mmu3.outcast.game.GameSelectGUI;
+import me.hapyl.mmu3.outcast.game.Games;
 import me.hapyl.spigotutils.module.command.SimplePlayerCommand;
 import me.hapyl.spigotutils.module.util.Validate;
 import org.bukkit.command.CommandSender;

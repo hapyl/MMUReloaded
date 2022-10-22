@@ -6,6 +6,7 @@ import me.hapyl.mmu3.feature.Feature;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.entity.Entities;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.inventory.ItemEventHandler;
 import me.hapyl.spigotutils.module.util.Nulls;
 import me.hapyl.spigotutils.module.util.ThreadRandom;
 import org.bukkit.Location;
@@ -21,6 +22,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -32,44 +34,43 @@ import java.util.stream.Collectors;
 public class CandleController extends Feature implements Listener {
 
     private final Map<UUID, Data> playerData;
-    private final String itemId = "mmu3_Candle";
 
-    private final ItemStack CANDLE_ITEM = new ItemBuilder(Material.TORCH, itemId)
+    private final ItemStack CANDLE_ITEM = new ItemBuilder(Material.TORCH, "mmu3_Candle")
             .setName("&aCandle")
             .addSmartLore("Place on a block to create a candle. Left click to change candle texture.")
             .addClickEvent(CandleGUI::new, Action.LEFT_CLICK_AIR, Action.LEFT_CLICK_BLOCK)
+            .setEventHandler(new ItemEventHandler() {
+                @Override
+                public void onLeftClick(Player player, PlayerInteractEvent ev) {
+                    ev.setCancelled(true);
+                }
+
+                @Override
+                public void onBlockPlace(Player player, BlockPlaceEvent ev) {
+                    final Block block = ev.getBlock();
+                    final Location location = block.getLocation();
+                    final Data data = getData(player);
+
+                    if (data.isOffset()) {
+                        location.setYaw(ThreadRandom.nextFloat() * 160.0f);
+                    }
+
+                    // spawn armor stand
+                    Entities.ARMOR_STAND_MARKER.spawn(location.add(0.5d, -1.5d, 0.5d), self -> {
+                        self.setInvisible(true);
+                        self.setSilent(true);
+                        self.addScoreboardTag("__candle__");
+                        Nulls.runIfNotNull(self.getEquipment(), equipment -> equipment.setHelmet(data.getCandle().getItem()));
+                    }, Main.getPlugin());
+                }
+            })
             .glow()
+            .setCancelClicks(false)
             .build();
 
     public CandleController(Main mmu3plugin) {
         super(mmu3plugin);
         playerData = Maps.newHashMap();
-    }
-
-    @EventHandler()
-    public void handleBlockPlaceEvent(BlockPlaceEvent ev) {
-        final Player player = ev.getPlayer();
-        final Block block = ev.getBlock();
-        final ItemStack handItem = player.getInventory().getItemInMainHand();
-
-        if (block.getType() != Material.TORCH || !ItemBuilder.itemHasID(handItem, itemId)) {
-            return;
-        }
-
-        final Location location = block.getLocation();
-        final Data data = getData(player);
-
-        if (data.isOffset()) {
-            location.setYaw(ThreadRandom.nextFloat() * 160.0f);
-        }
-
-        // spawn armor stand
-        Entities.ARMOR_STAND_MARKER.spawn(location.add(0.5d, -1.5d, 0.5d), self -> {
-            self.setInvisible(true);
-            self.setSilent(true);
-            self.addScoreboardTag("__candle__");
-            Nulls.runIfNotNull(self.getEquipment(), equipment -> equipment.setHelmet(data.getCandle().getItem()));
-        }, Main.getPlugin());
     }
 
     @EventHandler()

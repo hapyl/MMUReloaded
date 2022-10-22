@@ -4,14 +4,16 @@ import me.hapyl.mmu3.feature.Calculate;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreatorFeature;
 import me.hapyl.mmu3.feature.lastlocation.LastLocation;
 import me.hapyl.mmu3.feature.lastlocation.LastLocationListener;
-import me.hapyl.mmu3.feature.specialblocks.SpecialBlockListener;
 import me.hapyl.mmu3.feature.specialblocks.SpecialBlocks;
 import me.hapyl.mmu3.feature.standeditor.StandEditor;
 import me.hapyl.mmu3.feature.standeditor.StandEditorListener;
 import me.hapyl.mmu3.feature.statechanger.StateChanger;
 import me.hapyl.mmu3.feature.statechanger.StateChangerListener;
+import me.hapyl.mmu3.listener.EntityListener;
 import me.hapyl.mmu3.listener.EntityRemovalListener;
 import me.hapyl.mmu3.listener.PlayerListener;
+import me.hapyl.mmu3.outcast.backpack.BackpackListener;
+import me.hapyl.mmu3.outcast.hypixel.slayer.listener.SlayerListener;
 import me.hapyl.mmu3.test.Test;
 import me.hapyl.spigotutils.EternaAPI;
 import org.bukkit.Bukkit;
@@ -46,7 +48,7 @@ public class Main extends JavaPlugin {
         eternaAPI = new EternaAPI(this);
 
         // Register Commands
-        new CommandRegistry(this).registerCommands();
+        new CommandRegistry(this);
 
         // Register events
         pluginManager.registerEvents(new PlayerListener(), this);
@@ -55,8 +57,10 @@ public class Main extends JavaPlugin {
         // Register features events
         new StandEditorListener(this);
         new StateChangerListener(this);
-        new SpecialBlockListener(this);
         new LastLocationListener(this);
+        new SlayerListener(this);
+        new EntityListener(this);
+        new BackpackListener(this);
 
         // Initiate features
         registry = new FeatureRegistry(this);

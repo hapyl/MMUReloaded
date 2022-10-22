@@ -86,7 +86,7 @@ public class EnchantSubGUI extends ICSubGUI {
         }
 
         // Preview Lore
-        setItem(13, buildPreviewItem());
+        setItem(13, buildPreviewItem(), ItemCreatorGUI::new);
 
         // Page Arrows
         if (start >= 14) {

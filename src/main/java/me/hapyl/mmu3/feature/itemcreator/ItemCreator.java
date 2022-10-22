@@ -24,6 +24,7 @@ public class ItemCreator {
     private final List<String> lore;
     private final Map<Enchantment, Integer> enchantMap;
     private int amount;
+    private String headTexture;
 
     public ItemCreator(Player player) {
         this.player = player;
@@ -32,6 +33,14 @@ public class ItemCreator {
         this.name = null;
         this.lore = Lists.newArrayList();
         this.enchantMap = Maps.newHashMap();
+    }
+
+    public String getHeadTexture() {
+        return headTexture;
+    }
+
+    public void setHeadTexture(String headTexture) {
+        this.headTexture = headTexture;
     }
 
     public Player getPlayer() {
@@ -91,6 +100,10 @@ public class ItemCreator {
             enchantMap.forEach(builder::addEnchant);
         }
 
+        if (headTexture != null && material == Material.PLAYER_HEAD) {
+            builder.setHeadTextureUrl(headTexture);
+        }
+
         return builder.toItemStack();
     }
 
@@ -118,44 +131,6 @@ public class ItemCreator {
         if (meta.hasDisplayName()) {
             name = meta.getDisplayName();
         }
-    }
-
-    public String exportCode() {
-        final StringBuilder builder = new StringBuilder("{");
-
-        builder.append("Id=").append(material.name().toLowerCase()).append(";");
-        builder.append("Count=").append(amount).append(";");
-        builder.append("Name=").append(name.replace("§", "&")).append(";");
-
-        if (!lore.isEmpty()) {
-            builder.append("Lore=[");
-            for (int i = 0; i < lore.size(); i++) {
-                final String str = lore.get(i);
-                builder.append(str.replace("§", "&"));
-                if (i <= lore.size() - 1) {
-                    builder.append(",");
-                }
-            }
-            builder.append("];");
-        }
-
-        if (!enchantMap.isEmpty()) {
-            builder.append("Ench=[");
-            enchantMap.forEach((e, l) -> {
-
-            });
-            builder.append("];");
-        }
-
-        return builder.append("}").toString();
-    }
-
-    public void importCode(String code) {
-
-    }
-
-    public boolean validateCode(String string) {
-        return string.startsWith("{") && string.endsWith("}") && string.contains("Id=");
     }
 
     public void addSmartLore(String string) {

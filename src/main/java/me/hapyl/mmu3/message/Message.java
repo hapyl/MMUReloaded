@@ -2,6 +2,8 @@ package me.hapyl.mmu3.message;
 
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.player.PlayerLib;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -118,6 +120,25 @@ public enum Message {
         raw(player, ChatColor.DARK_RED, ChatColor.BOLD, message, replacements);
     }
 
+    public static void click(Player player, ClickEvent event, Object prompt, Object... replacements) {
+        Chat.sendClickableMessage(
+                player,
+                event,
+                PREFIX + prompt.toString(),
+                colorReplacements(ChatColor.GRAY, ChatColor.YELLOW, replacements)
+        );
+    }
+
+    public static void clickHover(Player player, ClickEvent event, HoverEvent eventHover, Object prompt, Object... replacements) {
+        Chat.sendClickableHoverableMessage(
+                player,
+                event,
+                eventHover,
+                PREFIX + prompt.toString(),
+                colorReplacements(ChatColor.GRAY, ChatColor.YELLOW, replacements)
+        );
+    }
+
     public static void broadcast(String message, Object... replacements) {
         Chat.broadcast(PREFIX + "Broadcast &8➤ &7" + message.formatted(replacements));
     }
@@ -139,13 +160,17 @@ public enum Message {
     }
 
     private static void raw(Player player, ChatColor color, ChatColor replacementsColor, String message, Object... replacements) {
+        Chat.sendMessage(player, PREFIX + color + message, colorReplacements(color, replacementsColor, replacements));
+    }
+
+    private static Object[] colorReplacements(ChatColor color, ChatColor replacementsColor, Object... replacements) {
         final Object[] coloredReplacements = new String[replacements.length];
 
         for (int i = 0; i < replacements.length; i++) {
             coloredReplacements[i] = replacementsColor.toString() + replacements[i].toString() + color.toString();
         }
 
-        Chat.sendMessage(player, PREFIX + color + message, coloredReplacements);
+        return coloredReplacements;
     }
 
     public enum Type {

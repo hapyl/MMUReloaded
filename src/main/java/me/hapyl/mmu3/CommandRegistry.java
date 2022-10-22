@@ -20,9 +20,10 @@ public class CommandRegistry {
 
     public CommandRegistry(Main plugin) {
         this.processor = new CommandProcessor(plugin);
+        registerCommands();
     }
 
-    public void registerCommands() {
+    private void registerCommands() {
         register(new StateChangerCommand("stateChanger"));
         register(new EditStandCommand("editStand"));
         register(new SpecialBlocksCommand("specialBlocks"));
@@ -53,6 +54,13 @@ public class CommandRegistry {
         register(new BrushCommand("tinybrush"));
         register(new SelfTeleportCommand("self"));
         register(new DesignerCommand("designer"));
+        register(new SlayerCommand("slayer"));
+        register(new SlayerBossCommand("slayerboss"));
+        register(new SoundCommand("sound"));
+        register(new BackpackCommand("backpack"));
+        register(new NumericIdCommand("id"));
+        register(new BukkitTagCommand("tags"));
+        register(new CommandBlockPreviewCommand("commandBlockPreview"));
 
         // TEST
         register(new CommandWithArguments("_testcommandwitharguments"));

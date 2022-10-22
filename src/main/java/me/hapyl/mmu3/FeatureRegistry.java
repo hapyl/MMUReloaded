@@ -1,10 +1,7 @@
 package me.hapyl.mmu3;
 
 import com.google.common.collect.Maps;
-import me.hapyl.mmu3.feature.Calculate;
-import me.hapyl.mmu3.feature.ColoredSign;
-import me.hapyl.mmu3.feature.Feature;
-import me.hapyl.mmu3.feature.ServerPro;
+import me.hapyl.mmu3.feature.*;
 import me.hapyl.mmu3.feature.brush.BrushManager;
 import me.hapyl.mmu3.feature.candle.CandleController;
 import me.hapyl.mmu3.feature.designer.Designer;
@@ -13,6 +10,7 @@ import me.hapyl.mmu3.feature.lastlocation.LastLocation;
 import me.hapyl.mmu3.feature.specialblocks.SpecialBlocks;
 import me.hapyl.mmu3.feature.standeditor.StandEditor;
 import me.hapyl.mmu3.feature.statechanger.StateChanger;
+import me.hapyl.mmu3.outcast.hypixel.slayer.Slayer;
 
 import java.util.Map;
 
@@ -31,6 +29,8 @@ public final class FeatureRegistry {
     public final BrushManager brushManager;
     public final Designer designer;
     public final ColoredSign coloredSign;
+    public final Slayer slayer;
+    public final CommandBlockPreview commandBlockPreview;
 
     public FeatureRegistry(Main main) {
         featureStatus = Maps.newHashMap();
@@ -46,6 +46,8 @@ public final class FeatureRegistry {
         brushManager = new BrushManager(main);
         designer = new Designer(main);
         coloredSign = new ColoredSign(main);
+        slayer = new Slayer(main);
+        commandBlockPreview = new CommandBlockPreview(main);
     }
 
     public void setFeatureStatus(Feature feature, boolean flag) {

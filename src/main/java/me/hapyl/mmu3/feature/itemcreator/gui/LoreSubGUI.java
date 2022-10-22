@@ -38,11 +38,12 @@ public class LoreSubGUI extends ICSubGUI {
                         new ItemBuilder(Material.FILLED_MAP)
                                 .setName("&aLine %s", index + 1)
                                 .setAmount(index + 1)
-                                .addLore("Current Lore: " + currentLore)
+                                .addLore("&aCurrent Lore:")
+                                .addLore(currentLore)
                                 .addLore()
                                 .hideFlags()
                                 .addLore("&eLeft Click to change line.")
-                                .addLore("&eRight Click to remove line.")
+                                .addLore("&6Right Click to remove line.")
                                 .build()
                 );
                 setClick(slot, player -> new SignGUI(player, "Enter Lore") {
@@ -65,7 +66,7 @@ public class LoreSubGUI extends ICSubGUI {
                 boolean nextLine = index == lore.size();
                 setItem(
                         slot,
-                        new ItemBuilder(Material.MAP)
+                        new ItemBuilder(nextLine ? Material.MAP : Material.PAPER)
                                 .setAmount(index + 1)
                                 .setName("%sLine %s", (nextLine ? "&e" : "&c"), index + 1)
                                 .hideFlags()
@@ -114,9 +115,11 @@ public class LoreSubGUI extends ICSubGUI {
                     31,
                     new ItemBuilder(Material.POPPY)
                             .setName("&aAdd Line")
-                            .addSmartLore("Adds a new line of lore to the item. Next slot is highlighted!")
+                            .addSmartLore("Adds a new line of lore to the item.")
+                            .addLore()
+                            .addLore("&eClick to add lore")
                             .build(),
-                    player -> new SignGUI(player, "Enter Lore") {
+                    player -> new SignGUI(player, "", "", "^^ Enter Lore ^^") {
                         @Override
                         public void onResponse(Player player, String[] strings) {
                             creator.getLore().add(concatString(strings));

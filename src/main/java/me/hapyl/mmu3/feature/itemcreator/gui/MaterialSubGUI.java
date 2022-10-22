@@ -38,7 +38,6 @@ public class MaterialSubGUI extends ICSubGUI {
         final String query = data.getLastItemCreatorQuery();
         fillItem(0, 8, PANEL_ITEM);
         setPanelGoBack(0, "Item Creator", ItemCreatorGUI::new);
-        setPanelCloseMenu(8);
 
         if (query == null) {
             items = category.getItems();
@@ -58,7 +57,7 @@ public class MaterialSubGUI extends ICSubGUI {
             setClick(8, player -> updateInventory(start + PAGE_ITEM_AMOUNT));
         }
 
-        // search
+        // Search
         setItem(
                 4,
                 new ItemBuilder(Material.OAK_SIGN)
@@ -68,7 +67,7 @@ public class MaterialSubGUI extends ICSubGUI {
                         .addLore("Current Query: &b" + (query == null ? "None" : query))
                         .addLore()
                         .addLore("&eLeft Click to enter query")
-                        .addLore("&eRight Click to clear")
+                        .addLore("&6Right Click to clear")
                         .predicate(query != null, ItemBuilder::glow)
                         .build()
         );
@@ -92,7 +91,7 @@ public class MaterialSubGUI extends ICSubGUI {
             updateInventory();
         }, ClickType.RIGHT);
 
-        // set items
+        // Set items
         for (int i = 0; i < PAGE_ITEM_AMOUNT; i++) {
             int slot = 9 + i;
             if (start + i < items.size()) {
@@ -104,11 +103,11 @@ public class MaterialSubGUI extends ICSubGUI {
                 });
             }
             else {
-                setItem(slot, PANEL_ITEM_GRAY);
+                setItem(slot, PANEL_ITEM_GRAY, null);
             }
         }
 
-        // set categories
+        // Set categories
         int slot = 2;
         for (Category value : Category.values()) {
             final boolean selected = value == category;

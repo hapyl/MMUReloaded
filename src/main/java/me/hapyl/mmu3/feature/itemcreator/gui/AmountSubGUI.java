@@ -19,7 +19,7 @@ public abstract class AmountSubGUI extends ICSubGUI {
                     "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2VkZDIwYmU5MzUyMDk0OWU2Y2U3ODlkYzRmNDNlZmFlYjI4YzcxN2VlNmJmY2JiZTAyNzgwMTQyZjcxNiJ9fX0=")
             .setName("&aIncrease")
             .addLore("&eLeft Click to increase by 1.")
-            .addLore("&eRight Click to increase by 10.")
+            .addLore("&6Right Click to increase by 10.")
             .toItemStack();
 
     private static final ItemStack ITEM_DECREASE_AMOUNT = ItemBuilder
@@ -27,7 +27,7 @@ public abstract class AmountSubGUI extends ICSubGUI {
                     "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ4YTk5ZGIyYzM3ZWM3MWQ3MTk5Y2Q1MjYzOTk4MWE3NTEzY2U5Y2NhOTYyNmEzOTM2Zjk2NWIxMzExOTMifX19")
             .setName("&aDecrease")
             .addLore("&eLeft Click to decrease by 1.")
-            .addLore("&eRight Click to decrease by 10.")
+            .addLore("&6Right Click to decrease by 10.")
             .toItemStack();
 
     private final String name;

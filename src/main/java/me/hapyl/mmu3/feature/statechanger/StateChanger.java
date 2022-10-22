@@ -99,7 +99,6 @@ public class StateChanger extends Feature {
                 data instanceof Snowable;
     }
 
-    // TODO: 007. 07/05/2022 - add config support
     public boolean isBannedBlock(Material material) {
         return switch (material) {
             case BEDROCK -> true;

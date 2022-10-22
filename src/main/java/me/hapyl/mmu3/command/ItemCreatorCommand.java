@@ -4,7 +4,6 @@ import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreator;
 import me.hapyl.mmu3.feature.itemcreator.gui.ItemCreatorGUI;
 import me.hapyl.mmu3.feature.itemcreator.gui.LoreSubGUI;
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
 import org.bukkit.command.CommandSender;
@@ -14,7 +13,7 @@ import java.util.List;
 
 public class ItemCreatorCommand extends SimplePlayerAdminCommand {
 
-    private final String[] validArguments = { "open", "new", "import", "addsmartlore", "setsmartlore" };
+    private final String[] validArguments = { "open", "new", "import", "addsmartlore", "setsmartlore", "setheadtexture" };
 
     public ItemCreatorCommand(String name) {
         super(name);
@@ -44,11 +43,8 @@ public class ItemCreatorCommand extends SimplePlayerAdminCommand {
 
             switch (argument) {
                 case "import" -> {
-                    if (!creator.validateCode(string)) {
-                        Message.error(player, "Invalid import code!");
-                        return;
-                    }
-                    Message.error(player, "This feature is not yet implemented!");
+                    final String decode = "null";
+                    player.sendMessage(decode);
                 }
 
                 case "addsmartlore" -> {
@@ -59,6 +55,11 @@ public class ItemCreatorCommand extends SimplePlayerAdminCommand {
                 case "setsmartlore" -> {
                     creator.setSmartLore(string);
                     new LoreSubGUI(player);
+                }
+
+                case "setheadtexture" -> {
+                    creator.setHeadTexture(string);
+                    new ItemCreatorGUI(player);
                 }
             }
         }
