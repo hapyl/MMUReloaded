@@ -3,13 +3,16 @@ package me.hapyl.mmu3.command;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.chat.LazyClickEvent;
+import me.hapyl.spigotutils.module.chat.LazyEvent;
 import me.hapyl.spigotutils.module.chat.LazyHoverEvent;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
 import me.hapyl.spigotutils.module.math.Numbers;
 import me.hapyl.spigotutils.module.player.PlayerLib;
 import me.hapyl.spigotutils.module.util.Validate;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -36,24 +39,45 @@ public class SoundCommand extends SimplePlayerAdminCommand {
                     return;
                 }
 
+                // execute play at self location
                 Message.clickHover(
                         player,
-                        LazyClickEvent.SUGGEST_COMMAND.of("playsound %s record @s ~ ~ ~ 1 %s".formatted(
-                                sound.getKey().getKey(),
+                        LazyClickEvent.SUGGEST_COMMAND.of("execute as @a at @s run playsound %s record @s ~ ~ ~ 1 %s".formatted(
+                                sound
+                                        .getKey()
+                                        .getKey(),
                                 pitch
                         )),
-                        LazyHoverEvent.SHOW_TEXT.of("&7Click to copy Minecraft command."),
-                        "&e&lCLICK &7to copy Minecraft command."
+                        LazyHoverEvent.SHOW_TEXT.of("&aClick to copy Minecraft command."),
+                        "&e&lCLICK &ato copy Minecraft command."
                 );
 
+                // execute play at target location
+                final Block block = player.getTargetBlockExact(50);
+                if (block != null) {
+                    final Location location = block.getLocation();
+                    final String blockName = Chat.capitalize(block.getType());
+
+                    Message.clickHover(
+                            player,
+                            LazyClickEvent.SUGGEST_COMMAND.of("execute as @a at @s run playsound %s record @s %s %s %s 1 %s".formatted(
+                                    sound.getKey().getKey(),
+                                    location.getBlockX(),
+                                    location.getBlockY(),
+                                    location.getBlockZ(),
+                                    pitch
+                            )),
+                            LazyHoverEvent.SHOW_TEXT.of("&2Click to copy Minecraft command at %s.".formatted(blockName)),
+                            "&e&lCLICK &2to copy Minecraft command at %s.".formatted(blockName)
+                    );
+                }
+
+                // player lib
                 Message.clickHover(
                         player,
-                        LazyClickEvent.SUGGEST_COMMAND.of("PlayerLib.playSound(player, Sound.%s, %sf);".formatted(
-                                sound,
-                                pitch
-                        )),
-                        LazyHoverEvent.SHOW_TEXT.of("&7Click to copy PlayerLib code."),
-                        "&e&lCLICK &7to copy PlayerLib code."
+                        LazyClickEvent.SUGGEST_COMMAND.of("PlayerLib.playSound(player, Sound.%s, %sf);".formatted(sound, pitch)),
+                        LazyHoverEvent.SHOW_TEXT.of("&bClick to copy PlayerLib code."),
+                        "&e&lCLICK &bto copy PlayerLib code."
                 );
                 return;
             }
@@ -78,12 +102,13 @@ public class SoundCommand extends SimplePlayerAdminCommand {
             }
 
             PlayerLib.playSound(player, sound, pitch);
+
+            Message.success(player, "Played %s (%s) sound to you.", Chat.capitalize(sound), pitch);
             Message.clickHover(
                     player,
-                    LazyClickEvent.RUN_COMMAND.of("/sound command %s %s", sound, pitch),
-                    LazyHoverEvent.SHOW_TEXT.of("&7Click to generate commands."),
-                    "Played %s (%s) sound to you. &e&lCLICK &7to generate commands.",
-                    Chat.capitalize(sound), pitch
+                    LazyEvent.runCommand("/sound command %s %s", sound, pitch),
+                    LazyEvent.showText("&eClick to generate commands!"),
+                    "&e&lCLICK HERE &6to generate commands!"
             );
 
             return;

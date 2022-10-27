@@ -12,7 +12,6 @@ import me.hapyl.spigotutils.module.util.Validate;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.EntityShulker;
 import net.minecraft.world.level.block.entity.TileEntityCommand;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -21,7 +20,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Shulker;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -41,21 +39,6 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
         registerRunnable(3L);
     }
 
-    @EventHandler()
-    public void handleCommandList(PlayerCommandSendEvent ev) {
-        if (!commands.isEmpty()) {
-            return;
-        }
-
-        for (String command : ev.getCommands()) {
-            if (!command.contains("minecraft:")) {
-                continue;
-            }
-
-            commands.add(StringUtils.substringAfter(command, ":"));
-        }
-    }
-
     @Override
     public void run() {
         Bukkit
@@ -72,13 +55,15 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
             return;
         }
 
-        ev.setCancelled(true);
-
         final String command = getCommand(player);
         if (command == null || command.isEmpty()) {
-            Message.error(player, "This command block doesn't have any command!");
+            if (command != null) {
+                Message.error(player, "This command block doesn't have any command!");
+            }
             return;
         }
+
+        ev.setCancelled(true);
 
         final String commandShort = command.length() > 10 ? command.substring(0, 10) + "..." : command;
         Message.clickHover(
@@ -91,7 +76,7 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
 
     @Nullable
     private String getCommand(Player player) {
-        final Block block = player.getTargetBlockExact(20);
+        final Block block = player.getTargetBlockExact(50);
         if (!isCommandBlock(block)) {
             return null;
         }
@@ -102,7 +87,7 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
     }
 
     private ChatColor getColor(Player player) {
-        final Block block = player.getTargetBlockExact(20);
+        final Block block = player.getTargetBlockExact(50);
         if (!isCommandBlock(block)) {
             return ChatColor.WHITE;
         }
@@ -147,7 +132,7 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
             Chat.sendActionbar(player, colorCommand(command));
         }
 
-        Nulls.runIfNotNull(player.getTargetBlockExact(20), b -> outlineCommandBlock(player, b.getLocation(), getColor(player)));
+        Nulls.runIfNotNull(player.getTargetBlockExact(50), b -> outlineCommandBlock(player, b.getLocation(), getColor(player)));
     }
 
     private void outlineCommandBlock(Player player, Location location, ChatColor color) {

@@ -61,6 +61,9 @@ public class CommandRegistry {
         register(new NumericIdCommand("id"));
         register(new BukkitTagCommand("tags"));
         register(new CommandBlockPreviewCommand("commandBlockPreview"));
+        register(new ParticleCommand("particles"));
+        register(new FindEmptyCommandBlocksCommand("findEmptyCommandBlocks"));
+        register(new NBTCommand("nbt"));
 
         // TEST
         register(new CommandWithArguments("_testcommandwitharguments"));

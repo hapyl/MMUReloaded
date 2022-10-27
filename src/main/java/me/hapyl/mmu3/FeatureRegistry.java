@@ -31,6 +31,7 @@ public final class FeatureRegistry {
     public final ColoredSign coloredSign;
     public final Slayer slayer;
     public final CommandBlockPreview commandBlockPreview;
+    public final EmptyCommandBlockLocator cbLocator;
 
     public FeatureRegistry(Main main) {
         featureStatus = Maps.newHashMap();
@@ -48,6 +49,7 @@ public final class FeatureRegistry {
         coloredSign = new ColoredSign(main);
         slayer = new Slayer(main);
         commandBlockPreview = new CommandBlockPreview(main);
+        cbLocator = new EmptyCommandBlockLocator(main);
     }
 
     public void setFeatureStatus(Feature feature, boolean flag) {
