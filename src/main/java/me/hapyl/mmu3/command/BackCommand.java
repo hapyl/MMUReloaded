@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class BackCommand extends SimplePlayerAdminCommand {
     public BackCommand(String name) {
         super(name);
-        setDescription("Teleports to players' last saved location if such present.");
+        setDescription("Teleports player to their last saved location if such present.");
     }
 
     @Override

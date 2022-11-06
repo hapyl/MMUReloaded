@@ -21,7 +21,7 @@ import org.bukkit.util.Vector;
 
 public class Dice {
 
-    private static final ItemStack[] diceTextures = new ItemStack[] {
+    private static final ItemStack[] DICE_TEXTURES = new ItemStack[] {
             createHead("6e22c298e7c6336af17909ac1f1ee6834b58b1a3cc99aba255ca7eaeb476173"),
             createHead("71b7a73fc934c9de9160c0fd59df6e42efd5d0378e342b68612cfec3e894834a"),
             createHead("abe677a1e163a9f9e0afcfcde0c95365553478f99ab11152a4d97cf85dbe66f"),
@@ -41,13 +41,13 @@ public class Dice {
             self.setGravity(false);
             self.setInvulnerable(true);
             BukkitUtils.lockArmorStand(self);
-            Nulls.runIfNotNull(self.getEquipment(), eq -> eq.setHelmet(diceTextures[number]));
+            Nulls.runIfNotNull(self.getEquipment(), eq -> eq.setHelmet(DICE_TEXTURES[number]));
         });
         playAnimation();
     }
 
     public int pickRandomNumber() {
-        return ThreadRandom.nextInt(diceTextures.length);
+        return ThreadRandom.nextInt(DICE_TEXTURES.length);
     }
 
     private void showRolledNumber() {

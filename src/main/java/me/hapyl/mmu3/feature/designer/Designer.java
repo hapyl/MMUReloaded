@@ -15,6 +15,7 @@ public class Designer extends Feature {
 
     public Designer(Main mmu3plugin) {
         super(mmu3plugin);
+        setDescription("Allows to design a chest GUI.");
         designers = Maps.newHashMap();
     }
 

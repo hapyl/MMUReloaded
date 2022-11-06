@@ -9,7 +9,7 @@ public class Feature {
 
     private final Main mmu3plugin;
     private String name;
-    private String info;
+    private String description;
 
     public Feature(Main mmu3plugin) {
         this.mmu3plugin = mmu3plugin;
@@ -37,16 +37,16 @@ public class Feature {
         this.name = name;
     }
 
-    public final void setInfo(String info) {
-        this.info = info;
+    public final void setDescription(String description) {
+        this.description = description;
     }
 
     public final String getName() {
         return name;
     }
 
-    public final String getInfo() {
-        return info;
+    public final String getDescription() {
+        return description;
     }
 
     public final boolean isListener() {

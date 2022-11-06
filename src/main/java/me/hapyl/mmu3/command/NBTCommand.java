@@ -25,7 +25,8 @@ public class NBTCommand extends SimplePlayerAdminCommand {
             Message.error(player, "Not holding item.");
             return;
         }
-        NBTHolder holder = new NBTHolder(item);
+
+        final NBTHolder holder = new NBTHolder(item);
 
         // TODO
         //        if (trace != null && trace.getHitEntity() != null) {
@@ -38,7 +39,7 @@ public class NBTCommand extends SimplePlayerAdminCommand {
         //            holder = new NBTHolder(item);
         //        }
 
-        if (holder == null || !holder.hasData()) {
+        if (!holder.hasData()) {
             Message.error(player, "Unable to fetch NBT.");
             return;
         }

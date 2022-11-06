@@ -2,14 +2,16 @@ package me.hapyl.mmu3.command;
 
 import me.hapyl.mmu3.feature.action.PlayerActions;
 import me.hapyl.mmu3.message.Message;
+import me.hapyl.spigotutils.module.command.DisabledCommand;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
 import me.hapyl.spigotutils.module.util.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class ActionCommand extends SimplePlayerAdminCommand {
+public class ActionCommand extends SimplePlayerAdminCommand implements DisabledCommand {
     public ActionCommand(String name) {
         super(name);
+        setDescription("Allows to perform certain actions, like sitting, swinging hands etc.");
     }
 
     @Override

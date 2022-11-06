@@ -64,6 +64,8 @@ public class CommandRegistry {
         register(new ParticleCommand("particles"));
         register(new FindEmptyCommandBlocksCommand("findEmptyCommandBlocks"));
         register(new NBTCommand("nbt"));
+        register(new TeleportShortcutCommand(">"));
+        register(new NightVisionCommand("nightvision"));
 
         // TEST
         register(new CommandWithArguments("_testcommandwitharguments"));

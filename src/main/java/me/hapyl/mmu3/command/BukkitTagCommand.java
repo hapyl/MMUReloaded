@@ -21,6 +21,8 @@ public class BukkitTagCommand extends SimplePlayerAdminCommand {
         super(name);
         setDescription("Shows all materials in existing tag.");
         populateTags();
+
+        addCompleterValues(1, byName.keySet().toArray(new String[] {}));
     }
 
     private void populateTags() {
@@ -58,15 +60,17 @@ public class BukkitTagCommand extends SimplePlayerAdminCommand {
             return;
         }
 
+        final String tagName = tag.getKey().getKey();
+
         if (args.length == 1) {
-            Message.info(player, "%s contains %s values:", tag, CollectionUtils.wrapToString(tag.getValues(), Wrap.DEFAULT));
+            Message.success(player, "%s contains: %s", tagName, CollectionUtils.wrapToString(tag.getValues(), Wrap.DEFAULT));
             return;
         }
 
         final String str = args[1].toLowerCase();
-        final String tagName = tag.getKey().getKey();
         final boolean present = isPresent(tag, str);
 
+        // FIXME: 006, Nov 6, 2022 - Incorrect isPresent check
         if (present) {
             Message.error(player, "%s is not present in %s tag!", str, tagName);
         }

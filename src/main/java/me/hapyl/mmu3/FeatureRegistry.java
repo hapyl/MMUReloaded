@@ -50,6 +50,8 @@ public final class FeatureRegistry {
         slayer = new Slayer(main);
         commandBlockPreview = new CommandBlockPreview(main);
         cbLocator = new EmptyCommandBlockLocator(main);
+
+        // These features don't require to be accessed
     }
 
     public void setFeatureStatus(Feature feature, boolean flag) {

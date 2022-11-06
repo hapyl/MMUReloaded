@@ -12,6 +12,7 @@ import me.hapyl.spigotutils.module.util.Validate;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.EntityShulker;
 import net.minecraft.world.level.block.entity.TileEntityCommand;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -20,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Shulker;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -37,6 +39,21 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
         commands = Sets.newHashSet();
 
         registerRunnable(3L);
+    }
+
+    @EventHandler()
+    public void handleVanillaCommands(PlayerCommandSendEvent ev) {
+        if (!commands.isEmpty()) {
+            return;
+        }
+
+        for (String command : ev.getCommands()) {
+            if (!command.contains("minecraft:")) {
+                continue;
+            }
+
+            commands.add(StringUtils.substringAfter(command, ":"));
+        }
     }
 
     @Override
@@ -240,7 +257,7 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
         return false;
     }
 
-    private boolean isCommandBlock(Block block) {
+    public static boolean isCommandBlock(Block block) {
         if (block == null) {
             return false;
         }

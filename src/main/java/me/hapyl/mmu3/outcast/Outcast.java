@@ -7,6 +7,6 @@ public class Outcast extends Feature {
     public Outcast(Main mmu3plugin) {
         super(mmu3plugin);
         setName("Outcast");
-        setInfo("Contains features that are not really an utility but rather a concept.");
+        setDescription("Contains features that are not really an utility but rather a concept.");
     }
 }

@@ -10,6 +10,8 @@ import java.util.Map;
 
 public class Watcher extends Feature {
 
+    // TODO: 006, Nov 6, 2022 - Finish this
+
     private final Map<Player, PlayerProfile> savedProfiles;
 
     public Watcher(Main mmu3plugin) {
@@ -33,8 +35,11 @@ public class Watcher extends Feature {
      */
     public void setSkinName(String playerName) {
         final Player player = Bukkit.getPlayer(playerName);
-        if (player != null) {
+        if (player == null) {
+            return;
         }
+
+        //        player.getPlayerProfile().getTextures().setSkin();
     }
 
 

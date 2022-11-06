@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 public class CandleCommand extends SimplePlayerAdminCommand {
     public CandleCommand(String name) {
         super(name);
+        setDescription("Opens a Candle selection GUI.");
     }
 
     @Override
