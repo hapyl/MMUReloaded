@@ -2,7 +2,8 @@ package me.hapyl.mmu3.outcast.game;
 
 import me.hapyl.mmu3.outcast.game.games.CookieClicker;
 import me.hapyl.mmu3.outcast.game.games.Ultrasequencer;
-import me.hapyl.mmu3.outcast.game.games.benchmark.react.BenchmarkReaction;
+import me.hapyl.mmu3.outcast.game.games.benchmark.BenchmarkReaction;
+import me.hapyl.mmu3.outcast.game.games.minesweeper.MineSweeper;
 import me.hapyl.mmu3.outcast.game.games.wordle.Wordle;
 import org.bukkit.entity.Player;
 
@@ -12,6 +13,7 @@ public enum Games {
     WORDLE(new Wordle()),
     REACTION_TIME(new BenchmarkReaction()),
     ULTRASEQUENCER(new Ultrasequencer()),
+    MINESWEEPER(new MineSweeper()),
 
     ;
 

@@ -3,23 +3,34 @@ package me.hapyl.mmu3.outcast.game;
 import me.hapyl.spigotutils.module.inventory.gui.Action;
 import me.hapyl.spigotutils.module.util.Runnables;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class GameInstance {
 
     private final Player player;
     private final Game game;
+    private final boolean debug;
     protected final GameGUI gui;
 
-    public GameInstance(Player player, Game game) {
+    public GameInstance(Player player, Game game, boolean debug) {
         this.player = player;
         this.game = game;
+        this.debug = debug;
         this.gui = new GameGUI(player, this);
 
         Runnables.runLater(() -> {
             onGameStart();
             gui.openInventory();
         }, 1L);
+    }
+
+    public GameInstance(Player player, Game game) {
+        this(player, game, false);
+    }
+
+    public boolean isDebug() {
+        return debug;
     }
 
     /**
@@ -30,9 +41,10 @@ public abstract class GameInstance {
     /**
      * Called every time player clicked at a slot.
      *
-     * @param slot - Clicked slot.
+     * @param slot      - Clicked slot.
+     * @param clickType - Click Type.
      */
-    public abstract void onClick(int slot);
+    public abstract void onClick(int slot, ClickType clickType);
 
     /**
      * Called whenever player closes inventory.

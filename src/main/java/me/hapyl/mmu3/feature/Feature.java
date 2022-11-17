@@ -11,11 +11,23 @@ public class Feature {
     private String name;
     private String description;
 
+    private boolean enabled;
+
     public Feature(Main mmu3plugin) {
         this.mmu3plugin = mmu3plugin;
         if (isListener()) {
             mmu3plugin.getServer().getPluginManager().registerEvents((Listener) this, mmu3plugin);
         }
+
+        this.enabled = true;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    protected void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     protected void registerRunnable(long delay) {

@@ -9,11 +9,14 @@ public class GameGUI extends PanelGUI {
     private final GameInstance game;
 
     public GameGUI(Player player, GameInstance game) {
-        super(player, "★ " + game.getName(), game.getGame().getMenuSize());
+        super(player, "★ " + game.getName() + (game.isDebug() ? " §4§lDEBUGGING" : ""), game.getGame().getMenuSize());
         this.game = game;
 
         setCancelType(CancelType.EITHER);
-        setEventListener(((p, gui, ev) -> game.onClick(ev.getRawSlot())));
+        setEventListener(((p, gui, ev) -> {
+            final int rawSlot = ev.getRawSlot();
+            game.onClick(rawSlot, ev.getClick());
+        }));
         setCloseEvent((p) -> game.onGameStop());
     }
 

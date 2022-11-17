@@ -1,4 +1,4 @@
-package me.hapyl.mmu3.outcast.game.games.benchmark.react;
+package me.hapyl.mmu3.outcast.game.games.benchmark;
 
 import com.google.common.collect.Maps;
 import me.hapyl.mmu3.Main;
@@ -13,6 +13,7 @@ import me.hapyl.spigotutils.module.util.ThreadRandom;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -65,7 +66,7 @@ public class BenchmarkReaction extends Game {
             }
 
             @Override
-            public void onClick(int slot) {
+            public void onClick(int slot, ClickType clickType) {
                 if (status == Status.PRE_GAME) {
                     nextRound();
                     return;

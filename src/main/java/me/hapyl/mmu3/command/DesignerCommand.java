@@ -21,7 +21,7 @@ public class DesignerCommand extends SimplePlayerAdminCommand {
     protected void execute(Player player, String[] args) {
         //
         // designer - Open current designer
-        // designer (Name) - Open someone elses designer
+        // designer (Name) - Open someone else designer
         // designer (Int) - Create new designer with provided size
         final Designer manager = Main.getRegistry().designer;
 

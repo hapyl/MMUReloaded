@@ -32,6 +32,7 @@ public class StateChanger extends Feature {
 
     public StateChanger(Main main) {
         super(main);
+        setDescription("Gives player a state changer item.");
     }
 
     public void openEditor(Player player, Block block) {

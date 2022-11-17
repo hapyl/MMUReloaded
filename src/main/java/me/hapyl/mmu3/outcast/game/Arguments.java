@@ -46,4 +46,7 @@ public class Arguments {
         return EMPTY;
     }
 
+    public boolean isDebug() {
+        return getString(0, "").equalsIgnoreCase("debug");
+    }
 }

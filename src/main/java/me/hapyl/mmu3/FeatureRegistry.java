@@ -1,6 +1,5 @@
 package me.hapyl.mmu3;
 
-import com.google.common.collect.Maps;
 import me.hapyl.mmu3.feature.*;
 import me.hapyl.mmu3.feature.brush.BrushManager;
 import me.hapyl.mmu3.feature.candle.CandleController;
@@ -12,11 +11,7 @@ import me.hapyl.mmu3.feature.standeditor.StandEditor;
 import me.hapyl.mmu3.feature.statechanger.StateChanger;
 import me.hapyl.mmu3.outcast.hypixel.slayer.Slayer;
 
-import java.util.Map;
-
 public final class FeatureRegistry {
-
-    private final Map<Feature, Boolean> featureStatus;
 
     public final StateChanger stateChanger;
     public final StandEditor standEditor;
@@ -34,8 +29,6 @@ public final class FeatureRegistry {
     public final EmptyCommandBlockLocator cbLocator;
 
     public FeatureRegistry(Main main) {
-        featureStatus = Maps.newHashMap();
-
         stateChanger = new StateChanger(main);
         standEditor = new StandEditor(main);
         specialBlocks = new SpecialBlocks(main);
@@ -54,12 +47,8 @@ public final class FeatureRegistry {
         // These features don't require to be accessed
     }
 
-    public void setFeatureStatus(Feature feature, boolean flag) {
-        featureStatus.put(feature, flag);
-    }
-
-    public boolean getStatus(Feature feature) {
-        return featureStatus.getOrDefault(feature, false);
+    public boolean isEnabled(Feature feature) {
+        return feature.isEnabled();
     }
 
 }

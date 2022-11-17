@@ -14,6 +14,7 @@ import me.hapyl.spigotutils.module.util.Runnables;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -134,7 +135,7 @@ public class Wordle extends Game {
             }
 
             @Override
-            public void onClick(int slot) {
+            public void onClick(int slot, ClickType clickType) {
                 if (slot != 36) {
                     return;
                 }

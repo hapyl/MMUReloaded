@@ -15,6 +15,7 @@ import me.hapyl.spigotutils.module.util.ThreadRandom;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -78,7 +79,7 @@ public class Ultrasequencer extends Game {
             }
 
             @Override
-            public void onClick(int slot) {
+            public void onClick(int slot, ClickType clickType) {
                 if (state != State.GAME) {
                     return;
                 }

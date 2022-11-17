@@ -5,6 +5,7 @@ import me.hapyl.mmu3.outcast.game.Arguments;
 import me.hapyl.mmu3.outcast.game.GameSelectGUI;
 import me.hapyl.mmu3.outcast.game.Games;
 import me.hapyl.spigotutils.module.command.SimplePlayerCommand;
+import me.hapyl.spigotutils.module.inventory.gui.DisabledGUI;
 import me.hapyl.spigotutils.module.util.Validate;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -20,7 +21,10 @@ public class GameCommand extends SimplePlayerCommand {
     @Override
     protected void execute(Player player, String[] args) {
         if (args.length == 0) {
-            new GameSelectGUI(player);
+            final GameSelectGUI gui = new GameSelectGUI(player);
+            if (gui instanceof DisabledGUI) {
+                Message.error(player, "Please provide a game name instead!");
+            }
             return;
         }
 
@@ -39,6 +43,9 @@ public class GameCommand extends SimplePlayerCommand {
     protected List<String> tabComplete(CommandSender sender, String[] args) {
         if (args.length == 1) {
             return completerSort(Games.values(), args);
+        }
+        if (args.length == 2) {
+            return completerSort(new String[] { "debug" }, args);
         }
         return Collections.emptyList();
     }

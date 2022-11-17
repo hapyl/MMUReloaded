@@ -11,6 +11,7 @@ import me.hapyl.spigotutils.module.player.PlayerLib;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -65,7 +66,7 @@ public class CookieClicker extends Game {
             }
 
             @Override
-            public void onClick(int slot) {
+            public void onClick(int slot, ClickType clickType) {
                 if (slot != 13) {
                     return;
                 }
