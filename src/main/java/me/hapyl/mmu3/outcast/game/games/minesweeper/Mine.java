@@ -2,18 +2,30 @@ package me.hapyl.mmu3.outcast.game.games.minesweeper;
 
 public class Mine {
 
+    private final int x;
+    private final int z;
     private final int slot;
     private int nearbyMines;
     private boolean isRevealed;
     private boolean isBomb;
     private boolean isMarked;
 
-    public Mine(int index) {
+    public Mine(int index, int x, int z) {
         this.slot = index;
+        this.x = x;
+        this.z = z;
         this.nearbyMines = 0;
         this.isBomb = false;
         this.isMarked = false;
         this.isRevealed = false;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getZ() {
+        return z;
     }
 
     public boolean isRevealed() {

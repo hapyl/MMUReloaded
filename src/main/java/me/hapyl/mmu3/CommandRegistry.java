@@ -66,6 +66,7 @@ public class CommandRegistry {
         register(new NBTCommand("nbt"));
         register(new TeleportShortcutCommand(">"));
         register(new NightVisionCommand("nightvision"));
+        register(new WatcherCommand("watcher"));
 
         // TEST
         register(new CommandWithArguments("_testcommandwitharguments"));

@@ -1,6 +1,7 @@
 package me.hapyl.mmu3.outcast.game.games.minesweeper;
 
 import com.google.common.collect.Lists;
+import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.outcast.game.Arguments;
 import me.hapyl.mmu3.outcast.game.Game;
 import me.hapyl.mmu3.outcast.game.GameInstance;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,26 +33,24 @@ public class MineSweeper extends Game {
     protected GameInstance newInstance(Player player, @Nonnull Arguments arguments) {
         return new GameInstance(player, this, arguments.isDebug()) {
 
+            private final int mines = Math.min(arguments.getInt(0, 5), 24);
             private final long startedAt = System.currentTimeMillis();
             private final Mine[][] field = new Mine[5][5];
-            private final int[] validSlots = {
-                    2, 3, 4, 5, 6,
-                    11, 12, 13, 14, 15,
-                    20, 21, 22, 23, 24,
-                    29, 30, 31, 32, 33,
-                    38, 39, 40, 41, 42
-            };
+            private final int[] validSlots = { 2, 3, 4, 5, 6, 11, 12, 13, 14, 15, 20, 21, 22, 23, 24, 29, 30, 31, 32, 33, 38, 39, 40, 41,
+                                               42 };
 
-            private final ChatColor[] dangerColor = {
-                    ChatColor.GREEN, ChatColor.DARK_GREEN,
-                    ChatColor.YELLOW, ChatColor.GOLD, ChatColor.RED
-            };
+            private final ChatColor[] dangerColor = { ChatColor.GREEN, ChatColor.DARK_GREEN, ChatColor.YELLOW, ChatColor.GOLD, ChatColor.RED,
+                                                      ChatColor.DARK_RED };
 
             private long finishedAt;
             private State state;
 
             @Override
             public void onGameStart() {
+                if (mines != 5) {
+                    Message.info(getPlayer(), "Playing with %s mines!", mines);
+                }
+
                 state = State.PLAYING;
                 generateBombs();
                 fillOuter(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName("&f").build());
@@ -61,7 +61,7 @@ public class MineSweeper extends Game {
                 int slot = 0;
                 for (int i = 0; i < 5; i++) {
                     for (int j = 0; j < 5; j++) {
-                        field[i][j] = new Mine(validSlots[slot++]);
+                        field[i][j] = new Mine(validSlots[slot++], i, j);
                     }
                 }
 
@@ -73,7 +73,7 @@ public class MineSweeper extends Game {
 
                 Collections.shuffle(list);
 
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < mines; i++) {
                     list.get(i).setBomb(true);
                 }
 
@@ -116,32 +116,52 @@ public class MineSweeper extends Game {
             }
 
             private boolean checkMine(int i, int j) {
-                if (i < 0 || j < 0 || i >= 5 || j >= 5) {
+                if (isOutOfBounds(i, j)) {
                     return false;
                 }
 
                 return field[i][j].isBomb();
             }
 
+            private boolean checkZero(int i, int j) {
+                if (isOutOfBounds(i, j)) {
+                    return false;
+                }
+
+                final Mine mine = field[i][j];
+                return mine.getNearbyMines() == 0 && !mine.isRevealed();
+            }
+
+            private boolean isOutOfBounds(int i, int j) {
+                return i < 0 || j < 0 || i >= 5 || j >= 5;
+            }
+
             private void updateItems() {
                 for (Mine[] mines : field) {
                     for (final Mine mine : mines) {
                         final int slot = mine.getSlot();
+
                         if (!mine.isRevealed()) {
-                            setItem(slot, new ItemBuilder(mine.isMarked() ? Material.FILLED_MAP : Material.MAP).setName("&a???")
-                                    .addLore("&eClick to reveal.")
-                                    .addLore("&6Right Click to mark.")
-                                    .addLoreIf("&4&lDEBUG &f" + (mine.isBomb() ? "&cMine" : "&a" + mine.getNearbyMines()), isDebug())
-                                    .build());
+                            setItem(
+                                    slot,
+                                    ItemBuilder
+                                            .of(mine.isMarked() ? Material.FILLED_MAP : Material.MAP, "&a???")
+                                            .addLore("&eClick to reveal.")
+                                            .addLore("&6Right Click to mark.")
+                                            .addLoreIf("&4&lDEBUG &f" + (mine.isBomb() ? "&cMine" : "&a" + mine.getNearbyMines()), isDebug())
+                                            .build()
+                            );
                             continue;
                         }
+
                         if (mine.isBomb()) {
                             setItem(slot, new ItemBuilder(Material.TNT).setName("&c&lBOOM!").build());
                             continue;
                         }
 
                         final int nearbyMines = mine.getNearbyMines();
-                        final ChatColor color = dangerColor[nearbyMines];
+                        final ChatColor color = dangerColor[Math.min(nearbyMines, 5)];
+
                         if (nearbyMines == 0) {
                             setItem(slot, new ItemBuilder(Material.OAK_BUTTON).setName(color + "There are no mines nearby!").build());
                         }
@@ -175,8 +195,8 @@ public class MineSweeper extends Game {
 
                 // If clicking when won, display time.
                 if (state == State.WON) {
-                    final String gameTime = Chat.formatTimeString(finishedAt - startedAt);
-                    Chat.broadcast("&a%s &7completed the game in &a%s!", player.getName(), gameTime);
+                    final String gameTime = new SimpleDateFormat("ss.SSS").format(finishedAt - startedAt);
+                    Chat.broadcast("&a%s &7defused %s mines in &a%s!", player.getName(), mines, gameTime);
                 }
 
                 // If clicked when not playing, close inventory.
@@ -192,10 +212,15 @@ public class MineSweeper extends Game {
 
                 if (clickType.isLeftClick() && !mine.isRevealed()) {
                     mine.reveal();
+
+                    // Test for 0
+                    if (mine.getNearbyMines() == 0) {
+                        checkNeighbourForZero(mine.getX(), mine.getZ());
+                    }
+
                     if (mine.isBomb()) {
                         stopGame(State.LOST);
                         PlayerLib.playSound(player, Sound.ENTITY_GENERIC_EXPLODE, 0.75f);
-                        revealAll();
                         return;
                     }
                 }
@@ -217,12 +242,36 @@ public class MineSweeper extends Game {
 
                 stopGame(State.WON);
                 PlayerLib.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1.0f);
-                fillOuter(ItemBuilder
-                                  .of(Material.GREEN_STAINED_GLASS_PANE, "&aYou won!", "")
-                                  .addLore("&7It took you %s!", Chat.formatTimeString(finishedAt - startedAt))
-                                  .addLore()
-                                  .addLore("&eClick to flex your time!")
-                                  .build());
+                fillOuter(ItemBuilder.of(
+                        Material.GREEN_STAINED_GLASS_PANE,
+                        "&aYou won!",
+                        "&7It took you %ss!".formatted(Chat.formatTimeString(finishedAt - startedAt)),
+                        "",
+                        "&eClick to flex your time!"
+                ).build());
+            }
+
+            private void checkNeighbourForZero(int i, int j) {
+                final Mine mine = field[i][j];
+                if (mine.getNearbyMines() != 0) {
+                    return;
+                }
+
+                mine.reveal();
+
+                if (checkZero(i + 1, j)) {
+                    checkNeighbourForZero(i + 1, j);
+                }
+                if (checkZero(i - 1, j)) {
+                    checkNeighbourForZero(i - 1, j);
+                }
+                if (checkZero(i, j + 1)) {
+                    checkNeighbourForZero(i, j + 1);
+                }
+                if (checkZero(i, j - 1)) {
+                    checkNeighbourForZero(i, j - 1);
+                }
+
             }
 
             private void fillOuter(ItemStack stack) {
@@ -237,8 +286,11 @@ public class MineSweeper extends Game {
                 if (this.state != State.PLAYING) {
                     return;
                 }
+
                 this.state = state;
                 this.finishedAt = System.currentTimeMillis();
+
+                revealAll();
             }
 
             // Ok it's iterating over 25 elements; it's fine.
