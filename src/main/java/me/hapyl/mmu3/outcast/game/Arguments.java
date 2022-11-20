@@ -47,6 +47,11 @@ public class Arguments {
     }
 
     public boolean isDebug() {
-        return getString(0, "").equalsIgnoreCase("debug");
+        for (String argument : arguments) {
+            if (argument.equalsIgnoreCase("debug")) {
+                return true;
+            }
+        }
+        return false;
     }
 }

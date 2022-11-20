@@ -1,6 +1,7 @@
 package me.hapyl.mmu3.outcast.game.games.minesweeper;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.outcast.game.Arguments;
 import me.hapyl.mmu3.outcast.game.Game;
@@ -19,8 +20,10 @@ import org.bukkit.inventory.ItemStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class MineSweeper extends Game {
     public MineSweeper() {
@@ -36,11 +39,18 @@ public class MineSweeper extends Game {
             private final int mines = Math.min(arguments.getInt(0, 5), 24);
             private final long startedAt = System.currentTimeMillis();
             private final Mine[][] field = new Mine[5][5];
-            private final int[] validSlots = { 2, 3, 4, 5, 6, 11, 12, 13, 14, 15, 20, 21, 22, 23, 24, 29, 30, 31, 32, 33, 38, 39, 40, 41,
-                                               42 };
+            private final int[] validSlots = {
+                    2, 3, 4, 5, 6,
+                    11, 12, 13, 14, 15,
+                    20, 21, 22, 23, 24,
+                    29, 30, 31, 32, 33,
+                    38, 39, 40, 41, 42
+            };
 
-            private final ChatColor[] dangerColor = { ChatColor.GREEN, ChatColor.DARK_GREEN, ChatColor.YELLOW, ChatColor.GOLD, ChatColor.RED,
-                                                      ChatColor.DARK_RED };
+            private final ChatColor[] dangerColor = {
+                    ChatColor.GREEN, ChatColor.DARK_GREEN, ChatColor.YELLOW,
+                    ChatColor.GOLD, ChatColor.RED, ChatColor.DARK_RED
+            };
 
             private long finishedAt;
             private State state;
@@ -81,55 +91,16 @@ public class MineSweeper extends Game {
 
 
                 // Calculate nearby mines
-                for (int i = 0; i < field.length; i++) {
-                    for (int j = 0; j < field[i].length; j++) {
-                        final Mine mine = field[i][j];
-                        // Yeah, my iq is not Long.MAX_VALUE to use loops
-                        // for checking the values...
-                        if (checkMine(i + 1, j)) {
-                            mine.incrementNearbyMines();
-                        }
-                        if (checkMine(i - 1, j)) {
-                            mine.incrementNearbyMines();
-                        }
-                        if (checkMine(i, j + 1)) {
-                            mine.incrementNearbyMines();
-                        }
-                        if (checkMine(i, j - 1)) {
-                            mine.incrementNearbyMines();
-                        }
-                        if (checkMine(i + 1, j + 1)) {
-                            mine.incrementNearbyMines();
-                        }
-                        if (checkMine(i + 1, j - 1)) {
-                            mine.incrementNearbyMines();
-                        }
-                        if (checkMine(i - 1, j + 1)) {
-                            mine.incrementNearbyMines();
-                        }
-                        if (checkMine(i - 1, j - 1)) {
-                            mine.incrementNearbyMines();
-                        }
+                for (Mine[] value : field) {
+                    for (final Mine mine : value) {
+                        getMinesAround(mine).forEach(m -> {
+                            if (m.isBomb()) {
+                                mine.incrementNearbyMines();
+                            }
+                        });
                     }
                 }
 
-            }
-
-            private boolean checkMine(int i, int j) {
-                if (isOutOfBounds(i, j)) {
-                    return false;
-                }
-
-                return field[i][j].isBomb();
-            }
-
-            private boolean checkZero(int i, int j) {
-                if (isOutOfBounds(i, j)) {
-                    return false;
-                }
-
-                final Mine mine = field[i][j];
-                return mine.getNearbyMines() == 0 && !mine.isRevealed();
             }
 
             private boolean isOutOfBounds(int i, int j) {
@@ -144,8 +115,7 @@ public class MineSweeper extends Game {
                         if (!mine.isRevealed()) {
                             setItem(
                                     slot,
-                                    ItemBuilder
-                                            .of(mine.isMarked() ? Material.FILLED_MAP : Material.MAP, "&a???")
+                                    ItemBuilder.of(mine.isMarked() ? Material.FILLED_MAP : Material.MAP, "&a???")
                                             .addLore("&eClick to reveal.")
                                             .addLore("&6Right Click to mark.")
                                             .addLoreIf("&4&lDEBUG &f" + (mine.isBomb() ? "&cMine" : "&a" + mine.getNearbyMines()), isDebug())
@@ -168,8 +138,7 @@ public class MineSweeper extends Game {
                         else {
                             setItem(
                                     slot,
-                                    new ItemBuilder(Material.STONE_BUTTON)
-                                            .setName(color + "There are %s mines nearby!", nearbyMines)
+                                    new ItemBuilder(Material.STONE_BUTTON).setName(color + "There are %s mines nearby!", nearbyMines)
                                             .setAmount(nearbyMines)
                                             .build()
                             );
@@ -253,25 +222,57 @@ public class MineSweeper extends Game {
 
             private void checkNeighbourForZero(int i, int j) {
                 final Mine mine = field[i][j];
+                mine.reveal();
+
                 if (mine.getNearbyMines() != 0) {
                     return;
                 }
 
-                mine.reveal();
+                getMinesAround(mine).forEach(m -> {
+                    if (m.getNearbyMines() == 0 && !m.isRevealed()) {
+                        checkNeighbourForZero(m.getX(), m.getZ());
+                    }
 
-                if (checkZero(i + 1, j)) {
-                    checkNeighbourForZero(i + 1, j);
-                }
-                if (checkZero(i - 1, j)) {
-                    checkNeighbourForZero(i - 1, j);
-                }
-                if (checkZero(i, j + 1)) {
-                    checkNeighbourForZero(i, j + 1);
-                }
-                if (checkZero(i, j - 1)) {
-                    checkNeighbourForZero(i, j - 1);
+                    m.reveal();
+                });
+
+            }
+
+            private Set<Mine> getMinesAround(Mine origin) {
+                final Set<Mine> set = Sets.newHashSet();
+
+                final int i = origin.getX();
+                final int j = origin.getZ();
+
+                supplyMine(set, i - 1, j - 1);
+                supplyMine(set, i - 1, j);
+                supplyMine(set, i - 1, j + 1);
+
+                supplyMine(set, i, j - 1);
+                supplyMine(set, i, j + 1);
+
+                supplyMine(set, i + 1, j - 1);
+                supplyMine(set, i + 1, j);
+                supplyMine(set, i + 1, j + 1);
+
+                return set;
+            }
+
+            private void supplyMine(Collection<Mine> cl, int i, int j) {
+                final Mine mine = getMine(i, j);
+                if (mine == null) {
+                    return;
                 }
 
+                cl.add(mine);
+            }
+
+            private Mine getMine(int i, int j) {
+                if (isOutOfBounds(i, j)) {
+                    return null;
+                }
+
+                return field[i][j];
             }
 
             private void fillOuter(ItemStack stack) {

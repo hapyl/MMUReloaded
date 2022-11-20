@@ -33,6 +33,9 @@ public class Mine {
     }
 
     public void reveal() {
+        if (isRevealed) {
+            return;
+        }
         isRevealed = true;
     }
 
