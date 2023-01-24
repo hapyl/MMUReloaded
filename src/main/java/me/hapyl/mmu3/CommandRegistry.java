@@ -67,6 +67,7 @@ public class CommandRegistry {
         register(new TeleportShortcutCommand(">"));
         register(new NightVisionCommand("nightvision"));
         register(new WatcherCommand("watcher"));
+        register(new FishingCommand("fish"));
 
         // TEST
         register(new CommandWithArguments("_testcommandwitharguments"));

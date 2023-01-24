@@ -158,7 +158,7 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
             return;
         }
 
-        final EntityShulker entity = new EntityShulker(EntityTypes.aB, Reflect.getMinecraftWorld(world));
+        final EntityShulker entity = new EntityShulker(EntityTypes.aC, Reflect.getMinecraftWorld(world));
         Reflect.setEntityLocation(entity, location);
 
         final Shulker shulker = (Shulker) entity.getBukkitEntity();

@@ -17,6 +17,7 @@ public class PersistentPlayerData extends Config {
     @DataField(path = "query.item_creator") private String lastItemCreatorQuery;
     @DataField(path = "feature.entity_removal") private boolean entityRemoval;
     @DataField(path = "feature.command_preview") private boolean commandPreview;
+    @DataField(path = "feature.quick_undo") private boolean quickUndo;
     @DataField(path = "game.cookie") private int cookieClicks;
     @DataField(path = "game.ultrasequencer") private int ultraSequencer;
 
@@ -29,6 +30,14 @@ public class PersistentPlayerData extends Config {
         this(player.getUniqueId());
         loadData();
         persistentData.put(player.getUniqueId(), this);
+    }
+
+    public boolean isQuickUndo() {
+        return quickUndo;
+    }
+
+    public void setQuickUndo(boolean quickUndo) {
+        this.quickUndo = quickUndo;
     }
 
     public boolean isCommandPreview() {

@@ -9,6 +9,8 @@ import me.hapyl.mmu3.feature.lastlocation.LastLocation;
 import me.hapyl.mmu3.feature.specialblocks.SpecialBlocks;
 import me.hapyl.mmu3.feature.standeditor.StandEditor;
 import me.hapyl.mmu3.feature.statechanger.StateChanger;
+import me.hapyl.mmu3.feature.warp.Warps;
+import me.hapyl.mmu3.outcast.fishing.Fishing;
 import me.hapyl.mmu3.outcast.hypixel.slayer.Slayer;
 
 public final class FeatureRegistry {
@@ -27,6 +29,8 @@ public final class FeatureRegistry {
     public final Slayer slayer;
     public final CommandBlockPreview commandBlockPreview;
     public final EmptyCommandBlockLocator cbLocator;
+    public final Fishing fishing;
+    public final Warps warps;
 
     public FeatureRegistry(Main main) {
         stateChanger = new StateChanger(main);
@@ -43,6 +47,8 @@ public final class FeatureRegistry {
         slayer = new Slayer(main);
         commandBlockPreview = new CommandBlockPreview(main);
         cbLocator = new EmptyCommandBlockLocator(main);
+        fishing = new Fishing(main);
+        warps = new Warps(main);
 
         // These features don't require to be accessed
     }

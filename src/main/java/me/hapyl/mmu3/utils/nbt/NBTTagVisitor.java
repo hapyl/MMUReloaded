@@ -1,12 +1,14 @@
 package me.hapyl.mmu3.utils.nbt;
 
 import com.google.common.collect.Lists;
+import me.hapyl.spigotutils.module.annotate.TestedNMS;
 import net.minecraft.nbt.*;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
+@TestedNMS(version = "1.19.3")
 public class NBTTagVisitor implements TagVisitor {
 
     private static final Pattern PATTERN = Pattern.compile("[A-Za-z\\d._+-]+");
@@ -40,7 +42,7 @@ public class NBTTagVisitor implements TagVisitor {
     public void a(NBTTagByteArray nbtTagByteArray) {
         append("&f[");
 
-        final byte[] bytes = nbtTagByteArray.d();
+        final byte[] bytes = nbtTagByteArray.e();
         for (int i = 0; i < bytes.length; i++) {
             if (i != 0) {
                 append(", ");
@@ -56,7 +58,7 @@ public class NBTTagVisitor implements TagVisitor {
     public void a(NBTTagIntArray nbtTagIntArray) {
         append("&f[");
 
-        final int[] bytes = nbtTagIntArray.f();
+        final int[] bytes = nbtTagIntArray.g();
         for (int i = 0; i < bytes.length; i++) {
             if (i != 0) {
                 append(", ");
@@ -72,7 +74,7 @@ public class NBTTagVisitor implements TagVisitor {
     public void a(NBTTagLongArray nbtTagLongArray) {
         append("&f[");
 
-        final long[] bytes = nbtTagLongArray.f();
+        final long[] bytes = nbtTagLongArray.g();
         for (int i = 0; i < bytes.length; i++) {
             if (i != 0) {
                 append(", ");
@@ -123,7 +125,7 @@ public class NBTTagVisitor implements TagVisitor {
     public void a(NBTTagCompound nbtTagCompound) {
         append("{");
 
-        List<String> keys = Lists.newArrayList(nbtTagCompound.d());
+        List<String> keys = Lists.newArrayList(nbtTagCompound.e());
         Collections.sort(keys);
 
         for (int i = 0; i < keys.size(); i++) {

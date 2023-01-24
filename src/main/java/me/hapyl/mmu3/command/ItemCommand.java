@@ -13,7 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.NumberConversions;
 
 import javax.annotation.Nullable;
-import java.util.Locale;
 
 /**
  * This class allows to create semi-complicated items using chat commands instead of GUI menu.
@@ -67,9 +66,20 @@ public class ItemCommand extends SimplePlayerAdminCommand {
         }
 
         if (material == null) {
-            Message.error(player, "%s is not a valid material!", arg);
-            getSimilarString(Material.values(), arg, player);
-            return;
+            // Try finding similar material
+            final String similarString = getSimilarString(Material.values(), arg);
+            if (similarString != null) {
+                final Material similarMaterial = Validate.getEnumValue(Material.class, similarString);
+                if (similarMaterial != null) {
+                    material = similarMaterial;
+                    Message.error(player, "Could find %s material, using %s instead.", arg, similarMaterial);
+                }
+            }
+
+            if (material == null) {
+                Message.error(player, "Invalid material %s.", arg);
+                return;
+            }
         }
 
         final ItemBuilder builder = new ItemBuilder(material);
@@ -179,8 +189,7 @@ public class ItemCommand extends SimplePlayerAdminCommand {
     private String getSimilarString(Object[] values, String str) {
         str = str.toLowerCase();
         for (Object t : values) {
-            final String lowerCase = (t instanceof Enum<?> e ? e.name() : t instanceof NamespacedKey n ? n.getKey() : t.toString()).toLowerCase(
-                    Locale.ROOT);
+            final String lowerCase = (t instanceof Enum<?> e ? e.name() : t instanceof NamespacedKey n ? n.getKey() : t.toString()).toLowerCase();
             if (lowerCase.contains(str)) {
                 return lowerCase;
             }
