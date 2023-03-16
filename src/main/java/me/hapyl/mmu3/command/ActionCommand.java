@@ -12,6 +12,7 @@ public class ActionCommand extends SimplePlayerAdminCommand implements DisabledC
     public ActionCommand(String name) {
         super(name);
         setDescription("Allows to perform certain actions, like sitting, swinging hands etc.");
+        setUsage("/action <action> [player]");
     }
 
     @Override

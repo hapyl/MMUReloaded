@@ -4,10 +4,10 @@ import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.inventory.Response;
 import me.hapyl.spigotutils.module.inventory.SignGUI;
 import me.hapyl.spigotutils.module.inventory.gui.CancelType;
 import me.hapyl.spigotutils.module.inventory.gui.PlayerGUI;
-import me.hapyl.spigotutils.module.util.Runnables;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -131,19 +131,21 @@ public class StandEditorGUI extends PlayerGUI {
 
             new SignGUI(player, "Enter Name") {
                 @Override
-                public void onResponse(Player player, String[] strings) {
-                    if (strings[0].contains("none") || strings[0].isBlank()) {
+                public void onResponse(Response response) {
+                    final String string = response.getString(0);
+
+                    if (string.contains("none") || string.isBlank()) {
                         Message.info(player, "Cancelled adding name.");
                     }
                     else {
-                        final String newName = Chat.format((strings[0] + " " + strings[1]).trim());
+                        final String newName = Chat.format((string + " " + response.getString(1)).trim());
                         stand.setCustomName(newName);
                         Message.info(player, "Set %s as new name.", newName);
                     }
 
-                    Runnables.runSync(() -> new StandEditorGUI(player, data));
+                    runSync(() -> new StandEditorGUI(player, data));
                 }
-            }.openMenu();
+            };
         }, ClickType.LEFT);
 
         addClick(5, player -> {

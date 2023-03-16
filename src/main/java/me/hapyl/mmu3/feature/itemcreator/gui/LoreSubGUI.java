@@ -7,6 +7,7 @@ import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.chat.LazyClickEvent;
 import me.hapyl.spigotutils.module.chat.LazyHoverEvent;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.inventory.Response;
 import me.hapyl.spigotutils.module.inventory.SignGUI;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -16,12 +17,14 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public class LoreSubGUI extends ICSubGUI {
+public class LoreSubGUI extends ItemCreatorSubGUI {
 
     private static final int MAX_LORE_LINES = 21;
 
     public LoreSubGUI(Player player) {
         super(player, "Modify Lore", Size.FIVE);
+        updateInventory(0);
+        openInventory();
     }
 
     public void updateInventory(int start) {
@@ -48,14 +51,15 @@ public class LoreSubGUI extends ICSubGUI {
                 );
                 setClick(slot, player -> new SignGUI(player, "Enter Lore") {
                     @Override
-                    public void onResponse(Player player, String[] strings) {
-                        lore.set(index, concatString(strings));
-                        runSync(() -> {
+                    public void onResponse(Response response) {
+                        lore.set(index, response.getAsString());
+                        response.runSync(() -> {
                             updateInventory(start);
                             openInventory();
                         });
                     }
-                }.openMenu(), ClickType.LEFT);
+
+                }, ClickType.LEFT);
                 setClick(slot, player -> {
                     lore.remove(index);
                     updateInventory(start);
@@ -121,14 +125,14 @@ public class LoreSubGUI extends ICSubGUI {
                             .build(),
                     player -> new SignGUI(player, "", "", "^^ Enter Lore ^^") {
                         @Override
-                        public void onResponse(Player player, String[] strings) {
-                            creator.getLore().add(concatString(strings));
+                        public void onResponse(Response response) {
+                            creator.getLore().add(response.getAsString());
                             runSync(() -> {
                                 updateInventory(start);
                                 openInventory();
                             });
                         }
-                    }.openMenu()
+                    }
             );
         }
 

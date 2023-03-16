@@ -7,9 +7,13 @@ import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.utils.PanelGUI;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.chat.LazyClickEvent;
+import me.hapyl.spigotutils.module.chat.LazyEvent;
 import me.hapyl.spigotutils.module.chat.LazyHoverEvent;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.inventory.Response;
 import me.hapyl.spigotutils.module.inventory.SignGUI;
+import me.hapyl.spigotutils.module.util.Runnables;
+import org.bukkit.Color;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -18,7 +22,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-public class ItemCreatorGUI extends PanelGUI {
+public final class ItemCreatorGUI extends PanelGUI {
 
     public ItemCreatorGUI(Player player) {
         this(player, false, true);
@@ -48,27 +52,30 @@ public class ItemCreatorGUI extends PanelGUI {
 
     @Override
     public void updateInventory() {
-        setItem(13, buildPreviewItem());
+        setItem(13, creator().buildPreviewItem());
         setClick(13, player -> new MaterialSubGUI(player, Category.BLOCKS), ClickType.LEFT);
 
         final ItemCreator creator = creator();
-        setClick(13, player -> new AmountSubGUI(player, "Amount", "Choose new amount for the item. (1-64)", creator.getMaterial(), 64) {
-            @Override
-            public void onClose(int amount) {
-                creator().setAmount(amount);
-            }
+        setClick(
+                13,
+                player -> new AmountSubGUI(player, "Amount", "Choose new amount for the item. (1-64)", creator.getMaterial(), 64, null) {
+                    @Override
+                    public void onClose(int amount) {
+                        creator().setAmount(amount);
+                    }
 
-            @Override
-            public PanelGUI returnToGUI() {
-                return new ItemCreatorGUI(getPlayer());
-            }
-        }, ClickType.RIGHT);
+                    @Override
+                    public PanelGUI returnToGUI() {
+                        return new ItemCreatorGUI(player);
+                    }
+                },
+                ClickType.RIGHT
+        );
 
         // Custom Name
         setItem(
                 28,
-                new ItemBuilder(Material.OAK_SIGN)
-                        .setName("&aSet Name")
+                new ItemBuilder(Material.OAK_SIGN).setName("&aSet Name")
                         .setSmartLore("Add a custom name to your item to make it look cool. Color codes are supported! (&)")
                         .addLore()
                         .addLore("Current Name: " + (creator.hasName() ? creator.getName() : "None"))
@@ -80,14 +87,12 @@ public class ItemCreatorGUI extends PanelGUI {
 
         setClick(28, player -> new SignGUI(player, "", "", "^^ Enter Name ^^") {
             @Override
-            public void onResponse(Player player, String[] strings) {
-                creator.setName(concatString(strings));
-                runSync(() -> {
-                    updateInventory();
-                    openInventory();
-                });
+            public void onResponse(Response response) {
+                creator.setName(response.getAsString());
+                updateAndReopenSync();
             }
-        }.openMenu(), player -> {
+
+        }, player -> {
             creator.setName(null);
             updateInventory();
             openInventory();
@@ -97,8 +102,7 @@ public class ItemCreatorGUI extends PanelGUI {
         // Build Item
         setPanelItem(
                 7,
-                new ItemBuilder(Material.LIME_DYE)
-                        .setName("Build Item")
+                new ItemBuilder(Material.CHEST).setName("Build Item")
                         .addSmartLore("Finalize the item and get it. You can still modify the item later!")
                         .build(),
                 player -> {
@@ -109,7 +113,7 @@ public class ItemCreatorGUI extends PanelGUI {
                     }
                     else {
                         inventory.addItem(buildFinalItem());
-                        Message.success(player, "Your item was successfully built!");
+                        Message.success(player, "Enjoy your item ;)");
                         Message.sound(player, Sound.BLOCK_ANVIL_USE, 2.0f);
                         player.closeInventory();
                     }
@@ -118,59 +122,115 @@ public class ItemCreatorGUI extends PanelGUI {
 
         setPanelItem(
                 6,
-                new ItemBuilder(Material.COMPARATOR)
-                        .setName("Complex Build")
+                new ItemBuilder(Material.COMPARATOR).setName("Complex Build")
                         .setSmartLore("Generate a minecraft command or ItemBuilder code.")
                         .build(),
-                this::notImplemented
+                player -> {
+                    final String command = creator.buildMinecraftGiveItem();
+
+                    Message.clickHover(
+                            player,
+                            LazyEvent.copyToClipboard(command),
+                            LazyEvent.showText("&eClick to copy! &c&o(Colors will only work in &nmcfunc&c&o files!)"),
+                            "&e&lCLICK &7to copy minecraft command."
+                    );
+
+                    closeInventory();
+                }
         );
 
         // Lore
         setItem(
                 30,
-                new ItemBuilder(Material.BOOK).setName("Lore").addSmartLore("Add or remove lore from the item.").build(),
+                new ItemBuilder(Material.BOOK).setName("Lore")
+                        .addSmartLore("Add or remove lore from the item.")
+                        .addLore()
+                        .addLore("&eClick to open lore sub-menu.")
+                        .build(),
                 LoreSubGUI::new
         );
 
         // Enchants
         setItem(
                 32,
-                new ItemBuilder(Material.LAPIS_LAZULI).setName("Enchantments").addSmartLore("Manager enchantments of the item.").build(),
+                new ItemBuilder(Material.LAPIS_LAZULI).setName("Enchantments")
+                        .addSmartLore("Manage enchantments of the item.")
+                        .addLore()
+                        .addLore("&eClick to open enchantments sub-menu.")
+                        .build(),
                 EnchantSubGUI::new
         );
 
-        setItem(34, new ItemBuilder(Material.PRISMARINE_SHARD).setName("Attributes").build(), this::notImplemented);
-        // TODO: 009. 09/05/2022 - Finish enchant, attributes etc
+        // Custom Model Data
+        final int customModelData = creator.getCustomModelData();
+        setItem(
+                33,
+                ItemBuilder.of(Material.PAINTING, "Custom Model Data", "Set custom model data value")
+                        .addLore()
+                        .addLore("Current Value: %s%s", customModelData, customModelData == 0 ? " &8Default" : "")
+                        .addLore()
+                        .addLore("&eClick to set custom model data")
+                        .build(),
+                player -> {
+                    new SignGUI(player, "Enter Custom Model Data") {
+                        @Override
+                        public void onResponse(Response response) {
+                            creator.setCustomModelData(response.getInt(0));
+                            updateAndReopenSync();
+                        }
+                    };
+                }
+        );
 
-        // Head texture
-        if (creator.getMaterial() == Material.PLAYER_HEAD) {
-            final String headTexture = creator.getHeadTexture();
-            setItem(
-                    14,
-                    new ItemBuilder(Material.BIRCH_SIGN)
-                            .setName("&aSet Head Texture")
-                            .addSmartLore("Paste &bMinecraft-URL &7value from &eminecraft-heads.com &7to set the head texture.")
-                            .addLore()
-                            .addLore("&aCurrent texture:")
-                            .addLore(headTexture == null ? "None!" : headTexture)
-                            .addLore()
-                            .addLore("&eClick to set texture")
-                            .addLoreIf("&6Right Click to remove", headTexture != null)
-                            .build()
-            );
+        setItem(34, new ItemBuilder(Material.PRISMARINE_SHARD).setName("Attributes").build(), AttributeSubGUI::new);
 
-            setClick(14, player -> {
-                Chat.sendClickableHoverableMessage(
-                        player,
-                        LazyClickEvent.SUGGEST_COMMAND.of("/ic setheadtexture "),
-                        LazyHoverEvent.SHOW_TEXT.of("&7Click to set head texture!"),
-                        Message.PREFIX + "&e&lCLICK HERE &7to set head texture."
+        // Material specific special buttons
+        switch (creator.getMaterial()) {
+            case PLAYER_HEAD -> {
+                final String headTexture = creator.getHeadTexture();
+                setItem(
+                        14,
+                        new ItemBuilder(Material.BIRCH_SIGN).setName("&aSet Head Texture")
+                                .addSmartLore("Paste &b&nMinecraft-URL&r &7value from &e&nminecraft-heads.com&r &7to set the head texture.")
+                                .addLore()
+                                .addLore("&aCurrent texture:")
+                                .addLore(headTexture == null ? "None!" : headTexture)
+                                .addLore()
+                                .addLore("&eClick to set texture")
+                                .addLoreIf("&6Right Click to remove", headTexture != null)
+                                .build()
                 );
-                player.closeInventory();
-            }, player -> {
-                creator.setHeadTexture(null);
-                updateInventory();
-            });
+
+                setClick(14, player -> {
+                    Chat.sendClickableHoverableMessage(
+                            player,
+                            LazyClickEvent.SUGGEST_COMMAND.of("/ic setheadtexture "),
+                            LazyHoverEvent.SHOW_TEXT.of("&7Click to set head texture!"),
+                            Message.PREFIX + "&e&lCLICK HERE &7to set head texture."
+                    );
+                    player.closeInventory();
+                }, player -> {
+                    creator.setHeadTexture(null);
+                    updateInventory();
+                });
+            }
+
+            case LEATHER_HELMET, LEATHER_CHESTPLATE, LEATHER_LEGGINGS, LEATHER_BOOTS, LEATHER_HORSE_ARMOR -> {
+                final Color color = creator.getArmorColor();
+                setItem(
+                        14,
+                        ItemBuilder.of(Material.WHITE_DYE, "Change Color")
+                                .addSmartLore("Change leather armor color.")
+                                .addLore()
+                                .addLore(
+                                        "&aCurrent Color: %s",
+                                        color == null ? "&8None!" : (creator.getArmorColorAsChatColor() + "")
+                                )
+                                .addLore()
+                                .addLore("&eClick to change color")
+                                .asIcon(), ArmorColorSubGUI::new
+                );
+            }
         }
 
         // Add listener for creative item replace
@@ -187,14 +247,13 @@ public class ItemCreatorGUI extends PanelGUI {
                 return;
             }
 
-            new ICSubGUI(player, "Set Item", Size.THREE) {
+            new ItemCreatorSubGUI(player, "Set Item", Size.THREE) {
                 @Override
                 public void updateInventory() {
                     setItem(13, currentItem);
                     setItem(
                             11,
-                            new ItemBuilder(Material.LIME_TERRACOTTA)
-                                    .setName("&aReplace Item")
+                            new ItemBuilder(Material.LIME_TERRACOTTA).setName("&aReplace Item")
                                     .setSmartLore("Replace editor item with item to the right.")
                                     .addLore()
                                     .addSmartLore("&c&lWarning! &7This will reset current editor item, including any changes you made.")
@@ -211,10 +270,9 @@ public class ItemCreatorGUI extends PanelGUI {
                             player -> ItemCreatorGUI.this.openInventory()
                     );
                 }
-            };
+            }.updateAndOpen();
 
         });
-
     }
 
     private void notImplemented(Player player) {
@@ -222,16 +280,11 @@ public class ItemCreatorGUI extends PanelGUI {
         Message.sound(getPlayer(), Sound.ENTITY_VILLAGER_NO);
     }
 
-    private ItemStack buildPreviewItem() {
-        final ItemBuilder builder = new ItemBuilder(buildFinalItem());
-
-        builder.addLore("&8&m                                   ");
-        builder.addSmartLore("This is a preview of your item! Click the button at the bottom to build your item.", "&7&o");
-        builder.addLore();
-        builder.addLore("&eClick to change material");
-        builder.addLore("&6Right Click to pick amount");
-
-        return builder.toItemStack();
+    private void updateAndReopenSync() {
+        Runnables.runSync(() -> {
+            updateInventory();
+            openInventory();
+        });
     }
 
     private ItemStack buildFinalItem() {

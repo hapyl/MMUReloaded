@@ -3,10 +3,13 @@ package me.hapyl.mmu3.feature.activity;
 import com.google.common.collect.Sets;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
+import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.util.Runnables;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -38,8 +41,16 @@ public class WorldActivity extends Feature implements Listener {
         }
     }
 
-    public void toggleActivity(Activity activity) {
+    public void toggleActivity(Activity activity, boolean broadcastStatus) {
         setEnabled(activity, !isEnabled(activity));
+
+        if (!broadcastStatus) {
+            return;
+        }
+
+        final boolean enabled = isEnabled(activity);
+        Message.broadcast("%s activity is now %s!", activity.getName(), enabled ? "enabled" : "disabled");
+        Message.broadcast("&o" + (enabled ? activity.getEnableMessage() : activity.getDisableMessage()));
     }
 
     // Listeners
@@ -83,16 +94,21 @@ public class WorldActivity extends Feature implements Listener {
     public void handleBlockPlaceEvent(BlockPlaceEvent ev) {
         final Block block = ev.getBlock();
         final BlockState state = ev.getBlockReplacedState();
+        final Player player = ev.getPlayer();
 
-        if (isEnabled(Activity.BLOCK_UPDATE)) {
-            ev.setCancelled(true);
-
-            Runnables.runLater(() -> {
-                // FIXME: 008, Jan 8, 2023 -> This needs testing for proper block rotation applying.
-                state.setBlockData(block.getBlockData());
-                state.update(true, false);
-            }, 1L);
+        if (!isEnabled(Activity.BLOCK_UPDATE)) {
+            return;
         }
+
+        final BlockData blockData = block.getBlockData();
+
+        ev.setCancelled(true);
+
+        Runnables.runLater(() -> {
+            block.setType(player.getInventory().getItemInMainHand().getType(), false);
+            state.setBlockData(blockData);
+            state.update(true, false);
+        }, 1L);
     }
 
 }

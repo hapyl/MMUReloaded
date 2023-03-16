@@ -38,8 +38,16 @@ public class Warp {
     public void teleport(Entity entity) {
         entity.teleport(location);
         if (entity instanceof Player player) {
-            Message.info(player, "Teleported to %s.", name);
+            Message.info(player, "Teleported to warp \"%s\".", name);
             Message.sound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f);
         }
+    }
+
+    public void setLocation(Location location) {
+        this.location.setX(location.getX());
+        this.location.setY(location.getY());
+        this.location.setZ(location.getZ());
+        this.location.setYaw(location.getYaw());
+        this.location.setPitch(location.getPitch());
     }
 }

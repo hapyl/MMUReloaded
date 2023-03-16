@@ -16,14 +16,16 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 
-public class EnchantSubGUI extends ICSubGUI {
+public class EnchantSubGUI extends ItemCreatorSubGUI {
 
     public EnchantSubGUI(Player player) {
         super(player, "Enchantments", Size.FIVE);
+        updateInventory(0);
+        openInventory();
     }
 
     public void updateInventory(int start) {
-        clear();
+        clearSubGUI();
 
         final ItemCreator creator = creator();
         final Map<Enchantment, Integer> presentEnchants = creator.getEnchantMap();
@@ -55,9 +57,9 @@ public class EnchantSubGUI extends ICSubGUI {
 
                 setClick(slot, player -> new AmountSubGUI(
                         player,
-                        "Enchantment Level",
+                        "Enchant Level",
                         "For " + enchantName,
-                        enchant.getMaterial(), 1000
+                        enchant.getMaterial(), 1000, new EnchantSubGUI(player)
                 ) {
                     @Override
                     public void onClose(int amount) {

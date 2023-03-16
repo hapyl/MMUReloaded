@@ -1,18 +1,27 @@
 package me.hapyl.mmu3.command;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.chat.LazyEvent;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.util.Enums;
 import me.hapyl.spigotutils.module.util.Validate;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.NumberConversions;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class allows to create semi-complicated items using chat commands instead of GUI menu.
@@ -25,6 +34,8 @@ public class ItemCommand extends SimplePlayerAdminCommand {
     //**/ Arguments are pairs of key:value strings.
     //**/
 
+    private final Map<Help, String[]> helpPages = Maps.newHashMap();
+
     public ItemCommand(String name) {
         super(name);
         setAliases("i");
@@ -36,7 +47,33 @@ public class ItemCommand extends SimplePlayerAdminCommand {
             }
         }
 
-        addCompleterValues(2, "name()", "lore()", "smart()", "enchant()");
+        addCompleterValues(1, "self");
+
+        setHelp(
+                Help.GENERAL,
+                "Basic Usage: %s <Material> or %s <Material>:<Amount>".formatted(getUsage(), getUsage()),
+                "Using &e'self' &7in place of material name will modify held item."
+        );
+
+        setHelp(
+                Help.ABOUT_ARGUMENTS,
+                "Arguments are strings, formatted like 'argumentName(argumentValue)'",
+                "which are separated by space if multiple."
+        );
+
+        setHelp(
+                Help.VALID_ARGUMENTS,
+                "&aName: &3name(&bYour Name&3)",
+                "&aLore: &3lore(&bThis is lore, And another line&3)",
+                "&aSmart Lore: &3smart(&bSmart lore automatically splits the lore lines!&3)",
+                "&aEnchants: &3enchant(&bsharpness:2&3) enchant(&bunbreaking:10&3, &blooting:69&3, &bthorns:420&3)",
+                "&aNBT: &3nbt(&bDamage: 123&3) &3nbt(&bTags: [\"TagList\"]&3)"
+        );
+
+    }
+
+    private void setHelp(Help help, String... strings) {
+        helpPages.put(help, strings);
     }
 
     @Override
@@ -48,21 +85,32 @@ public class ItemCommand extends SimplePlayerAdminCommand {
 
         final String arg = args[0];
         if (arg.equalsIgnoreCase("help")) {
-            sendHelp(player);
+            sendHelp(player, args.length >= 2 ? Enums.byName(Help.class, args[1], Help.GENERAL) : Help.GENERAL);
             return;
         }
 
+        boolean usingSelf = false;
         Material material;
-        int amount;
+        int amount = 1;
 
+        final PlayerInventory playerInventory = player.getInventory();
+
+        // Parse material
         if (arg.contains(":")) {
             final String[] split = arg.split(":");
             material = Validate.getEnumValue(Material.class, split[0]);
             amount = NumberConversions.toInt(split[1]);
         }
+        // Check for self to modify items
+        else if (arg.equalsIgnoreCase("self") || arg.equals("_")) {
+            final ItemStack itemInMainHand = playerInventory.getItemInMainHand();
+            material = itemInMainHand.getType();
+            amount = itemInMainHand.getAmount();
+            usingSelf = true;
+        }
+        // Default to arg parsing
         else {
             material = Validate.getEnumValue(Material.class, arg);
-            amount = 1;
         }
 
         if (material == null) {
@@ -72,7 +120,7 @@ public class ItemCommand extends SimplePlayerAdminCommand {
                 final Material similarMaterial = Validate.getEnumValue(Material.class, similarString);
                 if (similarMaterial != null) {
                     material = similarMaterial;
-                    Message.error(player, "Could find %s material, using %s instead.", arg, similarMaterial);
+                    Message.error(player, "Could not find %s material, using %s instead.", arg, Chat.capitalize(similarMaterial));
                 }
             }
 
@@ -82,17 +130,40 @@ public class ItemCommand extends SimplePlayerAdminCommand {
             }
         }
 
-        final ItemBuilder builder = new ItemBuilder(material);
+        if (material.isAir()) {
+            Message.error(player, "Cannot give nor modify air.");
+            return;
+        }
+
+        final ItemBuilder builder = usingSelf ? new ItemBuilder(playerInventory.getItemInMainHand()) : ItemBuilder.of(material);
         builder.setAmount(amount);
 
+        // Parse and apply arguments if any
         if (args.length >= 2) {
             if (!parseArgumentsAndApply(player, builder, Chat.arrayToString(args, 1))) {
                 return;
             }
         }
 
-        player.getInventory().addItem(builder.toItemStack());
-        Message.info(player, "Gave x%s %s to %s.", builder.getAmount(), material.name(), player.getName());
+        final ItemStack itemStack = builder.build();
+
+        if (usingSelf) {
+            playerInventory.setItem(playerInventory.getHeldItemSlot(), itemStack);
+            Message.info(player, "Modified held item.");
+        }
+        else {
+            playerInventory.addItem(itemStack);
+            Message.info(player, "Gave x%s %s to %s.", builder.getAmount(), Chat.capitalize(material), player.getName());
+        }
+    }
+
+    @Override
+    protected List<String> tabComplete(CommandSender sender, String[] args) {
+        if (args.length >= 2) {
+            return completerSort(Lists.newArrayList("name()", "lore()", "smart()", "enchant()", "nbt()"), args);
+        }
+
+        return super.tabComplete(sender, args);
     }
 
     public boolean parseArgumentsAndApply(Player player, ItemBuilder builder, String string) {
@@ -100,11 +171,14 @@ public class ItemCommand extends SimplePlayerAdminCommand {
         final String loreSubstring = findBetween(string, "lore");
         final String smartLoreSubstring = findBetween(string, "smart");
         final String enchantSubstring = findBetween(string, "enchant");
+        final String nbtSubstring = findBetween(string, "nbt");
 
+        // Process name
         if (nameSubstring != null) {
             builder.setName(nameSubstring);
         }
 
+        // Process lore
         if (loreSubstring != null) {
             if (loreSubstring.contains(",")) {
                 final String[] lines = loreSubstring.split(",");
@@ -121,7 +195,7 @@ public class ItemCommand extends SimplePlayerAdminCommand {
             builder.addSmartLore(smartLoreSubstring);
         }
 
-        // enchant(sharpness:5)
+        // Process enchants
         if (enchantSubstring != null) {
             final String[] enchants = (enchantSubstring.contains(",") ? enchantSubstring.split(",") : new String[] { enchantSubstring });
             for (String str : enchants) {
@@ -148,6 +222,10 @@ public class ItemCommand extends SimplePlayerAdminCommand {
 
                 builder.addEnchant(enchantment, lvl);
             }
+        }
+
+        if (nbtSubstring != null) {
+            builder.setNbt(nbtSubstring);
         }
 
         return true;
@@ -197,18 +275,46 @@ public class ItemCommand extends SimplePlayerAdminCommand {
         return null;
     }
 
-    private void sendHelp(Player player) {
-        Message.info(player, "&b&m-----------------------------------");
-        Message.info(player, "Basic Usage: %s [Material] or %s [Material]:[Amount]", getUsage(), getUsage());
+
+    private void sendHelp(Player player, Help help) {
+        final String[] helpStrings = helpPages.get(help);
+
+        Message.info(player, "&b&m----------[&a&l %s Help &a&l[&b&m----------".formatted(Chat.capitalize(help.name())));
+        for (String string : helpStrings) {
+            Message.info(player, string);
+        }
+
+        // Other help
         Message.info(player, "");
-        Message.info(player, "Arguments are strings, formatted like 'argumentName(argumentValue)'");
-        Message.info(player, "which are separated by space if multiple.");
-        Message.info(player, "");
-        Message.info(player, "&b&lValid Arguments:");
-        Message.info(player, "Name: &aname(Insert Item Name)");
-        Message.info(player, "Lore: &alore(First Lore Line, Another lore line, And another!)");
-        Message.info(player, "Smart Lore: &asmart(Smart lore splits line automatically at the best spots!)");
-        Message.info(player, "Enchants: &aenchant(shaprness:2) enchant(unbreaking:10, looting:69, thorns:420)");
-        Message.info(player, "&b&m-----------------------------------");
+        final Help previous = Enums.getPreviousValue(Help.class, help);
+        final Help next = Enums.getNextValue(Help.class, help);
+
+        Message.clickHover(
+                player,
+                LazyEvent.runCommand("%s help %s", getUsage().toLowerCase(), previous),
+                LazyEvent.showText("&7Click to see help for %s!", Chat.capitalize(previous)),
+                "&e&lCLICK &eto see help about %s.",
+                Chat.capitalize(previous)
+        );
+
+        Message.clickHover(
+                player,
+                LazyEvent.runCommand("%s help %s", getUsage(), next),
+                LazyEvent.showText("&7Click to see help for %s!", Chat.capitalize(next)),
+                "&e&lCLICK &eto see help about %s.",
+                Chat.capitalize(next)
+        );
+
+        Message.info(player, "&b&m------------------------------", Chat.capitalize(help.name()));
+
     }
+
+    private enum Help {
+
+        GENERAL,
+        ABOUT_ARGUMENTS,
+        VALID_ARGUMENTS
+
+    }
+
 }

@@ -17,6 +17,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -28,6 +29,7 @@ public class StateChangerGUI extends PanelGUI {
     public StateChangerGUI(Player player, String name, Data data) {
         super(player, name, Size.FIVE);
         this.data = data;
+
         setBottomPanel();
         updateInventory();
     }
@@ -99,7 +101,6 @@ public class StateChangerGUI extends PanelGUI {
         }
 
         if (blockRawData instanceof Wall blockData) {
-
             final BlockFace[] allowedFaces = { BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST };
             final boolean isUp = blockData.isUp();
 
@@ -129,7 +130,6 @@ public class StateChangerGUI extends PanelGUI {
 
                 switchAddLore(slot, Wall.Height.values(), height, builder);
                 switchAddClick(slot, blockData, Wall.Height.values(), height, (d, h) -> d.setHeight(face, h));
-
             }
         }
 
@@ -447,6 +447,7 @@ public class StateChangerGUI extends PanelGUI {
             );
         }
 
+        // Dripstone
         if (blockRawData instanceof PointedDripstone blockData) {
             final PointedDripstone.Thickness thickness = blockData.getThickness();
             final BlockFace verticalDirection = blockData.getVerticalDirection();
@@ -483,6 +484,7 @@ public class StateChangerGUI extends PanelGUI {
             switchAddClick(10, blockData, PointedDripstone.Thickness.values(), thickness, PointedDripstone::setThickness);
         }
 
+        // Redstone
         if (blockRawData instanceof RedstoneWire blockData) {
             for (BlockFace face : blockData.getAllowedFaces()) {
                 if (!StateConstants.FACE_SLOT_MAP.containsKey(face)) {
@@ -506,6 +508,7 @@ public class StateChangerGUI extends PanelGUI {
             }
         }
 
+        // Rotatable
         if (blockRawData instanceof Rotatable blockData) {
             final BlockFace rotation = blockData.getRotation();
 
@@ -549,6 +552,7 @@ public class StateChangerGUI extends PanelGUI {
             levelableAddClick(23, blockData, distance, maximumDistance, Scaffolding::setDistance);
         }
 
+        // Sculk
         if (blockRawData instanceof SculkSensor blockData) {
             final SculkSensor.Phase phase = blockData.getPhase();
             switchAddLore(
@@ -562,6 +566,7 @@ public class StateChangerGUI extends PanelGUI {
             switchAddClick(22, blockData, SculkSensor.Phase.values(), phase, SculkSensor::setPhase);
         }
 
+        // Snow
         if (blockRawData instanceof Snow blockData) {
             final int layers = blockData.getLayers();
             final int maximumLayers = blockData.getMaximumLayers();
@@ -578,6 +583,7 @@ public class StateChangerGUI extends PanelGUI {
             levelableAddClick(22, blockData, blockData.getMinimumLayers(), layers, maximumLayers, Snow::setLayers);
         }
 
+        // Snowable
         if (blockRawData instanceof Snowable blockData) {
             final boolean snowy = blockData.isSnowy();
 
@@ -591,6 +597,56 @@ public class StateChangerGUI extends PanelGUI {
                             .build(), player -> applyState(blockData, d -> d.setSnowy(!snowy))
             );
 
+        }
+
+        // Pink Petals
+        if (blockRawData instanceof PinkPetals blockData) {
+            final int flowerAmount = blockData.getFlowerAmount();
+
+            levelableAddLore(
+                    19,
+                    "Petals",
+                    flowerAmount,
+                    blockData.getMaximumFlowerAmount(),
+                    new ItemBuilder(Material.PINK_PETALS)
+                            .setName("&aPetals")
+                            .setSmartLore("The amount of petals on the flower.")
+            );
+
+            levelableAddClick(19, blockData, 1, flowerAmount, blockData.getMaximumFlowerAmount(), PinkPetals::setFlowerAmount);
+        }
+
+        // Chiseled Bookshelf
+        if (blockRawData instanceof ChiseledBookshelf blockData) {
+            final Map<Integer, Integer> inventorySlotToChiseledBookshelfOccupiedSlotMap = Map.of(
+                    0, 10,
+                    1, 19,
+                    2, 28,
+                    3, 16,
+                    4, 25,
+                    5, 34
+            );
+
+            // This always sets the default book, since we're not 1.20 yet
+            // and block is disabled by a client.
+
+            for (int i = 0; i < 6; i++) {
+                final int slot = inventorySlotToChiseledBookshelfOccupiedSlotMap.get(i);
+                final boolean isOccupied = blockData.isSlotOccupied(i);
+
+                final int finalI = i;
+                setItem(
+                        slot,
+                        ItemBuilder.of(Material.BOOK)
+                                .setAmount(i + 1)
+                                .predicate(isOccupied, ItemBuilder::glow)
+                                .setName("Has Book at " + (i + 1))
+                                .addLoreIf("This slot is occupied.", isOccupied)
+                                .addLoreIf("This slot is not occupied.", !isOccupied)
+                                .asIcon(),
+                        player -> applyState(blockData, d -> d.setSlotOccupied(finalI, !isOccupied))
+                );
+            }
         }
 
         // Open Inventory

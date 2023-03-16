@@ -205,6 +205,11 @@ public class SpecialBlocks extends Feature {
             }
         }
 
+        // Disabled blocks (1.20)
+        disabled:
+        {
+        }
+
 
     } // end of the method
 

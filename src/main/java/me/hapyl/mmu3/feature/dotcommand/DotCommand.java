@@ -2,6 +2,8 @@ package me.hapyl.mmu3.feature.dotcommand;
 
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
+import me.hapyl.mmu3.message.Message;
+import me.hapyl.spigotutils.module.inventory.gui.GUI;
 import me.hapyl.spigotutils.module.util.Runnables;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -30,7 +32,6 @@ public class DotCommand extends Feature implements Listener {
         }
 
         ev.setCancelled(true);
-
         String strippedMessage = message.substring(1);
 
         // Check for russian words
@@ -44,10 +45,10 @@ public class DotCommand extends Feature implements Listener {
         }
 
         final String finalStrippedMessage = strippedMessage;
+        Message.info(player, "Converted '%s' %s '/%s'.", message, GUI.ARROW_FORWARD, finalStrippedMessage);
+
         Runnables.runSync(() -> {
             Bukkit.dispatchCommand(player, finalStrippedMessage);
         });
-
-
     }
 }

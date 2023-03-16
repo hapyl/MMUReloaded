@@ -8,6 +8,7 @@ import me.hapyl.mmu3.outcast.game.GameInstance;
 import me.hapyl.mmu3.utils.PanelGUI;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.inventory.Response;
 import me.hapyl.spigotutils.module.inventory.SignGUI;
 import me.hapyl.spigotutils.module.player.PlayerLib;
 import me.hapyl.spigotutils.module.util.Runnables;
@@ -19,7 +20,6 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import java.util.Locale;
 
 public class Wordle extends Game {
 
@@ -163,8 +163,9 @@ public class Wordle extends Game {
 
                 new SignGUI(getPlayer(), "Enter Five Letter Word") {
                     @Override
-                    public void onResponse(Player player, String[] strings) {
-                        final String word = strings[0].toLowerCase(Locale.ROOT);
+                    public void onResponse(Response response) {
+                        final String word = response.getString(0);
+
                         if (word.length() != 5) {
                             Message.error(player, "A word must be 5 letter long!");
                             Message.sound(player, Sound.ENTITY_VILLAGER_NO);
@@ -185,8 +186,7 @@ public class Wordle extends Game {
                         status = Status.GUESSING;
                         returnToMenuFromSign();
                     }
-                }.openMenu();
-
+                };
             }
 
             private void returnToMenuFromSign() {

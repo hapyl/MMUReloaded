@@ -1,6 +1,7 @@
 package me.hapyl.mmu3.message;
 
 import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.chat.LazyEvent;
 import me.hapyl.spigotutils.module.player.PlayerLib;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -41,6 +42,7 @@ public enum Message {
     private final int expectedReplacements;
 
     public static final String PREFIX = "&c&lMMU3 &8➤ &7";
+    public static final String PREFIX_BROADCAST = "&6&lMMU3 &8➤ &e";
     public static final String ARROW = "➤";
 
     Message(Type type, String value) {
@@ -140,7 +142,13 @@ public enum Message {
     }
 
     public static void broadcast(String message, Object... replacements) {
-        Chat.broadcast(PREFIX + "Broadcast &8➤ &7" + message.formatted(replacements));
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            Chat.sendHoverableMessage(
+                    player,
+                    LazyEvent.showText("&e&oThis is a broadcast message. Everyone on the server sees it."),
+                    PREFIX_BROADCAST + message.formatted(replacements)
+            );
+        });
     }
 
     public static void broadcastAdmins(String message, Object... replacements) {

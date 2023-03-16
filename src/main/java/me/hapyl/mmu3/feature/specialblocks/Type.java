@@ -7,6 +7,7 @@ public enum Type {
     SNOW,
     FLUID_WATER,
     FLUID_LAVA,
-    CORAL
+    CORAL,
+    DISABLED
 
 }

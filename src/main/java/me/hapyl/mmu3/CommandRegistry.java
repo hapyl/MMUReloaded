@@ -68,6 +68,13 @@ public class CommandRegistry {
         register(new NightVisionCommand("nightvision"));
         register(new WatcherCommand("watcher"));
         register(new FishingCommand("fish"));
+        register(new WarpCommand("warp"));
+        register(new LineOfSightCommand("los"));
+        register(new ActivityCommand("activity"));
+        register(new BoundingBoxCommand("boundingBox"));
+        register(new SpawnCommand("spawn"));
+        register(new DeleteCommand("delete"));
+        register(new FillNearCommand("fillNear"));
 
         // TEST
         register(new CommandWithArguments("_testcommandwitharguments"));

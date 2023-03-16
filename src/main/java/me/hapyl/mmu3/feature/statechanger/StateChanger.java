@@ -97,7 +97,7 @@ public class StateChanger extends Feature {
                 data instanceof CaveVines || data instanceof Farmland || data instanceof Gate || data instanceof Levelled ||
                 data instanceof Piston || data instanceof PistonHead || data instanceof PointedDripstone || data instanceof Rotatable ||
                 data instanceof Scaffolding || data instanceof SculkSensor || data instanceof Snow ||
-                data instanceof Snowable;
+                data instanceof Snowable || data instanceof PinkPetals;
     }
 
     public boolean isBannedBlock(Material material) {

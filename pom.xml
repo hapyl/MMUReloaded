@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <name>MapmakerUtilitiesReloaded</name>
-    <version>1.6.0-SNAPSHOT</version>
+    <version>1.6.1-SNAPSHOT</version>
     <description>A utilities plugin for mapmakers by mapmakers.</description>
 
     <properties>
@@ -28,23 +28,44 @@
                     <target>17</target>
                 </configuration>
             </plugin>
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-shade-plugin</artifactId>-->
+            <!--                <version>3.2.4</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <phase>package</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>shade</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            <createDependencyReducedPom>false</createDependencyReducedPom>-->
+            <!--                            <outputFile>E:/_Server18/plugins/MapmakerUtilitiesReloaded-${version}.jar</outputFile>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
+
+            <!-- Copy Rename -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <groupId>com.coderplus.maven.plugins</groupId>
+                <artifactId>copy-rename-maven-plugin</artifactId>
+                <version>1.0</version>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <id>copy-file</id>
+                        <phase>install</phase>
                         <goals>
-                            <goal>shade</goal>
+                            <goal>copy</goal>
                         </goals>
                         <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <outputFile>E:/_Server18/plugins/MapmakerUtilitiesReloaded-${version}.jar</outputFile>
+                            <sourceFile>${project.build.directory}/${project.build.finalName}.jar</sourceFile>
+                            <destinationFile>E:/_Server18/plugins/${project.name}.jar</destinationFile>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
         <resources>
             <resource>
@@ -54,6 +75,7 @@
         </resources>
     </build>
 
+    <!--    Repositories-->
     <repositories>
         <repository>
             <id>spigotmc-repo</id>
@@ -66,22 +88,20 @@
 
     </repositories>
 
+    <!--    Dependencies-->
     <dependencies>
 
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.19.3-R0.1-SNAPSHOT</version>
+            <version>1.19.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>local.eternapi</groupId>
-            <artifactId>local</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>E:/_Server18/plugins/EternaAPI.jar
-            </systemPath>
+            <groupId>me.hapyl</groupId>
+            <artifactId>EternaAPI</artifactId>
+            <version>2.9.3-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

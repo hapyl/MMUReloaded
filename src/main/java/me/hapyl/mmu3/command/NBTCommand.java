@@ -4,25 +4,43 @@ import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.utils.nbt.NBTData;
 import me.hapyl.mmu3.utils.nbt.NBTHolder;
 import me.hapyl.mmu3.utils.nbt.NBTTagVisitor;
+import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.chat.LazyEvent;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
+import me.hapyl.spigotutils.module.nbt.nms.NBTNative;
 import net.minecraft.nbt.NBTBase;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public class NBTCommand extends SimplePlayerAdminCommand {
     public NBTCommand(String name) {
         super(name);
+        setDescription("Allows to read and write NBT to items, blocks or entities.");
+        setUsage("nbt [Path],({Nbt})");
     }
 
     // nbt [optional]
+    // nbt {}
     @Override
     protected void execute(Player player, String[] args) {
-        final ItemStack item = player.getInventory().getItemInMainHand();
+        final PlayerInventory playerInventory = player.getInventory();
+        final ItemStack item = playerInventory.getItemInMainHand();
         //        final RayTraceResult trace = player.rayTraceBlocks(25);
 
         if (item.getType().isAir()) {
             Message.error(player, "Not holding item.");
+            return;
+        }
+
+        // Setting the NBT
+        if (args.length >= 1 && args[0].startsWith("{")) {
+            try {
+                playerInventory.setItemInMainHand(NBTNative.setNbt(item, Chat.arrayToString(args, 0)));
+                Message.success(player, "Modified held item NBT.");
+            } catch (Exception e) {
+                Message.error(player, "Unable to modify NBT! " + e.getMessage());
+            }
             return;
         }
 
@@ -40,7 +58,7 @@ public class NBTCommand extends SimplePlayerAdminCommand {
         //        }
 
         if (!holder.hasData()) {
-            Message.error(player, "Unable to fetch NBT.");
+            Message.error(player, "Item doesn't contains any NBT data.");
             return;
         }
 
@@ -63,7 +81,6 @@ public class NBTCommand extends SimplePlayerAdminCommand {
         holder.getMappedValues().forEach((k, v) -> {
             formatDisplay(player, k, v);
         });
-
     }
 
     private void formatDisplay(Player player, String key, NBTBase nbt) {

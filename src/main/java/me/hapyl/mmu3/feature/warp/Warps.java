@@ -7,16 +7,17 @@ import me.hapyl.mmu3.feature.Feature;
 import javax.annotation.Nullable;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public class Warps extends Feature {
 
-    private final Map<String, Warp> byName;
+    protected final Map<String, Warp> byName;
     private final WarpConfig config;
 
     public Warps(Main mmu3plugin) {
         super(mmu3plugin);
         this.byName = Maps.newHashMap();
-        this.config = new WarpConfig(mmu3plugin);
+        this.config = new WarpConfig(mmu3plugin, this);
     }
 
     public WarpConfig getConfig() {
@@ -31,12 +32,21 @@ public class Warps extends Feature {
             return false;
         }
 
-        byName.put(name, newWarp);
+        byName.put(name.toLowerCase(Locale.ROOT), newWarp);
         return true;
+    }
+
+    public void unregister(Warp warp) {
+        byName.remove(warp.getName().toLowerCase(Locale.ROOT));
     }
 
     @Nullable
     public Warp byName(String name) {
         return byName.get(name.toLowerCase(Locale.ROOT));
     }
+
+    public Set<String> names() {
+        return byName.keySet();
+    }
+
 }

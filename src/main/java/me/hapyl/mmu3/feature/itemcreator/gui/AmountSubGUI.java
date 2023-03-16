@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Locale;
 
-public abstract class AmountSubGUI extends ICSubGUI {
+public abstract class AmountSubGUI extends ItemCreatorSubGUI {
 
     private static final ItemStack ITEM_INCREASE_AMOUNT = ItemBuilder
             .playerHead(
@@ -36,8 +36,8 @@ public abstract class AmountSubGUI extends ICSubGUI {
     private final int maxAmount;
     private int amount;
 
-    public AmountSubGUI(Player player, String name, String about, Material material, int maxAmount) {
-        super(player, name, Size.THREE, false);
+    public AmountSubGUI(Player player, String name, String about, Material material, int maxAmount, PanelGUI returnGUI) {
+        super(player, name, Size.THREE, null);
         this.name = name;
         this.about = about;
         this.material = material;

@@ -13,17 +13,17 @@ import java.util.List;
 
 public class ItemCreatorCommand extends SimplePlayerAdminCommand {
 
-    private final String[] validArguments = { "open", "new", "import", "addsmartlore", "setsmartlore", "setheadtexture" };
+    private final String[] validArguments = { "open", "new", "import", "addsmartlore", "setsmartlore", "setheadtexture", "setnbt" };
 
     public ItemCreatorCommand(String name) {
         super(name);
         setDescription("Opens item creator gui.");
-        setAliases("ic");
+        setAliases("ic", "createItem", "create");
     }
 
     @Override
     protected void execute(Player player, String[] args) {
-        // ic (open, new, import, addsmartlore, setsmartlore)
+        // ic (open, new, import, addsmartlore, setsmartlore, setnbt)
 
         if (args.length == 0) {
             new ItemCreatorGUI(player);
@@ -59,6 +59,11 @@ public class ItemCreatorCommand extends SimplePlayerAdminCommand {
 
                 case "setheadtexture" -> {
                     creator.setHeadTexture(string);
+                    new ItemCreatorGUI(player);
+                }
+
+                case "setnbt" -> {
+                    creator.setNbt(string);
                     new ItemCreatorGUI(player);
                 }
             }

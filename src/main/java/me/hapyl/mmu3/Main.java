@@ -29,7 +29,6 @@ public class Main extends JavaPlugin {
 
     private FeatureRegistry registry;
     private EternaAPI eternaAPI;
-
     @Override
     public void onEnable() {
         if (instance != null) {
@@ -69,6 +68,9 @@ public class Main extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             PersistentPlayerData.createData(player);
         }
+
+        // Load warp config
+        registry.warps.getConfig().loadWarps();
 
         // Test
         new Test();
@@ -113,6 +115,10 @@ public class Main extends JavaPlugin {
                 PersistentPlayerData.getData(player).saveData();
             }
         }, "persistent player data save");
+
+        runSafe(() -> {
+            registry.warps.getConfig().saveWarps();
+        }, "warp save");
     }
 
     private void runSafe(Runnable runnable, String name) {

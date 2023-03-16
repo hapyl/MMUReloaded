@@ -23,11 +23,13 @@ public class WatcherCommand extends SimplePlayerAdminCommand {
             Chat.sendMessage(player, "&aUpdating skin test.");
 
             final PlayerTextures textures = profile.getTextures();
-            textures.setSkin(new URL("http://textures.minecraft.net/texture/e17cb11a339366b60ace013f42b1ab5837ecf12a4985552745d84aac80bfafa8"));
+            player.sendMessage("1: " + textures.getSkin());
 
-            profile.update().thenRun(() -> {
-                Chat.sendMessage(player, "&aUpdated.");
-            });
+            textures.setSkin(new URL("http://textures.minecraft.net/texture/e17cb11a339366b60ace013f42b1ab5837ecf12a4985552745d84aac80bfafa8"));
+            profile.setTextures(textures);
+
+            player.sendMessage("2: " + textures.getSkin());
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

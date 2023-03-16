@@ -33,7 +33,7 @@ public class StandEditor extends Feature {
         tuneDataMap = Maps.newHashMap();
         editingMap = Maps.newHashMap();
         loadoutMap = Maps.newHashMap();
-        tuningMaterial = Material.FLINT;
+        tuningMaterial = Material.BEETROOT_SEEDS;
 
         // init tuning slots
         tuningPartSlotMap = Maps.newHashMap();

@@ -1,9 +1,13 @@
 package me.hapyl.mmu3;
 
 import me.hapyl.mmu3.feature.*;
+import me.hapyl.mmu3.feature.activity.WorldActivity;
+import me.hapyl.mmu3.feature.bb.BoundingBoxManager;
+import me.hapyl.mmu3.feature.block.BlockReplacer;
 import me.hapyl.mmu3.feature.brush.BrushManager;
 import me.hapyl.mmu3.feature.candle.CandleController;
 import me.hapyl.mmu3.feature.designer.Designer;
+import me.hapyl.mmu3.feature.dotcommand.DotCommand;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreatorFeature;
 import me.hapyl.mmu3.feature.lastlocation.LastLocation;
 import me.hapyl.mmu3.feature.specialblocks.SpecialBlocks;
@@ -31,6 +35,9 @@ public final class FeatureRegistry {
     public final EmptyCommandBlockLocator cbLocator;
     public final Fishing fishing;
     public final Warps warps;
+    public final WorldActivity worldActivity;
+    public final BoundingBoxManager boundingBoxManager;
+    public final BlockReplacer replacer;
 
     public FeatureRegistry(Main main) {
         stateChanger = new StateChanger(main);
@@ -49,8 +56,12 @@ public final class FeatureRegistry {
         cbLocator = new EmptyCommandBlockLocator(main);
         fishing = new Fishing(main);
         warps = new Warps(main);
+        worldActivity = new WorldActivity(main);
+        boundingBoxManager = new BoundingBoxManager(main);
+        replacer = new BlockReplacer(main);
 
         // These features don't require to be accessed
+        new DotCommand(main);
     }
 
     public boolean isEnabled(Feature feature) {

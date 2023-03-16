@@ -6,8 +6,9 @@ import me.hapyl.mmu3.feature.itemcreator.Category;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.spigotutils.module.inventory.Response;
 import me.hapyl.spigotutils.module.inventory.SignGUI;
-import me.hapyl.spigotutils.module.util.Runnables;
+import me.hapyl.spigotutils.module.inventory.gui.Action;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -16,7 +17,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public class MaterialSubGUI extends ICSubGUI {
+// Todo -> Btw Mojang broke something again duh, fix this.
+public class MaterialSubGUI extends ItemCreatorSubGUI {
 
     private final int PAGE_ITEM_AMOUNT = 36;
     private final ItemStack PANEL_ITEM_GRAY = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName("&f").build();
@@ -26,7 +28,7 @@ public class MaterialSubGUI extends ICSubGUI {
     private List<Material> items;
 
     public MaterialSubGUI(Player player, Category category) {
-        super(player, "Select Material", Size.FIVE, false);
+        super(player, "Select Material", Size.FIVE);
         this.category = category;
         this.items = category.getItems();
         this.data = PersistentPlayerData.getData(player);
@@ -74,15 +76,15 @@ public class MaterialSubGUI extends ICSubGUI {
 
         setClick(4, player -> new SignGUI(player, "Enter Query") {
             @Override
-            public void onResponse(Player player, String[] strings) {
-                data.setLastItemCreatorQuery(concatString(strings));
+            public void onResponse(Response response) {
+                data.setLastItemCreatorQuery(response.getAsString());
                 sortByQuery();
-                Runnables.runSync(() -> {
+                runSync(() -> {
                     updateInventory();
                     openInventory();
                 });
             }
-        }.openMenu(), ClickType.LEFT);
+        }, ClickType.LEFT);
 
         setClick(4, player -> {
             data.setLastItemCreatorQuery(null);
@@ -103,7 +105,7 @@ public class MaterialSubGUI extends ICSubGUI {
                 });
             }
             else {
-                setItem(slot, PANEL_ITEM_GRAY, null);
+                setItem(slot, PANEL_ITEM_GRAY, (Action) null);
             }
         }
 

@@ -6,33 +6,44 @@ import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
 import me.hapyl.spigotutils.module.math.Numbers;
+import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
 public class ItemCreator {
 
-    private final Player player;
     private String name;
     private Material material;
+    private int amount;
+    private int customModelData;
+    private String headTexture;
+    private String nbt;
+    private Color armorColor;
+
+    private final Player player;
     private final List<String> lore;
     private final Map<Enchantment, Integer> enchantMap;
-    private int amount;
-    private String headTexture;
+    private final Map<Attribute, AttributeModifier> attributes;
 
     public ItemCreator(Player player) {
         this.player = player;
         this.material = Material.GRASS_BLOCK;
         this.amount = 1;
+        this.customModelData = 0;
         this.name = null;
         this.lore = Lists.newArrayList();
         this.enchantMap = Maps.newHashMap();
+        this.attributes = Maps.newHashMap();
     }
 
     public String getHeadTexture() {
@@ -83,6 +94,54 @@ public class ItemCreator {
         this.amount = Numbers.clamp(amount, 1, 64);
     }
 
+    public String buildMinecraftGiveItem() {
+        final StringBuilder command = new StringBuilder("give @s %s{".formatted(material.getKey().getKey().toLowerCase()));
+
+        // display
+        if (name != null || !lore.isEmpty()) {
+            final StringBuilder display = new StringBuilder("display: {");
+
+            if (name != null) {
+                display.append("Name: '\"%s\"'".formatted(name));
+            }
+
+            if (!lore.isEmpty()) {
+                final StringBuilder loreBuilder = new StringBuilder("Lore: [");
+                if (name != null) {
+                    display.append(", ");
+                }
+
+                for (int i = 0; i < lore.size(); i++) {
+                    final String loreLine = lore.get(i);
+                    if (i != 0) {
+                        loreBuilder.append(", ");
+                    }
+
+                    loreBuilder.append("'\"%s\"'".formatted(loreLine));
+                }
+
+                display.append(loreBuilder.append("]"));
+            }
+
+            command.append(display.append("}"));
+        }
+
+        return command.append("}").toString();
+    }
+
+    public ItemStack buildPreviewItem() {
+        final ItemBuilder builder = new ItemBuilder(buildFinalItem());
+
+        builder.addLore("&8&m                                   ");
+        builder.addLore();
+        builder.addSmartLore("This is a preview of your item! Click the button at the bottom to build your item.", "&7&o");
+        builder.addLore();
+        builder.addLore("&eClick to change material");
+        builder.addLore("&6Right Click to pick amount");
+
+        return builder.toItemStack();
+    }
+
     public ItemStack buildFinalItem() {
         final ItemBuilder builder = new ItemBuilder(material).setAmount(amount);
 
@@ -104,7 +163,15 @@ public class ItemCreator {
             builder.setHeadTextureUrl(headTexture);
         }
 
-        return builder.toItemStack();
+        if (nbt != null) {
+            builder.setNbt(nbt);
+        }
+
+        if (armorColor != null) {
+            builder.setLeatherArmorColor(armorColor);
+        }
+
+        return builder.build();
     }
 
     public void setItem(ItemStack item) {
@@ -142,5 +209,60 @@ public class ItemCreator {
         this.lore.clear();
         addSmartLore(string);
         Message.info(player, "Set new smart lore.");
+    }
+
+    public void setCustomModelData(int value) {
+        customModelData = value;
+    }
+
+    public int getCustomModelData() {
+        return customModelData;
+    }
+
+    public void setAttribute(Attribute attribute, AttributeModifier modifier) {
+        attributes.put(attribute, modifier);
+    }
+
+    public Map<Attribute, AttributeModifier> getAttributes() {
+        return attributes;
+    }
+
+    @Nonnull
+    public AttributeModifier getAttributeModifierOrCompute(LinkedAttribute attribute) {
+        final Attribute link = attribute.getLink();
+        return attributes.computeIfAbsent(link, m -> new AttributeModifier(attribute.name(), 0.0d, AttributeModifier.Operation.ADD_NUMBER));
+    }
+
+    public void setNbt(String string) {
+        this.nbt = string;
+    }
+
+    public String getNbt() {
+        return nbt;
+    }
+
+    public void setArmorColor(Color color) {
+        armorColor = color;
+    }
+
+    public Color getOrCreateColor() {
+        if (armorColor == null) {
+            armorColor = Color.fromBGR(0, 0, 0);
+        }
+
+        return armorColor;
+    }
+
+    public Color getArmorColor() {
+        return armorColor;
+    }
+
+    public net.md_5.bungee.api.ChatColor getArmorColorAsChatColor() {
+        return armorColor ==
+                null ? net.md_5.bungee.api.ChatColor.DARK_GRAY : net.md_5.bungee.api.ChatColor.of(new java.awt.Color(
+                armorColor.getRed(),
+                armorColor.getBlue(),
+                armorColor.getGreen()
+        ));
     }
 }

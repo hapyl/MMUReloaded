@@ -12,7 +12,6 @@ import org.bukkit.util.RayTraceResult;
 
 public class NumericIdCommand extends SimplePlayerAdminCommand {
 
-    // TODO: 021, Oct 21, 2022 fixme8
     public NumericIdCommand(String name) {
         super(name);
         setDescription("Allows to show numeric ID of held item.");
