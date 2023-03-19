@@ -13,14 +13,16 @@ import org.bukkit.entity.Player;
 public class DesignerCommand extends SimplePlayerAdminCommand {
     public DesignerCommand(String name) {
         super(name);
+
         setDescription("Allows to create and use a GUI designer.");
+        addCompleterValues(1, "dump");
         setAliases("ds");
     }
 
     @Override
     protected void execute(Player player, String[] args) {
-        //
         // designer - Open current designer
+        // designer dump - Dumps current designer spigot code
         // designer (Name) - Open someone else designer
         // designer (Int) - Create new designer with provided size
         final Designer manager = Main.getRegistry().designer;
@@ -33,6 +35,11 @@ public class DesignerCommand extends SimplePlayerAdminCommand {
             }
 
             designer.open(player);
+            return;
+        }
+
+        if (args[0].equalsIgnoreCase("dump")) {
+
             return;
         }
 

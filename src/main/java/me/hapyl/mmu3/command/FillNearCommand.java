@@ -36,7 +36,7 @@ public class FillNearCommand extends SimplePlayerAdminCommand {
         addCompleterValues(2, blocks);
         addCompleterValues(3, blocks);
 
-        addCompleterHandler(1, arg -> {
+        addCompleterHandler(1, (player, arg) -> {
             if (arg.equalsIgnoreCase("undo")) {
                 return "&a&nWill undo last fill!";
             }
