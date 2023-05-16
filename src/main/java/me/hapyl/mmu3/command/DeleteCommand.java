@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 
 public class DeleteCommand extends SimplePlayerAdminCommand {
 
+    private final double maxDeleteRadius = 1000;
+
     public DeleteCommand(String name) {
         super(name);
 
@@ -28,8 +30,7 @@ public class DeleteCommand extends SimplePlayerAdminCommand {
                 final int i = Validate.getInt(arg);
                 if (i < 1) {
                     return "&c&nToo little: {}!";
-                }
-                else if (i > 100) {
+                } else if (i > maxDeleteRadius) {
                     return "&c&nToo much: {}!";
                 }
 
@@ -55,7 +56,7 @@ public class DeleteCommand extends SimplePlayerAdminCommand {
             return;
         }
 
-        if (radius < 1 || radius > 100) {
+        if (radius < 1 || radius > maxDeleteRadius) {
             Message.error(player, "Too little or too much radius!");
             return;
         }

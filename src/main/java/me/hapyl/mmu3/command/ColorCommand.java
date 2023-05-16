@@ -2,7 +2,6 @@ package me.hapyl.mmu3.command;
 
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,6 +29,8 @@ public class ColorCommand extends SimplePlayerAdminCommand {
         // Remove color
         if (args.length == 0) {
             leatherMeta.setColor(null);
+            item.setItemMeta(leatherMeta);
+
             Message.success(player, "Cleared color.");
             Message.sound(player, Sound.ITEM_BUCKET_EMPTY, 0.0f);
             return;
@@ -39,7 +40,7 @@ public class ColorCommand extends SimplePlayerAdminCommand {
         leatherMeta.setColor(org.bukkit.Color.fromRGB(color.getRed(), color.getGreen(), color.getBlue()));
         item.setItemMeta(leatherMeta);
 
-        Message.success(player, "Changed color to %s.", ChatColor.of(color));
+        Message.success(player, "Changed color to %s.", args[0]);
     }
 
     private Color colorFromString(String string) {

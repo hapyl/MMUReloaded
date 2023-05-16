@@ -14,6 +14,7 @@ import me.hapyl.mmu3.feature.specialblocks.SpecialBlocks;
 import me.hapyl.mmu3.feature.standeditor.StandEditor;
 import me.hapyl.mmu3.feature.statechanger.StateChanger;
 import me.hapyl.mmu3.feature.warp.Warps;
+import me.hapyl.mmu3.outcast.chatgame.ChatGameManager;
 import me.hapyl.mmu3.outcast.fishing.Fishing;
 import me.hapyl.mmu3.outcast.hypixel.slayer.Slayer;
 
@@ -38,6 +39,7 @@ public final class FeatureRegistry {
     public final WorldActivity worldActivity;
     public final BoundingBoxManager boundingBoxManager;
     public final BlockReplacer replacer;
+    public final ChatGameManager chatGameManager;
 
     public FeatureRegistry(Main main) {
         stateChanger = new StateChanger(main);
@@ -59,6 +61,7 @@ public final class FeatureRegistry {
         worldActivity = new WorldActivity(main);
         boundingBoxManager = new BoundingBoxManager(main);
         replacer = new BlockReplacer(main);
+        chatGameManager = new ChatGameManager(main);
 
         // These features don't require to be accessed
         new DotCommand(main);
