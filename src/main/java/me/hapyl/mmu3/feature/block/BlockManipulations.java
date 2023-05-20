@@ -20,7 +20,6 @@ public final class BlockManipulations {
             }
         }
 
-
         return affectedBlocks;
     }
 
