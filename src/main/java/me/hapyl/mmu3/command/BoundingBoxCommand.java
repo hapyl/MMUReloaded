@@ -16,7 +16,7 @@ public class BoundingBoxCommand extends SimplePlayerAdminCommand {
         setDescription("Draws a bounding box outline between two points.");
         setAliases("bb");
 
-        addCompleterValues(1, "clear", "pos1", "pos2", "1", "2", "execute");
+        addCompleterValues(1, "clear", "pos1", "pos2", "1", "2", "execute", "spigot");
     }
 
     @Override
@@ -28,9 +28,11 @@ public class BoundingBoxCommand extends SimplePlayerAdminCommand {
 
             if (outline.getStart() == null) {
                 outline.setStart(player);
-            }
-            else {
+            } else {
                 outline.setEnd(player);
+            }
+
+            if (outline.isDefined()) {
                 outline.show();
             }
 
@@ -66,6 +68,16 @@ public class BoundingBoxCommand extends SimplePlayerAdminCommand {
                         LazyEvent.copyToClipboard(execute),
                         LazyEvent.showText("&eClick to copy!"),
                         "Execute command: " + execute + " &6&lCLICK"
+                );
+            }
+            case "spigot" -> {
+                final String spigot = "%s, %s, %s, %s, %s, %s".formatted(outline.getMinX(), outline.getMinY(), outline.getMinZ(), outline.getMaxX(), outline.getMaxY(), outline.getMaxZ());
+
+                Message.clickHover(
+                        player,
+                        LazyEvent.copyToClipboard(spigot),
+                        LazyEvent.showText("&eClick to copy!"),
+                        "Spigot coordinates: " + spigot + " &6&lCLICK"
                 );
             }
         }

@@ -106,10 +106,16 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.hapyl</groupId>
+            <groupId>me.hapyl</groupId>
             <artifactId>EternaAPI</artifactId>
-            <version>2.14.1-SNAPSHOT</version>
+            <version>2.14.2-SNAPSHOT</version>
         </dependency>
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.github.hapyl</groupId>-->
+        <!--            <artifactId>EternaAPI</artifactId>-->
+        <!--            <version>2.14.2-SNAPSHOT</version>-->
+        <!--        </dependency>-->
 
     </dependencies>
 </project>
