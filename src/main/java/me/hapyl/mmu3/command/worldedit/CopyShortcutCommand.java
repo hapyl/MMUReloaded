@@ -1,4 +1,4 @@
-package me.hapyl.mmu3.command.shortcut.worldedit;
+package me.hapyl.mmu3.command.worldedit;
 
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
 import org.bukkit.entity.Player;

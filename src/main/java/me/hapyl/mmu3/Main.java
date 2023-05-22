@@ -29,6 +29,7 @@ public class Main extends JavaPlugin {
 
     private FeatureRegistry registry;
     private EternaAPI eternaAPI;
+
     @Override
     public void onEnable() {
         if (instance != null) {

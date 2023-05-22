@@ -20,6 +20,8 @@ public class LoggedBoundingBox extends BoundingBox {
         if (bool) {
             Message.success(player, "Set start position to %s.", getStartString());
             PlayerLib.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 2);
+
+            super.show();
         }
         else {
             Message.error(player, "Could not set position. Not valid block in sight.");

@@ -117,7 +117,7 @@ public class Ultrasequencer extends Game {
                 // Empty board
                 clearBoard();
 
-                // Create round and show menu
+                // Create a round and show menu
                 for (int i = 0; i < round; i++) {
                     final int slot = randomSlot();
                     final int iPlusOne = i + 1;
@@ -149,14 +149,6 @@ public class Ultrasequencer extends Game {
 
             private void revealItem(int slot) {
                 setItem(slot, new ItemBuilder(getColor(playerClick)).setName("&a" + (playerClick + 1)).build());
-
-                // Temp admin help
-                if (playerClick + 1 >= currentRound.size()) {
-                    return;
-                }
-
-                final int next = currentRound.get(playerClick + 1);
-                setItem(next, new ItemBuilder(Material.DIAMOND).setName("Next One!").build());
             }
 
             private void startRoundTask() {

@@ -75,6 +75,10 @@ public class CommandRegistry {
         register(new SpawnCommand("spawn"));
         register(new DeleteCommand("delete"));
         register(new FillNearCommand("fillNear"));
+        register(new PlayerShaderCommand("shader"));
+        register(new ColorCommand("color"));
+        register(new MmuUndoCommand("mmuUndo"));
+        register(new FixTreeOrientationCommand("fixTreeOrientation"));
 
         // TEST
         register(new CommandWithArguments("_testcommandwitharguments"));

@@ -2,6 +2,7 @@ package me.hapyl.mmu3.feature.lastlocation;
 
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.utils.InjectListener;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -13,7 +14,9 @@ public class LastLocationListener extends InjectListener {
 
     @EventHandler(ignoreCancelled = true)
     public void handlePlayerTeleportEvent(PlayerTeleportEvent ev) {
-        Main.getLastLocation().saveLastLocation(ev.getPlayer().getUniqueId(), ev.getTo());
+        final Player player = ev.getPlayer();
+
+        Main.getLastLocation().saveLastLocation(player.getUniqueId(), ev.getFrom());
     }
 
 }

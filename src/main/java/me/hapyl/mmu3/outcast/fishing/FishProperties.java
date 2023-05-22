@@ -87,7 +87,7 @@ public class FishProperties {
         }
 
         // 0.0-1.0
-        final float percent = (float) (size / (maxSize - minSize));
+        final float percent = (float) size / maxSize;
 
         if (checkSize(percent, 0.2f, 0.333f)) {
             return FishGrade.SMALL;

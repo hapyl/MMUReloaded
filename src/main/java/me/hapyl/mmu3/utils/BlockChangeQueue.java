@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.utils;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import me.hapyl.spigotutils.module.math.nn.IntInt;
 import org.bukkit.block.Block;
@@ -8,7 +9,7 @@ import org.bukkit.block.BlockState;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class BlockChangeQueue {
+public final class BlockChangeQueue {
 
     private final LinkedList<Map<Block, BlockState>> queue;
 
@@ -46,6 +47,10 @@ public class BlockChangeQueue {
 
     public void add(Map<Block, BlockState> map) {
         queue.add(map);
+    }
+
+    public void add(Block block) {
+        queue.add(ImmutableMap.of(block, block.getState()));
     }
 
     public int size() {
