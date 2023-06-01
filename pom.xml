@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>MapmakerUtilitiesReloaded</groupId>
-    <artifactId>MapmakerUtilitiesReloaded</artifactId>
+    <artifactId>MMUReloaded</artifactId>
     <packaging>jar</packaging>
 
     <name>MapmakerUtilitiesReloaded</name>
-    <version>1.7.0-SNAPSHOT</version>
+    <version>1.8.0-SNAPSHOT</version>
     <description>A utilities plugin for mapmakers by mapmakers.</description>
 
     <properties>
@@ -28,23 +28,6 @@
                     <target>17</target>
                 </configuration>
             </plugin>
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-shade-plugin</artifactId>-->
-            <!--                <version>3.2.4</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <phase>package</phase>-->
-            <!--                        <goals>-->
-            <!--                            <goal>shade</goal>-->
-            <!--                        </goals>-->
-            <!--                        <configuration>-->
-            <!--                            <createDependencyReducedPom>false</createDependencyReducedPom>-->
-            <!--                            <outputFile>E:/_Server18/plugins/MapmakerUtilitiesReloaded-${version}.jar</outputFile>-->
-            <!--                        </configuration>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--            </plugin>-->
 
             <!-- Copy Rename -->
             <plugin>
@@ -77,7 +60,6 @@
 
     <!--    Repositories-->
     <repositories>
-
         <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
@@ -92,30 +74,20 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-
     </repositories>
 
     <!--    Dependencies-->
     <dependencies>
-
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
             <version>1.19.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
-            <groupId>me.hapyl</groupId>
+            <groupId>com.github.hapyl</groupId>
             <artifactId>EternaAPI</artifactId>
-            <version>2.14.2-SNAPSHOT</version>
+            <version>2.16.2-SNAPSHOT</version>
         </dependency>
-
-        <!--        <dependency>-->
-        <!--            <groupId>com.github.hapyl</groupId>-->
-        <!--            <artifactId>EternaAPI</artifactId>-->
-        <!--            <version>2.14.2-SNAPSHOT</version>-->
-        <!--        </dependency>-->
-
     </dependencies>
 </project>
