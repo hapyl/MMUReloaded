@@ -28,7 +28,9 @@ public class LineOfSightCommand extends SimplePlayerAdminCommand {
         final Material type = block.getType();
         final String blockData = block.getBlockData().getAsString();
         final Location location = BukkitUtils.centerLocation(block.getLocation());
-        final String locationString = "%s.5 %s.0 %s.5".formatted(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+
+        final String locationString = "%s %s %s".formatted(location.getX(), location.getBlockY(), location.getZ());
+        final String locationStringCommas = "%s, %s, %s".formatted(location.getX(), location.getBlockY(), location.getZ());
 
         Message.info(player, "Looking at %s", Chat.capitalize(type), blockData);
 
@@ -38,6 +40,14 @@ public class LineOfSightCommand extends SimplePlayerAdminCommand {
                 LazyEvent.showText("&7Click to copy location."),
                 " Location: %s &6&lCOPY",
                 locationString
+        );
+
+        Message.clickHover(
+                player,
+                LazyEvent.copyToClipboard(locationStringCommas),
+                LazyEvent.showText("&7Click to copy location with commas."),
+                " Location: %s &6&lCOPY WITH COMMAS",
+                locationStringCommas
         );
 
         if (blockData.contains("[")) {

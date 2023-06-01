@@ -1,5 +1,6 @@
 package me.hapyl.mmu3;
 
+import me.hapyl.mmu3.command.worldedit.WorldEditShortcutRegistry;
 import me.hapyl.mmu3.feature.Calculate;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreatorFeature;
 import me.hapyl.mmu3.feature.lastlocation.LastLocation;
@@ -19,6 +20,7 @@ import me.hapyl.spigotutils.EternaAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,6 +31,8 @@ public class Main extends JavaPlugin {
 
     private FeatureRegistry registry;
     private EternaAPI eternaAPI;
+
+    public boolean hasWorldEdit;
 
     @Override
     public void onEnable() {
@@ -49,6 +53,19 @@ public class Main extends JavaPlugin {
 
         // Register Commands
         new CommandRegistry(this);
+
+        // Check for world edit
+        for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
+            if (plugin.getName().contains("WorldEdit")) {
+                hasWorldEdit = true;
+                break;
+            }
+        }
+
+        // Register World Edit shortcuts
+        if (hasWorldEdit) {
+            new WorldEditShortcutRegistry(this);
+        }
 
         // Register events
         pluginManager.registerEvents(new PlayerListener(), this);
@@ -77,8 +94,8 @@ public class Main extends JavaPlugin {
         new Test();
     }
 
-    // Features getter
-    // * Made these static for easier access
+    // Feature getter
+    // * Made these statics for easier access
     public static StateChanger getStateChanger() {
         return instance.registry.stateChanger;
     }
