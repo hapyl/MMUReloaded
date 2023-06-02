@@ -4,7 +4,6 @@ import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.chat.LazyEvent;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
-import me.hapyl.spigotutils.module.util.BukkitUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -27,10 +26,10 @@ public class LineOfSightCommand extends SimplePlayerAdminCommand {
 
         final Material type = block.getType();
         final String blockData = block.getBlockData().getAsString();
-        final Location location = BukkitUtils.centerLocation(block.getLocation());
+        final Location location = block.getLocation(); // don't center the location
 
-        final String locationString = "%s %s %s".formatted(location.getX(), location.getBlockY(), location.getZ());
-        final String locationStringCommas = "%s, %s, %s".formatted(location.getX(), location.getBlockY(), location.getZ());
+        final String locationString = "%s %s %s".formatted(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        final String locationStringCommas = "%s, %s, %s".formatted(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 
         Message.info(player, "Looking at %s", Chat.capitalize(type), blockData);
 
