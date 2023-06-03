@@ -78,6 +78,7 @@ public class CommandRegistry {
         register(new ColorCommand("color"));
         register(new MmuUndoCommand("mmuUndo"));
         register(new FixTreeOrientationCommand("fixTreeOrientation"));
+        register(new SearchCommand("search"));
 
         // TEST
         register(new CommandWithArguments("_testcommandwitharguments"));

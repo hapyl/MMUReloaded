@@ -10,6 +10,7 @@ import me.hapyl.mmu3.feature.designer.Designer;
 import me.hapyl.mmu3.feature.dotcommand.DotCommand;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreatorFeature;
 import me.hapyl.mmu3.feature.lastlocation.LastLocation;
+import me.hapyl.mmu3.feature.search.Search;
 import me.hapyl.mmu3.feature.specialblocks.SpecialBlocks;
 import me.hapyl.mmu3.feature.standeditor.StandEditor;
 import me.hapyl.mmu3.feature.statechanger.StateChanger;
@@ -40,6 +41,7 @@ public final class FeatureRegistry {
     public final BoundingBoxManager boundingBoxManager;
     public final BlockReplacer replacer;
     public final ChatGameManager chatGameManager;
+    public final Search search;
 
     public FeatureRegistry(Main main) {
         stateChanger = new StateChanger(main);
@@ -62,6 +64,7 @@ public final class FeatureRegistry {
         boundingBoxManager = new BoundingBoxManager(main);
         replacer = new BlockReplacer(main);
         chatGameManager = new ChatGameManager(main);
+        search = new Search(main);
 
         // These features don't require to be accessed
         new DotCommand(main);
