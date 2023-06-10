@@ -28,7 +28,8 @@ public class BoundingBoxCommand extends SimplePlayerAdminCommand {
 
             if (outline.getStart() == null) {
                 outline.setStart(player);
-            } else {
+            }
+            else {
                 outline.setEnd(player);
             }
 
@@ -71,7 +72,14 @@ public class BoundingBoxCommand extends SimplePlayerAdminCommand {
                 );
             }
             case "spigot" -> {
-                final String spigot = "%s, %s, %s, %s, %s, %s".formatted(outline.getMinX(), outline.getMinY(), outline.getMinZ(), outline.getMaxX(), outline.getMaxY(), outline.getMaxZ());
+                final String spigot = "%s, %s, %s, %s, %s, %s".formatted(
+                        outline.getMinX(),
+                        outline.getMinY(),
+                        outline.getMinZ(),
+                        outline.getMaxX(),
+                        outline.getMaxY(),
+                        outline.getMaxZ()
+                );
 
                 Message.clickHover(
                         player,

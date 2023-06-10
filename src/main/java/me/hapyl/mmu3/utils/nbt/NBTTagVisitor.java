@@ -2,13 +2,14 @@ package me.hapyl.mmu3.utils.nbt;
 
 import com.google.common.collect.Lists;
 import me.hapyl.spigotutils.module.annotate.TestedNMS;
+import me.hapyl.spigotutils.module.annotate.Version;
 import net.minecraft.nbt.*;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-@TestedNMS(version = "1.19.3")
+@TestedNMS(version = Version.V1_20)
 public class NBTTagVisitor implements TagVisitor {
 
     private static final Pattern PATTERN = Pattern.compile("[A-Za-z\\d._+-]+");
