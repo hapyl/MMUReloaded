@@ -2,8 +2,8 @@ package me.hapyl.mmu3.outcast.backpack;
 
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
 import me.hapyl.spigotutils.module.math.Numbers;
-import me.hapyl.spigotutils.module.nbt.LazyType;
 import me.hapyl.spigotutils.module.nbt.NBT;
+import me.hapyl.spigotutils.module.nbt.NBTType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -24,7 +24,7 @@ public class BackpackManager {
             throw new NullPointerException("meta is null");
         }
 
-        NBT.setValue(itemMeta, "BackpackId", LazyType.STR, UUID.randomUUID().toString());
+        NBT.setValue(itemMeta, "BackpackId", NBTType.STR, UUID.randomUUID().toString());
 
         return backpack;
     }

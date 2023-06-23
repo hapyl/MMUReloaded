@@ -18,7 +18,12 @@ import org.bukkit.inventory.PlayerInventory;
 
 public class TrimGUI extends PanelGUI {
 
-    private static final EquipmentSlot[] APPLICABLE_SLOTS = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
+    private static final EquipmentSlot[] APPLICABLE_SLOTS = {
+            EquipmentSlot.HEAD,
+            EquipmentSlot.CHEST,
+            EquipmentSlot.LEGS,
+            EquipmentSlot.FEET
+    };
 
     private final TrimData data;
 

@@ -22,6 +22,11 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+/**
+ * @implNote I know this is very weird and not <code>OOP</code> way of doing this,
+ * but I was just copied the old code here, really.
+ * Maybe one day I'll rewrite this whole thing, but today is not the day.
+ */
 public class StateChangerGUI extends PanelGUI {
 
     private final Data data;
@@ -42,7 +47,7 @@ public class StateChangerGUI extends PanelGUI {
                 7,
                 new ItemBuilder(Material.COMMAND_BLOCK)
                         .setName("&aRestore Block")
-                        .setSmartLore("Restores blocks to it's original form, before opening the menu.")
+                        .setSmartLore("Restores blocks to its original form before opening the menu.")
                         .build(),
                 player -> {
                     data.restoreOriginalBlockData();
@@ -626,9 +631,6 @@ public class StateChangerGUI extends PanelGUI {
                     4, 25,
                     5, 34
             );
-
-            // This always sets the default book, since we're not 1.20 yet
-            // and block is disabled by a client.
 
             for (int i = 0; i < 6; i++) {
                 final int slot = inventorySlotToChiseledBookshelfOccupiedSlotMap.get(i);

@@ -33,7 +33,7 @@ public class ColoredSign extends Feature implements Listener {
         ev.getBlock().getState().update(false, false);
     }
 
-    @EventHandler()
+    //    @EventHandler()
     public void handleSignClickEvent(PlayerInteractEvent ev) {
         final Block block = ev.getClickedBlock();
         final Player player = ev.getPlayer();

@@ -5,8 +5,8 @@ import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.config.Config;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
-import me.hapyl.spigotutils.module.nbt.LazyType;
 import me.hapyl.spigotutils.module.nbt.NBT;
+import me.hapyl.spigotutils.module.nbt.NBTType;
 import me.hapyl.spigotutils.module.util.Validate;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -57,8 +57,8 @@ public class Backpack extends Config {
                 .playerHeadUrl("2308bf5cc3e9decaf0770c3fdad1e042121cf39cc2505bbb866e18c6d23ccd0c")
                 .setName("%s Backpack", Chat.capitalize(size))
                 .setSmartLore("A backpack capable of holding up to %s items.".formatted(size.getSizeScaled()))
-                .setPersistentData("BackpackId", LazyType.STR.getType(), uuid.toString())
-                .setPersistentData("BackpackOwner", LazyType.STR.getType(), player.getUniqueId().toString())
+                .setPersistentData("BackpackId", NBTType.STR.getType(), uuid.toString())
+                .setPersistentData("BackpackOwner", NBTType.STR.getType(), player.getUniqueId().toString())
                 .build();
     }
 
@@ -112,7 +112,7 @@ public class Backpack extends Config {
             return false;
         }
 
-        return NBT.hasNbt(meta, "BackpackId", LazyType.STR.getType());
+        return NBT.hasNbt(meta, "BackpackId", NBTType.STR.getType());
     }
 
     public static boolean isBackpackExists(UUID uuid) {

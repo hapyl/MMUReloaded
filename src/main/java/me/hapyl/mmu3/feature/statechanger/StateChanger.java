@@ -24,7 +24,7 @@ public class StateChanger extends Feature {
     private final ItemStack baseItem = new ItemBuilder(Material.SHEARS, "state_changer")
             .setName("&aState Changer")
             .addSmartLore(
-                    "What looks like a normal pair or shears is actually an ancient item, used to modify shapes and forms of blocks. Unknown origin of this item makes it even more mysterious.",
+                    "What looks like a normal pair or shears is actually an ancient item, used to modify shapes and forms of blocks. The unknown origin of this item makes it even more mysterious.",
                     "&8&o"
             )
             .glow()
@@ -71,9 +71,9 @@ public class StateChanger extends Feature {
         }
 
         inventory.addItem(new ItemBuilder(baseItem)
-                                  .addLore()
-                                  .addLore("Created by almighty %s&7.", randomColorName(player))
-                                  .toItemStack());
+                .addLore()
+                .addLore("Created by almighty %s&7.", randomColorName(player))
+                .toItemStack());
 
         Message.success(player, "Success!");
     }
