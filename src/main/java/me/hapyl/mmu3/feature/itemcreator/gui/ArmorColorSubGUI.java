@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.itemcreator.gui;
 
+import me.hapyl.mmu3.feature.itemcreator.ColorSignGUI;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreator;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
@@ -7,6 +8,7 @@ import me.hapyl.spigotutils.module.inventory.Response;
 import me.hapyl.spigotutils.module.inventory.SignGUI;
 import me.hapyl.spigotutils.module.math.Numbers;
 import me.hapyl.spigotutils.module.player.PlayerLib;
+import me.hapyl.spigotutils.module.util.Runnables;
 import me.hapyl.spigotutils.module.util.ThreadRandom;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -52,26 +54,11 @@ public class ArmorColorSubGUI extends ItemCreatorSubGUI {
         // Enter Values
         // HEX
         setItem(30, ItemBuilder.of(Material.SPRUCE_SIGN, "Enter Hex Value", "", "&eClick to enter hexadecimal value").asIcon(), player -> {
-            new SignGUI(player, "#", SignGUI.DASHED_LINE, "Enter hexadecimal", "value") {
+            new ColorSignGUI(player) {
                 @Override
-                public void onResponse(Response response) {
-                    String string = response.getAsString();
-
-                    // Add # if not present
-                    if (!string.startsWith("#")) {
-                        string = "#" + string;
-                    }
-                    // Trim to only have one # (In case if pasted with #)
-                    else {
-                        string = string.substring(string.lastIndexOf("#"));
-                    }
-
-                    // Trim to min of 7
-                    string = string.substring(0, Math.min(string.length(), 7));
-                    final java.awt.Color decode = java.awt.Color.decode(string);
-
-                    creator.setArmorColor(Color.fromRGB(decode.getRed(), decode.getGreen(), decode.getBlue()));
-                    response.runSync(() -> updateInventory(), 1L);
+                public void onResponse(Color color) {
+                    creator.setArmorColor(color);
+                    Runnables.runLater(() -> updateInventory(), 1);
                 }
             };
         });

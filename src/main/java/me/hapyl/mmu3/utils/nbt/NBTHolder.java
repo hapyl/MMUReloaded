@@ -1,9 +1,10 @@
 package me.hapyl.mmu3.utils.nbt;
 
 import com.google.common.collect.Maps;
-import me.hapyl.spigotutils.module.annotate.TestedNMS;
+import me.hapyl.spigotutils.module.annotate.TestedOn;
+import me.hapyl.spigotutils.module.annotate.Version;
 import me.hapyl.spigotutils.module.chat.Chat;
-import me.hapyl.spigotutils.module.nbt.nms.NBTNative;
+import me.hapyl.spigotutils.module.nbt.NBTNative;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang.reflect.FieldUtils;
@@ -14,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-@TestedNMS(version = "1.19.2")
+@TestedOn(version = Version.V1_20)
 public final class NBTHolder {
 
     private final String name;

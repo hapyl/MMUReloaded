@@ -7,7 +7,7 @@ import me.hapyl.mmu3.utils.nbt.NBTTagVisitor;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.chat.LazyEvent;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
-import me.hapyl.spigotutils.module.nbt.nms.NBTNative;
+import me.hapyl.spigotutils.module.nbt.NBTNative;
 import net.minecraft.nbt.NBTBase;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
