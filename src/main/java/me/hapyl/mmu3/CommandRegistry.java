@@ -30,7 +30,6 @@ public class CommandRegistry {
         register(new CalculateCommand("calculate"));
         register(new BackCommand("back"));
         register(new CenterCommand("center"));
-        register(new ConsoleCommand("console"));
         register(new SayCommand("say"));
         register(new ItemCreatorCommand("itemCreator"));
         register(new EntityRemovalCommand("entityRemoval"));
