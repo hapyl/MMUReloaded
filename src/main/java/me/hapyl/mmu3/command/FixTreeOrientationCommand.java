@@ -72,6 +72,7 @@ public class FixTreeOrientationCommand extends SimplePlayerAdminCommand {
             case MANGROVE_LOG, MANGROVE_WOOD -> Material.MANGROVE_WOOD;
             case CRIMSON_STEM, CRIMSON_HYPHAE -> Material.CRIMSON_HYPHAE;
             case WARPED_STEM, WARPED_HYPHAE -> Material.WARPED_HYPHAE;
+            case CHERRY_LOG, CHERRY_WOOD -> Material.CHERRY_WOOD;
 
             // stripped
             case STRIPPED_OAK_LOG, STRIPPED_OAK_WOOD -> Material.STRIPPED_OAK_WOOD;
@@ -83,6 +84,7 @@ public class FixTreeOrientationCommand extends SimplePlayerAdminCommand {
             case STRIPPED_MANGROVE_LOG, STRIPPED_MANGROVE_WOOD -> Material.STRIPPED_MANGROVE_WOOD;
             case STRIPPED_CRIMSON_STEM, STRIPPED_CRIMSON_HYPHAE -> Material.STRIPPED_CRIMSON_HYPHAE;
             case STRIPPED_WARPED_STEM, STRIPPED_WARPED_HYPHAE -> Material.STRIPPED_WARPED_HYPHAE;
+            case STRIPPED_CHERRY_LOG, STRIPPED_CHERRY_WOOD -> Material.STRIPPED_CHERRY_WOOD;
 
             // defaults to null
             default -> null;

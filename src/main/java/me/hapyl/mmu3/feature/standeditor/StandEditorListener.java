@@ -4,6 +4,7 @@ import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.utils.InjectListener;
 import me.hapyl.spigotutils.module.chat.Chat;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.ArmorStand;
@@ -51,7 +52,9 @@ public class StandEditorListener extends InjectListener {
         final Player player = ev.getPlayer();
         final Entity rightClicked = ev.getRightClicked();
 
-        if (!player.isOp() || ev.getHand() == EquipmentSlot.OFF_HAND || !(rightClicked instanceof ArmorStand stand)) {
+        if (!player.isOp() || ev.getHand() == EquipmentSlot.OFF_HAND
+                || !(rightClicked instanceof ArmorStand stand)
+                || player.getGameMode() != GameMode.CREATIVE) {
             return;
         }
 

@@ -54,7 +54,9 @@ public class ServerPro extends Feature {
 
     public void addListenersAndPlay(SoundQueue queue) {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            queue.addListener(player);
+            if (player.isOp()) {
+                queue.addListener(player);
+            }
         }
         queue.play();
     }
