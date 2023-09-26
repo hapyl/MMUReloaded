@@ -4,7 +4,10 @@ import me.hapyl.spigotutils.module.chat.Chat;
 import org.bukkit.Material;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 
+import javax.annotation.Nonnull;
+
 public enum EnumTrimMaterial implements EnumTrim {
+
     QUARTZ(TrimMaterial.QUARTZ, Material.QUARTZ),
     IRON(TrimMaterial.IRON, Material.IRON_INGOT),
     NETHERITE(TrimMaterial.NETHERITE, Material.NETHERITE_INGOT),
@@ -25,11 +28,13 @@ public enum EnumTrimMaterial implements EnumTrim {
     }
 
     @Override
+    @Nonnull
     public String getName() {
         return Chat.format(name());
     }
 
     @Override
+    @Nonnull
     public Material getMaterial() {
         return material;
     }

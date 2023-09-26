@@ -1,62 +1,73 @@
 package me.hapyl.mmu3.feature.trim;
 
 import org.bukkit.Color;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ArmorMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.trim.ArmorTrim;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class TrimData {
 
-    private final Player player;
-    private final EnumTrimArmor[] armor;
-    private final Color[] armorColor;
+    private final TrimType type;
+    private final ArmorStand stand;
+
+    private boolean current;
+
+    private Color color;
     private EnumTrimPattern pattern;
     private EnumTrimMaterial material;
 
-    public TrimData(Player player) {
-        this.player = player;
-
-        this.armor = new EnumTrimArmor[4];
-        this.armorColor = new Color[4];
-
+    public TrimData(TrimType type, ArmorStand stand) {
+        this.type = type;
+        this.stand = stand;
+        this.color = null;
         this.pattern = EnumTrimPattern.SENTRY;
         this.material = EnumTrimMaterial.QUARTZ;
 
-        // default armor to iron
-        setArmor(EnumTrimArmor.IRON);
+        type.setItem(stand, createItem(new ItemStack(TrimArmor.IRON.getMaterial(type))));
     }
 
-    @Nullable
-    public Color getArmorColor(@Nonnull EquipmentSlot slot) {
-        return armorColor[slotToIndex(slot)];
+    public void update() {
+        setItem(createItem(type.getItem(stand)));
     }
 
-    public void setArmorColor(@Nonnull EquipmentSlot slot, @Nullable Color color) {
-        armorColor[slotToIndex(slot)] = color;
+    public void setItem(ItemStack item) {
+        type.setItem(stand, item);
     }
 
-    public void setArmor(@Nonnull EnumTrimArmor armor) {
-        setArmor(EquipmentSlot.HEAD, armor);
-        setArmor(EquipmentSlot.CHEST, armor);
-        setArmor(EquipmentSlot.LEGS, armor);
-        setArmor(EquipmentSlot.FEET, armor);
+    @Nonnull
+    public ItemStack getItem() {
+        return type.getItem(stand);
     }
 
-    public void setArmor(@Nonnull EquipmentSlot slot, @Nonnull EnumTrimArmor armor) {
-        this.armor[slotToIndex(slot)] = armor;
+    public boolean isCurrent() {
+        return current;
     }
 
-    public Player getPlayer() {
-        return player;
+    public void setCurrent(boolean current) {
+        this.current = current;
+    }
+
+    public ArmorStand getStand() {
+        return stand;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public EnumTrimPattern getPattern() {
         return pattern;
     }
 
-    public void setPattern(@Nonnull EnumTrimPattern pattern) {
+    public void setPattern(EnumTrimPattern pattern) {
         this.pattern = pattern;
     }
 
@@ -64,27 +75,37 @@ public class TrimData {
         return material;
     }
 
-    public void setMaterial(@Nonnull EnumTrimMaterial material) {
+    public void setMaterial(EnumTrimMaterial material) {
         this.material = material;
     }
 
-    @Nonnull
-    public EnumTrimArmor getArmor(@Nonnull EquipmentSlot slot) {
-        return armor[slotToIndex(slot)];
+    public final ItemStack createItem(ItemStack stack) {
+        final ItemStack item = new ItemStack(stack);
+
+        if (!(item.getItemMeta() instanceof ArmorMeta meta)) {
+            return item;
+        }
+
+        meta.setTrim(new ArmorTrim(material.bukkit, pattern.bukkit));
+        item.setItemMeta(meta);
+
+        // Apply color
+        if (isLeatherArmor() && color != null) {
+            final LeatherArmorMeta leatherMeta = (LeatherArmorMeta) meta;
+
+            leatherMeta.setColor(color);
+            item.setItemMeta(leatherMeta);
+        }
+
+        return item;
     }
 
-    @Nonnull
-    public EnumTrimArmor[] getArmor() {
-        return armor;
-    }
+    public boolean isLeatherArmor() {
+        final ItemStack item = type.getItem(stand);
 
-    private int slotToIndex(@Nonnull EquipmentSlot slot) {
-        return switch (slot) {
-            case HEAD -> 0;
-            case CHEST -> 1;
-            case LEGS -> 2;
-            case FEET -> 3;
-            default -> throw new IllegalArgumentException("invalid slot: " + slot);
+        return switch (item.getType()) {
+            case LEATHER_HELMET, LEATHER_CHESTPLATE, LEATHER_LEGGINGS, LEATHER_BOOTS -> true;
+            default -> false;
         };
     }
 }

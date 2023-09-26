@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <name>MapmakerUtilitiesReloaded</name>
-    <version>1.10.1-SNAPSHOT</version>
+    <version>1.11.0-SNAPSHOT</version>
     <description>A utilities plugin for mapmakers by mapmakers.</description>
 
     <properties>

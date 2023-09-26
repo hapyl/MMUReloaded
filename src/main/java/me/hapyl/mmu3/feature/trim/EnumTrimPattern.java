@@ -4,7 +4,10 @@ import me.hapyl.spigotutils.module.chat.Chat;
 import org.bukkit.Material;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 
+import javax.annotation.Nonnull;
+
 public enum EnumTrimPattern implements EnumTrim {
+
     SENTRY(TrimPattern.SENTRY, Material.SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE),
     DUNE(TrimPattern.DUNE, Material.DUNE_ARMOR_TRIM_SMITHING_TEMPLATE),
     COAST(TrimPattern.COAST, Material.COAST_ARMOR_TRIM_SMITHING_TEMPLATE),
@@ -31,12 +34,15 @@ public enum EnumTrimPattern implements EnumTrim {
     }
 
     @Override
+    @Nonnull
     public String getName() {
         return Chat.format(name());
     }
 
     @Override
+    @Nonnull
     public Material getMaterial() {
         return material;
     }
+
 }

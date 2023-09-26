@@ -1,9 +1,11 @@
 package me.hapyl.mmu3.command;
 
+import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.trim.EnumTrimMaterial;
 import me.hapyl.mmu3.feature.trim.EnumTrimPattern;
-import me.hapyl.mmu3.feature.trim.TrimGUI;
+import me.hapyl.mmu3.feature.trim.CachedTrimData;
 import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.utils.HexId;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -24,7 +26,21 @@ public class TrimCommand extends SimplePlayerAdminCommand {
     @Override
     protected void execute(Player player, String[] args) {
         if (args.length == 0) {
-            new TrimGUI(player);
+            Main.getRegistry().trimManager.enterEditor(player);
+            return;
+        }
+
+        if (args.length == 1) {
+            final HexId id = new HexId(args[0]);
+            final CachedTrimData data = Main.getRegistry().trimManager.getData(id);
+
+            if (data == null) {
+                Message.error(player, "Could not find anything for %s!", id);
+                return;
+            }
+
+            data.give(player);
+            Message.success(player, "Gave you items for %s!", id);
             return;
         }
 
@@ -41,7 +57,6 @@ public class TrimCommand extends SimplePlayerAdminCommand {
             Message.error(player, "This item cannot be trimmed!");
             return;
         }
-
 
         final EnumTrimPattern pattern = getArgument(args, 0).toEnum(EnumTrimPattern.class);
         final EnumTrimMaterial material = getArgument(args, 1).toEnum(EnumTrimMaterial.class);

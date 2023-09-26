@@ -10,6 +10,7 @@ public abstract class ColorSignGUI extends SignGUI {
         super(player, "#", SignGUI.DASHED_LINE, "Enter hexadecimal", "value");
     }
 
+    // This always has a valid color.
     public abstract void onResponse(Color color);
 
     @Override
@@ -27,7 +28,12 @@ public abstract class ColorSignGUI extends SignGUI {
 
         // Trim to min of 7
         string = string.substring(0, Math.min(string.length(), 7));
-        final java.awt.Color decode = java.awt.Color.decode(string);
+        java.awt.Color decode = new java.awt.Color(0, 0, 0);
+
+        try {
+            decode = java.awt.Color.decode(string);
+        } catch (Exception ignored) {
+        }
 
         onResponse(Color.fromRGB(decode.getRed(), decode.getGreen(), decode.getBlue()));
     }

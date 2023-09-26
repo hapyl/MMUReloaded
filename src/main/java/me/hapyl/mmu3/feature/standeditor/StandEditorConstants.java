@@ -14,7 +14,7 @@ public final class StandEditorConstants {
     public static final ItemStack ITEM_SHOW_ARMS = (new ItemBuilder(Material.RABBIT_FOOT))
             .setName("Show Arms")
             .setSmartLore("Toggles whenever armor stand has arms.")
-            .addSmartLore("Armor stand's with arms can hold weapons!", "&8")
+            .addSmartLore("Armor stands with arms can hold weapons!", "&8")
             .build();
     public static final ItemStack ITEM_VISIBILITY = (new ItemBuilder(Material.ENDER_EYE))
             .setName("Visibility")
@@ -34,7 +34,7 @@ public final class StandEditorConstants {
     public static final ItemStack ITEM_SMALL = (new ItemBuilder(Material.PUFFERFISH))
             .setName("Small")
             .setSmartLore("Toggles whenever armor stand is small.")
-            .addSmartLore("Imagine being smol.", "&8")
+            .addSmartLore("smol silly amror tsand", "&8")
             .build();
     public static final ItemStack ITEM_MARKER = (new ItemBuilder(Material.REDSTONE_TORCH))
             .setName("Marker")
@@ -62,6 +62,5 @@ public final class StandEditorConstants {
             .addLore()
             .addLore("&eClick to enter move mode")
             .build();
-
 
 }

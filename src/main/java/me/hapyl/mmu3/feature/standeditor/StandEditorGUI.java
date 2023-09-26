@@ -1,6 +1,7 @@
 package me.hapyl.mmu3.feature.standeditor;
 
 import me.hapyl.mmu3.Main;
+import me.hapyl.mmu3.feature.trim.Editor;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
@@ -8,9 +9,7 @@ import me.hapyl.spigotutils.module.inventory.Response;
 import me.hapyl.spigotutils.module.inventory.SignGUI;
 import me.hapyl.spigotutils.module.inventory.gui.CancelType;
 import me.hapyl.spigotutils.module.inventory.gui.PlayerGUI;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -20,13 +19,14 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.EulerAngle;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.text.DecimalFormat;
 import java.util.Set;
 
 import static me.hapyl.mmu3.feature.standeditor.StandEditorConstants.*;
 
-public class StandEditorGUI extends PlayerGUI {
+public class StandEditorGUI extends PlayerGUI implements Editor {
 
     private final Data data;
 
@@ -46,6 +46,29 @@ public class StandEditorGUI extends PlayerGUI {
         openInventory();
     }
 
+    @Override
+    public void showUsage(@Nonnull Player player) {
+        Message.info(player, "&a&lYou've entered the Trim Editor!");
+        Message.info(player, "&f&lMOVE AROUND&7 to move the armor stand.");
+        Message.info(player, "&f&lJUMP&7 to move the armor stand up.");
+        Message.info(player, "&f&lSNEAK&7 to move the armor stand down.");
+        Message.info(player, "&f&lSWAP HANDS&7 &8(F)&7 to cycle moving speed.");
+        Message.info(player, "&f&lLEFT CLICK&7 to leave the editor.");
+
+        Message.sound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1.75f);
+    }
+
+    private float getYaw() {
+        final ArmorStand stand = data.getStand();
+        final float yaw = stand.getLocation().getYaw();
+
+        if (yaw >= 360) {
+            return yaw % 360;
+        }
+
+        return yaw;
+    }
+
     private void updateInventory() {
         final StandEditor editor = Main.getStandEditor();
         final ArmorStand stand = data.getStand();
@@ -54,6 +77,17 @@ public class StandEditorGUI extends PlayerGUI {
             editor.setLock(stand, !editor.isLocked(stand));
             playSoundAndUpdate();
         });
+
+        setItem(22, new ItemBuilder(Material.ENDER_PEARL)
+                .setName("Rotate")
+                .addSmartLore("Rotate armor stands around its axis.")
+                .addLore()
+                .addLore("&aCurrent Yaw: &f&l%.2f", getYaw())
+                .addLore()
+                .addLore("&eClick to rotate clockwise.")
+                .addLore("&6Right Click to rotate counter-clockwise.")
+                .addLore("&8Sneak to rotate faster!")
+                .asIcon());
 
         setItem(20, buildTagsItem());
 
@@ -102,18 +136,14 @@ public class StandEditorGUI extends PlayerGUI {
             setCloseEvent(null);
             player.closeInventory();
 
-            Message.info(
-                    player,
-                    "You've entered the Move Mode! Move around to move armor stand that way. Jump to move it up, Sneak to move it down. &a&lPunch &7to leave this mode, &a&lSwap Hands &7to switch moving speed. Also, try lightly press the button, so armor stand won't move twice!"
-            );
-            Message.sound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1.75f);
+            showUsage(player);
         });
 
         setItem(
                 5,
                 new ItemBuilder(Material.OAK_SIGN)
                         .setName("&aCustom Name")
-                        .setSmartLore("Add or change custom name of this armor stand.")
+                        .setSmartLore("Add or change a custom name of this armor stand.")
                         .addLore()
                         .addLore("Current Name: " + getStandName())
                         .addLore()
@@ -263,6 +293,7 @@ public class StandEditorGUI extends PlayerGUI {
                 }
             }
 
+            // Load outs
             if (click == ClickType.NUMBER_KEY) {
                 final int clickedSlot = ev.getHotbarButton() + 1;
 
@@ -276,7 +307,7 @@ public class StandEditorGUI extends PlayerGUI {
                 else if (slot == 3) {
                     final StandInfo loadout = editor.getLoadout(player, clickedSlot);
                     if (loadout == null) {
-                        Message.error(player, "There is nothing on this slot!");
+                        Message.error(player, "There is nothing in this slot!");
                         Message.sound(player, Sound.ENTITY_VILLAGER_NO);
                         return;
                     }
@@ -285,6 +316,22 @@ public class StandEditorGUI extends PlayerGUI {
                     Message.success(player, "Successfully loaded loadout from slot %s.", clickedSlot);
                     playSoundAndUpdate();
                 }
+            }
+
+            // Rotate
+            if (slot == 22) {
+                final boolean clockwise = click.isLeftClick();
+                final double speed = click.isShiftClick() ? 10 : 1;
+
+                final Location location = stand.getLocation();
+                final float yaw = location.getYaw();
+
+                location.setYaw((float) (clockwise ? yaw + speed : yaw - speed));
+
+                stand.teleport(location);
+
+                Message.success(player, "Rotated %s degrees %s.", speed, clockwise ? "clockwise" : "counter-clockwise");
+                playSoundAndUpdate();
             }
         }));
     }
@@ -464,6 +511,7 @@ public class StandEditorGUI extends PlayerGUI {
 
     private ItemStack getArmorItemPreview(ItemStack stack) {
         return new ItemBuilder(stack)
+                .addLore()
                 .addLore("&8&m----------------------------")
                 .addSmartLore("This a preview of the item, click to remove it.", "&8")
                 .toItemStack();
@@ -535,10 +583,8 @@ public class StandEditorGUI extends PlayerGUI {
         final ItemBuilder builder = new ItemBuilder(stack).predicate(condition, ItemBuilder::glow);
 
         if (meta != null) {
-            if (meta.hasDisplayName()) {
-                final String name = meta.getDisplayName();
-                builder.setName((condition ? "&a" : "&c") + name);
-            }
+            final String name = meta.getDisplayName();
+            builder.setName((condition ? "&a" : "&c") + ChatColor.stripColor(name));
         }
 
         builder.addLore().addLore("&eClick to %s", condition ? "disable" : "enable");
