@@ -18,14 +18,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.annotation.Nonnull;
 
-/**
- * Movement:
- * W -> Previous armor slot (up)
- * S -> Next armor slot (down)
- * A -> Previous trim material/pattern
- * D -> Next trim material/pattern
- * JUMP -> Switch between material/pattern
- */
 public class TrimEditor implements Editor {
 
     private final Player player;
@@ -105,9 +97,7 @@ public class TrimEditor implements Editor {
     @Nonnull
     public ItemStack getCurrentItem() {
         final TrimData data = getData();
-        final ItemStack item = data.getItem();
-
-        return item == null ? new ItemStack(Material.AIR) : item;
+        return data.getItem();
     }
 
     public void setCurrentItem(@Nonnull ItemStack item) {
@@ -166,7 +156,10 @@ public class TrimEditor implements Editor {
 
     @Nonnull
     public final CachedTrimData remove() {
+        final TrimManager trimManager = Main.getRegistry().trimManager;
         final ItemStack[] itemStack = new ItemStack[4];
+
+        trimManager.exitEditor(player);
 
         for (int i = 0; i < trimData.length; i++) {
             final TrimData data = trimData[i];
@@ -176,19 +169,20 @@ public class TrimEditor implements Editor {
             stand.remove();
         }
 
-        final TrimManager trimManager = Main.getRegistry().trimManager;
         final CachedTrimData cachedTrimData = new CachedTrimData(itemStack);
         final HexId hexId = cachedTrimData.getHexId();
 
         Message.success(player, "Finished trim editing!");
-        Message.success(player, "Use &e/trim " + hexId + " &ato get your items!");
+        Message.success(player, "Your trim code is &e" + hexId + "&a!");
         Message.clickHover(
                 player,
-                LazyEvent.runCommand("/trim " + hexId),
-                LazyEvent.showText("&7Click to get items for %s!", hexId),
-                "&6&lOR CLICK HERE!"
+                LazyEvent.copyToClipboard(String.valueOf(hexId)),
+                LazyEvent.showText("&7Click to copy the code!"),
+                "&6&lCLICK TO COPY CODE!"
         );
+
         trimManager.setTrim(cachedTrimData);
+        cachedTrimData.give(player);
 
         return cachedTrimData;
     }
@@ -243,9 +237,7 @@ public class TrimEditor implements Editor {
         final TrimData data = getData();
 
         if (!data.isLeatherArmor()) {
-            sendInfo(ChatColor.DARK_RED + "Cannot dye this armor!");
-            sendSound(Sound.ENTITY_VILLAGER_NO);
-            return;
+            data.setItem(new ItemStack(TrimArmor.LEATHER.getMaterial(data.getType())));
         }
 
         new ColorSignGUI(player) {
@@ -271,9 +263,32 @@ public class TrimEditor implements Editor {
         Message.info(player, "&f&lA &8& &f&lD &7to cycle between pattern/material.");
         Message.info(player, "&f&lSPACE&7 to switch between pattern/material.");
         Message.info(player, "&f&lRIGHT CLICK&7 with an item to replace editing item.");
-        Message.info(player, "&f&lDROP&7 &8(Q)&7 to randomize the trim.");
-        Message.info(player, "&f&lSWAP HANDS&7 &8(F)&&7 to color armor.");
-        Message.info(player, "&f&lSNEAK&7 to leave the editor.");
+        Message.info(player, "&f&lSNEAK&7 to open the GUI.");
+    }
+
+    public void openGUI() {
+        new TrimGUI(player, this);
+    }
+
+    public void sendInfo(Object info, Object... format) {
+        Chat.sendActionbar(
+                player,
+                ChatColor.GREEN + String.valueOf(info),
+                Message.colorReplacements("&a", "&f&l", format)
+        );
+    }
+
+    public void sendSound(Sound sound) {
+        sendSound(sound, 1.0f);
+    }
+
+    public void sendSound(Sound sound, float pitch) {
+        PlayerLib.playSound(player, sound, pitch);
+    }
+
+    @Nonnull
+    public TrimData getData() {
+        return trimData[slot];
     }
 
     private boolean checkLockAndNotify() {
@@ -283,27 +298,6 @@ public class TrimEditor implements Editor {
         }
 
         return false;
-    }
-
-    private void sendInfo(Object info, Object... format) {
-        Chat.sendActionbar(
-                player,
-                ChatColor.GREEN + String.valueOf(info),
-                Message.colorReplacements("&a", "&f&l", format)
-        );
-    }
-
-    private void sendSound(Sound sound) {
-        sendSound(sound, 1.0f);
-    }
-
-    private void sendSound(Sound sound, float pitch) {
-        PlayerLib.playSound(player, sound, pitch);
-    }
-
-    @Nonnull
-    private TrimData getData() {
-        return trimData[slot];
     }
 
     private void createArmorStands() {

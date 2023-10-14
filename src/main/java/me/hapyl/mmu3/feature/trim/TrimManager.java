@@ -78,7 +78,7 @@ public class TrimManager extends Feature implements Listener {
             to.setPitch(0.0f);
 
             ev.setCancelled(true);
-            player.teleport(to);
+            //player.teleport(to);
         }
     }
 
@@ -111,19 +111,6 @@ public class TrimManager extends Feature implements Listener {
     }
 
     @EventHandler()
-    public void handleColor(PlayerSwapHandItemsEvent ev) {
-        final Player player = ev.getPlayer();
-        final TrimEditor editor = trimEditorMap.get(player);
-
-        if (editor == null) {
-            return;
-        }
-
-        ev.setCancelled(true);
-        editor.tryColor();
-    }
-
-    @EventHandler()
     public void handleQuit(PlayerQuitEvent ev) {
         final Player player = ev.getPlayer();
         final TrimEditor editor = trimEditorMap.remove(player);
@@ -139,7 +126,7 @@ public class TrimManager extends Feature implements Listener {
     }
 
     @EventHandler()
-    public void handleRandomize(PlayerDropItemEvent ev) {
+    public void handleSneak(PlayerToggleSneakEvent ev) {
         final Player player = ev.getPlayer();
         final TrimEditor editor = trimEditorMap.get(player);
 
@@ -147,20 +134,7 @@ public class TrimManager extends Feature implements Listener {
             return;
         }
 
-        ev.setCancelled(true);
-        editor.randomize();
-    }
-
-    @EventHandler()
-    public void handleSneak(PlayerToggleSneakEvent ev) {
-        final Player player = ev.getPlayer();
-        final TrimEditor editor = trimEditorMap.remove(player);
-
-        if (editor == null) {
-            return;
-        }
-
-        editor.remove();
+        editor.openGUI();
     }
 
     @EventHandler()
@@ -187,14 +161,8 @@ public class TrimManager extends Feature implements Listener {
         trimEditorMap.put(player, new TrimEditor(player));
     }
 
-    public void exitEditor(Player player) {
-        final TrimEditor editor = trimEditorMap.remove(player);
-
-        if (editor == null) {
-            return;
-        }
-
-        editor.remove();
+    public boolean exitEditor(Player player) {
+        return trimEditorMap.remove(player) != null;
     }
 
     public void setTrim(CachedTrimData cachedTrimData) {
