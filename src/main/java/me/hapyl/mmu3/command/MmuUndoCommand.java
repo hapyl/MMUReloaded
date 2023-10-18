@@ -4,7 +4,6 @@ import me.hapyl.mmu3.UndoManager;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.utils.BlockChangeQueue;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
-import me.hapyl.spigotutils.module.util.Validate;
 import org.bukkit.entity.Player;
 
 public class MmuUndoCommand extends SimplePlayerAdminCommand {
@@ -18,10 +17,10 @@ public class MmuUndoCommand extends SimplePlayerAdminCommand {
 
     @Override
     protected void execute(Player player, String[] args) {
-        final int deep = args.length > 0 ? Validate.getInt(args[0]) : 1;
+        final int deep = getArgument(args, 0).toInt(1);
 
         if (deep < 0) {
-            Message.error(player, "Cannot be negative.");
+            Message.error(player, "Cannot be 0 or negative.");
             return;
         }
 

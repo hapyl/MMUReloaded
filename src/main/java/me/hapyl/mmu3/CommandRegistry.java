@@ -3,7 +3,6 @@ package me.hapyl.mmu3;
 import me.hapyl.mmu3.command.*;
 import me.hapyl.mmu3.command.brush.BrushCommand;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.test.CommandWithArguments;
 import me.hapyl.spigotutils.module.command.CommandProcessor;
 import me.hapyl.spigotutils.module.command.SimpleCommand;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
@@ -79,9 +78,6 @@ public class CommandRegistry {
         register(new FixTreeOrientationCommand("fixTreeOrientation"));
         register(new SearchCommand("search"));
         register(new TrimCommand("trim"));
-
-        // TEST
-        register(new CommandWithArguments("_testcommandwitharguments"));
 
         registerTestCommand("datafields", (player, strings) -> {
             final PersistentPlayerData data = PersistentPlayerData.getData(player);

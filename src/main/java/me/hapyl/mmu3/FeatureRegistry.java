@@ -44,6 +44,7 @@ public final class FeatureRegistry {
     public final ChatGameManager chatGameManager;
     public final Search search;
     public final TrimManager trimManager;
+    public final DecorativePotFeature decorativePot;
 
     public FeatureRegistry(Main main) {
         stateChanger = new StateChanger(main);
@@ -68,6 +69,7 @@ public final class FeatureRegistry {
         chatGameManager = new ChatGameManager(main);
         search = new Search(main);
         trimManager = new TrimManager(main);
+        decorativePot = new DecorativePotFeature(main);
 
         // These features don't require to be accessed
         new DotCommand(main);
