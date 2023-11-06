@@ -55,21 +55,6 @@ public enum SlayerType {
             EntityType.BLAZE
     ),
 
-    OCELOT(
-            new SlayerData(
-                    "Fishseeking Fury",
-                    "Always hungry-looking cat that will devour you and your soul just for a fish.",
-                    Material.SALMON
-            ),
-            EntityType.SALMON,
-            EntityType.COD,
-            EntityType.PUFFERFISH,
-            EntityType.TROPICAL_FISH,
-            EntityType.AXOLOTL,
-            EntityType.TADPOLE
-    ),
-
-    SKELETON(new SlayerData("Rottingmutant Viledeviation", "&8&kwhat?", Material.BONE)),
     ;
 
     private final TieredSlayerQuests quests;

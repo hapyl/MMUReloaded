@@ -22,7 +22,7 @@ public class CookieClicker extends Game {
 
     public CookieClicker() {
         super("Cookie Clicker");
-        setInfo("");
+        setDescription("");
         milestoneString = Maps.newHashMap();
         setMilestone(0, "Noob", "Do you even know how to click?");
         setMilestone(1, "Apprentice", "You are getting better...");
@@ -83,9 +83,10 @@ public class CookieClicker extends Game {
             }
 
             @Override
-            public void onGameStop() {
+            public boolean onGameStop() {
                 data.setCookieClicks(clicks);
-                stopPlaying();
+
+                return true;
             }
         };
     }

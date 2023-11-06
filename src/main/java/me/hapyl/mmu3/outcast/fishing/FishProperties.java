@@ -45,28 +45,20 @@ public class FishProperties {
         this.catchTimeMax = catchTimeMax;
     }
 
-    public void setMinSize(int minSize) {
-        this.minSize = minSize;
-    }
-
-    public void setMaxSize(int maxSize) {
-        this.maxSize = maxSize;
-    }
-
-    public void setRequiredBaitLevel(int requiredBaitLevel) {
-        this.requiredBaitLevel = requiredBaitLevel;
-    }
-
-    public void setRequiredFishLevel(int requiredFishLevel) {
-        this.requiredFishLevel = requiredFishLevel;
-    }
-
     public int getMinSize() {
         return minSize;
     }
 
+    public void setMinSize(int minSize) {
+        this.minSize = minSize;
+    }
+
     public int getMaxSize() {
         return maxSize;
+    }
+
+    public void setMaxSize(int maxSize) {
+        this.maxSize = maxSize;
     }
 
     public Set<Biome> getBiomes() {
@@ -77,8 +69,16 @@ public class FishProperties {
         return requiredBaitLevel;
     }
 
+    public void setRequiredBaitLevel(int requiredBaitLevel) {
+        this.requiredBaitLevel = requiredBaitLevel;
+    }
+
     public int getRequiredFishLevel() {
         return requiredFishLevel;
+    }
+
+    public void setRequiredFishLevel(int requiredFishLevel) {
+        this.requiredFishLevel = requiredFishLevel;
     }
 
     public FishGrade getGrade(int size) {
@@ -87,23 +87,22 @@ public class FishProperties {
         }
 
         // 0.0-1.0
-        final float percent = (float) size / maxSize;
+        final float percent = (float) (size - minSize) / (maxSize - minSize);
 
-        if (checkSize(percent, 0.2f, 0.333f)) {
+        if (percent <= 0.2f) {
             return FishGrade.SMALL;
         }
-        else if (checkSize(percent, 0.333f, 0.5f)) {
+        else if (percent <= 0.333f) {
             return FishGrade.BIG;
         }
-        else if (checkSize(percent, 0.5f, 0.8f)) {
+        else if (percent <= 0.5f) {
+            return FishGrade.BIG;
+        }
+        else if (percent <= 0.99f) {
             return FishGrade.GIANT;
         }
 
         return FishGrade.MASSIVE;
-    }
-
-    private boolean checkSize(float size, float m, float mx) {
-        return size >= m && size < mx;
     }
 
     @Override
@@ -117,5 +116,9 @@ public class FishProperties {
                 ", catchTimeMin=" + catchTimeMin +
                 ", catchTimeMax=" + catchTimeMax +
                 '}';
+    }
+
+    private boolean checkSize(float size, float m, float mx) {
+        return size >= m && size < mx;
     }
 }

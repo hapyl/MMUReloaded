@@ -4,7 +4,10 @@ import com.google.common.collect.Maps;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
 import me.hapyl.mmu3.message.Message;
+import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.player.PlayerLib;
 import org.bukkit.FluidCollisionMode;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,16 +36,41 @@ public class BrushManager extends Feature implements Listener {
     @EventHandler()
     public void handlePlayerInteractEvent(PlayerInteractEvent ev) {
         final Player player = ev.getPlayer();
+        final Action action = ev.getAction();
 
-        if (ev.getHand() == EquipmentSlot.OFF_HAND ||
-                (ev.getAction() != Action.RIGHT_CLICK_AIR && ev.getAction() != Action.RIGHT_CLICK_BLOCK)) {
+        if (ev.getHand() == EquipmentSlot.OFF_HAND || action == Action.PHYSICAL) {
             return;
         }
 
         final PlayerBrush brush = getBrush(player);
         final ItemStack handItem = player.getInventory().getItemInMainHand();
 
-        if (brush.getBrush() == Brush.NONE || handItem.getType() != brush.getBrushItem()) {
+        if (brush.getBrush() == Brushes.NONE || handItem.getType() != brush.getBrushItem()) {
+            return;
+        }
+
+        // Left click is undo
+        if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
+            final long currentMillis = System.currentTimeMillis();
+            final boolean canUndo = brush.canUndo();
+
+            if (!canUndo) {
+                Chat.sendActionbar(player, "&c&lɴᴏᴛʜɪɴɢ ᴛᴏ ᴜɴᴅᴏ");
+                return;
+            }
+
+            if (currentMillis - brush.lastUndoUsage >= 2000) {
+                brush.lastUndoUsage = currentMillis;
+                Chat.sendActionbar(player, "&6&lʟᴇғᴛ ᴄʟɪᴄᴋ ᴀɢᴀɪɴ ᴛᴏ ᴜɴᴅᴏ");
+                PlayerLib.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 2.0f);
+                return;
+            }
+
+            brush.lastUndoUsage = 0;
+            brush.undo(1);
+
+            Chat.sendActionbar(player, "&a&lᴜɴᴅɪᴅ ʟᴀsᴛ ᴀᴄᴛɪᴏɴ");
+            PlayerLib.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.25f);
             return;
         }
 
@@ -55,7 +83,6 @@ public class BrushManager extends Feature implements Listener {
 
         brush.useBrush(block.getLocation());
         ev.setCancelled(true);
-
     }
 
     public void resetBrush(Player player) {

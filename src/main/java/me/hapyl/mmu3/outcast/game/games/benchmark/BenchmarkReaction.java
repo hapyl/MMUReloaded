@@ -27,7 +27,7 @@ public class BenchmarkReaction extends Game {
             .setName("&aClick to start!")
             .setSmartLore("When the red box turns green, click as quickly as you can!")
             .addLore()
-            .addSmartLore("There will a total of 5 rounds to determine your average reaction time.")
+            .addSmartLore("There will be a total of 5 rounds to determine your average reaction time.")
             .build();
 
     private final ItemStack ICON_WAITING = new ItemBuilder(Material.RED_STAINED_GLASS_PANE)
@@ -58,11 +58,12 @@ public class BenchmarkReaction extends Game {
             }
 
             @Override
-            public void onGameStop() {
+            public boolean onGameStop() {
                 task.cancel();
                 task = null;
                 roundData.clear();
-                stopPlaying();
+
+                return true;
             }
 
             @Override

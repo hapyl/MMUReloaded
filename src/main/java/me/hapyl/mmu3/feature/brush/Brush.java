@@ -1,73 +1,80 @@
 package me.hapyl.mmu3.feature.brush;
 
-import com.google.common.collect.Sets;
-import org.bukkit.Location;
-import org.bukkit.World;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
-public enum Brush {
+public abstract class Brush {
 
-    NONE((location, radius) -> null),
-    CIRCLE((location, radius) -> {
-        final World world = location.getWorld();
-        final Set<Block> circleBlocks = Sets.newHashSet();
+    private final String name;
+    private final Map<String, BrushData<?>> acceptingExtraData = Maps.newHashMap();
+    private boolean cancelPhysics;
 
-        if (world == null) {
-            return null;
-        }
-
-        final int bx = location.getBlockX();
-        final int by = location.getBlockY();
-        final int bz = location.getBlockZ();
-
-        for (int x = bx - radius; x <= bx + radius; x++) {
-            for (int y = by - radius; y <= by + radius; y++) {
-                for (int z = bz - radius; z <= bz + radius; z++) {
-                    double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)) + ((by - y) * (by - y)));
-                    if (distance < radius * radius) {
-                        circleBlocks.add(world.getBlockAt(x, y, z));
-                    }
-                }
-            }
-        }
-
-        return circleBlocks;
-    });
-
-    private final BrushPattern brushPattern;
-
-    Brush(BrushPattern brushPattern) {
-        this.brushPattern = brushPattern;
+    public Brush(String name) {
+        this.name = name;
+        this.cancelPhysics = true;
     }
 
-    public static List<Location> generateSphere(Location centerBlock, int radius, boolean hollow) {
-
-        List<Location> circleBlocks = new ArrayList<Location>();
-
-        int bx = centerBlock.getBlockX();
-        int by = centerBlock.getBlockY();
-        int bz = centerBlock.getBlockZ();
-
-        for (int x = bx - radius; x <= bx + radius; x++) {
-            for (int y = by - radius; y <= by + radius; y++) {
-                for (int z = bz - radius; z <= bz + radius; z++) {
-                    double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)) + ((by - y) * (by - y)));
-                    if (distance < radius * radius && !(hollow && distance < ((radius - 1) * (radius - 1)))) {
-                        Location l = new Location(centerBlock.getWorld(), x, y, z);
-                        circleBlocks.add(l);
-                    }
-                }
-            }
-        }
-
-        return circleBlocks;
+    public void setCancelPhysics(boolean cancelPhysics) {
+        this.cancelPhysics = cancelPhysics;
     }
 
-    public BrushPattern getPattern() {
-        return brushPattern;
+    public boolean isCancelPhysics() {
+        return cancelPhysics;
     }
+
+    @Nonnull
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Returns collected block with brush pattern.
+     *
+     * @param player   - Player, who used the brush.
+     * @param location - Location of the center.
+     * @param radius   - Radius.
+     * @return collection of blocks.
+     */
+    @Nullable
+    public abstract Collection<Block> collect(@Nonnull Player player, @Nonnull NonNullWorldLocation location, double radius);
+
+    public boolean hasExtraData() {
+        return !acceptingExtraData.isEmpty();
+    }
+
+    public boolean hasExtraDataByName(String key) {
+        return acceptingExtraData.containsKey(key.toLowerCase());
+    }
+
+    @Nullable
+    public BrushData<?> getExtraDataByName(String key) {
+        return acceptingExtraData.get(key);
+    }
+
+    @Nonnull
+    public Map<String, BrushData<?>> getAcceptingExtraData() {
+        return acceptingExtraData;
+    }
+
+    @Nonnull
+    public List<String> getAcceptingExtraDataKeys() {
+        return Lists.newArrayList(acceptingExtraData.keySet());
+    }
+
+    @Nonnull
+    protected <T> BrushData<T> addExtraData(String key, BrushDataType<T> type, T def) {
+        final BrushData<T> extraData = new BrushData<>(key, type, def);
+        acceptingExtraData.put(key, extraData);
+
+        return extraData;
+    }
+
 }

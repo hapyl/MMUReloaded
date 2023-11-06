@@ -1,10 +1,10 @@
 package me.hapyl.mmu3.command;
 
-import me.hapyl.mmu3.UndoManager;
+import me.hapyl.mmu3.feature.UndoManager;
+import me.hapyl.mmu3.feature.block.MultiBlockChange;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
 import me.hapyl.spigotutils.module.math.Cuboid;
-import me.hapyl.spigotutils.module.util.Validate;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -28,19 +28,14 @@ public class FixTreeOrientationCommand extends SimplePlayerAdminCommand {
             return;
         }
 
-        final int radius = Validate.getInt(args[0]);
-
-        if (radius <= 0 || radius > Byte.MAX_VALUE) {
-            Message.error(player, "Too much or little radius!");
-            return;
-        }
+        int radius = Math.min(getArgument(args, 0).toInt(1), 100);
 
         final Cuboid cuboid = new Cuboid(
                 player.getLocation().subtract(radius, radius, radius),
                 player.getLocation().add(radius, radius, radius)
         );
 
-        int fixedBlocks = 0;
+        final MultiBlockChange blockChange = new MultiBlockChange();
         for (Block block : cuboid.getBlocks()) {
             final Material fixedType = fixedWoodType(block.getType());
 
@@ -48,12 +43,12 @@ public class FixTreeOrientationCommand extends SimplePlayerAdminCommand {
                 continue;
             }
 
-            fixedBlocks++;
-            UndoManager.getUndoMap(player).add(block);
+            blockChange.add(block);
             block.setType(fixedType, false);
         }
 
-        Message.success(player, "Fixed %s blocks in %s radius.", fixedBlocks, radius);
+        UndoManager.getUndoMap(player).add(blockChange);
+        Message.success(player, "Fixed %s blocks in %s block radius.", blockChange.getSize(), radius);
     }
 
     @Nullable

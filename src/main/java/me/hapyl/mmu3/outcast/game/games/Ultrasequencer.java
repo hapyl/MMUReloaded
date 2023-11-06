@@ -72,10 +72,11 @@ public class Ultrasequencer extends Game {
             }
 
             @Override
-            public void onGameStop() {
+            public boolean onGameStop() {
                 PersistentPlayerData.getData(getPlayer()).setUltrasequencerRound(round);
                 cancelTask();
-                stopPlaying();
+
+                return true;
             }
 
             @Override

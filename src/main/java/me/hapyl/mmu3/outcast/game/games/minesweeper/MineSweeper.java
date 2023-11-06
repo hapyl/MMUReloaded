@@ -28,7 +28,7 @@ import java.util.Set;
 public class MineSweeper extends Game {
     public MineSweeper() {
         super("Minesweeper", PanelGUI.Size.FIVE);
-        setInfo("A minesweeper mini game.");
+        setDescription("A minesweeper mini game.");
     }
 
     @Nonnull

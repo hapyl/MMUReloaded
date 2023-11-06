@@ -1,87 +1,75 @@
 package me.hapyl.mmu3.feature.brush;
 
 import com.google.common.collect.Sets;
-import me.hapyl.spigotutils.module.math.Numbers;
+import me.hapyl.mmu3.feature.UndoManager;
+import me.hapyl.mmu3.feature.block.BlockChangeQueue;
+import me.hapyl.mmu3.feature.block.MultiBlockChange;
+import me.hapyl.spigotutils.module.chat.Chat;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Set;
+import java.util.UUID;
 
 public class PlayerBrush {
 
-    private static final int MAX_QUEUE_SIZE = 100;
-
-    private final LinkedList<BrushOperation> operationQueue;
     private final UUID uuid;
     private final Set<Material> mask;
+    private final BlockChangeQueue undoMap;
+    protected long lastUndoUsage;
 
-    private Brush brush;
+    private Brushes enumBrush;
     private Material brushItem;
     private Material material;
-    private int size;
+    private double size;
 
-    public PlayerBrush(UUID player) {
+    public PlayerBrush(@Nonnull UUID player) {
         this.uuid = player;
-        this.brush = Brush.NONE;
+        this.enumBrush = Brushes.NONE;
         this.brushItem = Material.WOODEN_HOE;
         this.material = Material.AIR;
         this.mask = Sets.newHashSet();
-        this.operationQueue = new LinkedList<>();
-        this.size = 2;
+        this.undoMap = UndoManager.getUndoMap(uuid);
     }
 
-    public void useBrush(Location location) {
-        final Collection<Block> collect = brush.getPattern().collect(location, size);
-        final BrushOperation operation = new BrushOperation();
+    public void useBrush(@Nonnull Location location) {
+        final Brush brush = enumBrush.getBrush();
 
+        if (brush == null) {
+            return;
+        }
+
+        final Collection<Block> collect = brush.collect(getPlayer(), NonNullWorldLocation.from(location), size);
+
+        if (collect == null) {
+            return;
+        }
+
+        final MultiBlockChange blockChange = new MultiBlockChange();
         collect.forEach(block -> {
             if (!isMasked(block.getType())) {
                 return;
             }
 
-            operation.add(block);
-            block.setType(material, true);
+            if (block.getType() == material) {
+                return;
+            }
+
+            blockChange.add(block);
+            block.setType(material, !brush.isCancelPhysics());
         });
 
-        operationQueue.add(operation);
-        if (operationQueue.size() >= MAX_QUEUE_SIZE) {
-            operationQueue.pollLast();
-        }
-    }
-
-    public int getQueueSize() {
-        return operationQueue.size();
+        undoMap.add(blockChange);
     }
 
     public int undo(int times) {
-        times = Numbers.clamp(times, 1, 100);
-        int undid = 0;
-        if (operationQueue.isEmpty()) {
-            return undid;
-        }
-
-        while (times-- > 0) {
-            final BrushOperation element = operationQueue.poll();
-            if (element == null) {
-                break;
-            }
-
-            undid++;
-            element.getBlocks().forEach(BlockInfo::restore);
-        }
-        return undid;
-    }
-
-    public void setMask(Material... block) {
-        resetMask();
-        mask.addAll(Arrays.asList(block));
-    }
-
-    public void addMask(Material block) {
-        mask.add(block);
+        return undoMap.restore(times);
     }
 
     public Material getBrushItem() {
@@ -96,8 +84,14 @@ public class PlayerBrush {
         mask.clear();
     }
 
+    @Nonnull
     public Set<Material> getMask() {
         return mask;
+    }
+
+    public void setMask(@Nonnull Set<Material> newMask) {
+        mask.clear();
+        mask.addAll(newMask);
     }
 
     public boolean isMasked(Material material) {
@@ -107,35 +101,69 @@ public class PlayerBrush {
         return mask.contains(material);
     }
 
+    @Nonnull
     public Player getPlayer() {
-        return Bukkit.getPlayer(uuid);
+        final Player player = Bukkit.getPlayer(uuid);
+
+        if (player == null) {
+            throw new IllegalStateException("Player is not online but used a brush?");
+        }
+
+        return player;
     }
 
+    @Nonnull
     public UUID getUuid() {
         return uuid;
     }
 
-    public void setBrush(Brush brush) {
-        this.brush = brush;
+    @Nonnull
+    public Brushes getBrush() {
+        return enumBrush;
     }
 
-    public void setMaterial(Material material) {
-        this.material = material;
+    public void setBrush(@Nonnull Brushes brush) {
+        this.enumBrush = brush;
     }
 
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-    public Brush getBrush() {
-        return brush;
-    }
-
+    @Nonnull
     public Material getMaterial() {
         return material;
     }
 
-    public int getSize() {
+    public void setMaterial(@Nonnull Material material) {
+        this.material = material;
+    }
+
+    public double getSize() {
         return size;
+    }
+
+    public void setSize(double size) {
+        this.size = size;
+    }
+
+    @Nonnull
+    public String getMaskFormatted() {
+        if (mask.isEmpty()) {
+            return "None!";
+        }
+
+        final StringBuilder builder = new StringBuilder();
+
+        int index = 0;
+        for (Material material : mask) {
+            if (index++ != 0) {
+                builder.append("&7, ");
+            }
+
+            builder.append(ChatColor.YELLOW).append(Chat.capitalize(material));
+        }
+
+        return builder.toString();
+    }
+
+    public boolean canUndo() {
+        return !undoMap.isEmpty();
     }
 }

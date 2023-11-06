@@ -1,6 +1,7 @@
 package me.hapyl.mmu3.command;
 
-import me.hapyl.mmu3.UndoManager;
+import me.hapyl.mmu3.feature.UndoManager;
+import me.hapyl.mmu3.feature.block.BlockChange;
 import me.hapyl.mmu3.feature.block.BlockManipulations;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.chat.Chat;
@@ -10,13 +11,10 @@ import me.hapyl.spigotutils.module.math.Cuboid;
 import me.hapyl.spigotutils.module.math.Numbers;
 import me.hapyl.spigotutils.module.util.Validate;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class FillNearCommand extends SimplePlayerAdminCommand {
 
@@ -82,9 +80,9 @@ public class FillNearCommand extends SimplePlayerAdminCommand {
                 player.getLocation().add(radius, radius, radius)
         );
 
-        final Map<Block, BlockState> affected = to == Material.POTATO ? BlockManipulations.fillBlocks(cuboid, from) : BlockManipulations.fillBlocks(cuboid, from, to);
+        final BlockChange affected = to == Material.POTATO ? BlockManipulations.fillBlocks(cuboid, from) : BlockManipulations.fillBlocks(cuboid, from, to);
 
-        if (affected.size() == 0) {
+        if (affected.getSize() == 0) {
             Message.error(player, "No blocks were affected!");
             return;
         }
@@ -92,11 +90,11 @@ public class FillNearCommand extends SimplePlayerAdminCommand {
         UndoManager.getUndoMap(player).add(affected);
 
         if (from == to) {
-            Message.success(player, "Filled %s blocks with %s!".formatted(affected.size(), Chat.capitalize(to)));
+            Message.success(player, "Filled %s blocks with %s!".formatted(affected.getSize(), Chat.capitalize(to)));
         } else {
             Message.success(
                     player,
-                    "Replaced %s %s with %s!".formatted(affected.size(), Chat.capitalize(from), Chat.capitalize(to))
+                    "Replaced %s %s with %s!".formatted(affected.getSize(), Chat.capitalize(from), Chat.capitalize(to))
             );
         }
 

@@ -43,7 +43,7 @@ public class Main extends JavaPlugin {
         instance = this;
 
         if (pluginManager.getPlugin("EternaAPI") == null) {
-            Bukkit.getLogger().severe("This plugins depends on EternaAPI! Please put it in you plugins folder.");
+            Bukkit.getLogger().severe("This plugin depends on EternaAPI! Please put it in your 'plugins' folder.");
             pluginManager.disablePlugin(this);
             return;
         }

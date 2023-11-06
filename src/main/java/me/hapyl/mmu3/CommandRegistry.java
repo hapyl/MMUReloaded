@@ -49,7 +49,7 @@ public class CommandRegistry {
         register(new PacketCommand("playerpacket"));
         register(new CalculateRelative("relative"));
         register(new PingCommand("ping"));
-        register(new BrushCommand("tinybrush"));
+        register(new BrushCommand("mmuBrush"));
         register(new SelfTeleportCommand("self"));
         register(new DesignerCommand("designer"));
         register(new SlayerCommand("slayer"));

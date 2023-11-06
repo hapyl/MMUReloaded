@@ -1,6 +1,7 @@
 package me.hapyl.mmu3;
 
 import me.hapyl.mmu3.feature.*;
+import me.hapyl.mmu3.feature.action.PlayerActionFeature;
 import me.hapyl.mmu3.feature.activity.WorldActivity;
 import me.hapyl.mmu3.feature.bb.BoundingBoxManager;
 import me.hapyl.mmu3.feature.block.BlockReplacer;
@@ -45,6 +46,8 @@ public final class FeatureRegistry {
     public final Search search;
     public final TrimManager trimManager;
     public final DecorativePotFeature decorativePot;
+    public final PlayerActionFeature playerActionFeature;
+    public final UndoManager undoManager;
 
     public FeatureRegistry(Main main) {
         stateChanger = new StateChanger(main);
@@ -70,6 +73,8 @@ public final class FeatureRegistry {
         search = new Search(main);
         trimManager = new TrimManager(main);
         decorativePot = new DecorativePotFeature(main);
+        playerActionFeature = new PlayerActionFeature(main);
+        undoManager = new UndoManager(main);
 
         // These features don't require to be accessed
         new DotCommand(main);

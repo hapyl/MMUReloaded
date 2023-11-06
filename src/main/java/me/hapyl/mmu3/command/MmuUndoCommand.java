@@ -1,8 +1,8 @@
 package me.hapyl.mmu3.command;
 
-import me.hapyl.mmu3.UndoManager;
+import me.hapyl.mmu3.feature.UndoManager;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.utils.BlockChangeQueue;
+import me.hapyl.mmu3.feature.block.BlockChangeQueue;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
 import org.bukkit.entity.Player;
 
@@ -25,15 +25,13 @@ public class MmuUndoCommand extends SimplePlayerAdminCommand {
         }
 
         final BlockChangeQueue undoMap = UndoManager.getUndoMap(player);
-        undoMap.restore(deep);
 
         if (undoMap.isEmpty()) {
-            Message.error(player, "Nothing to undo!");
+            Message.info(player, "Nothing to undo!");
             return;
         }
 
-        final int restoredBlocks = undoMap.restoreLast();
-
-        Message.success(player, "Undid %s edits!".formatted(restoredBlocks));
+        final int undid = undoMap.restore(deep);
+        Message.info(player, "Undid %s available operations!".formatted(undid));
     }
 }

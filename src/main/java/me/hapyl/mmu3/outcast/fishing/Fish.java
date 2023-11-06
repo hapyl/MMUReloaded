@@ -1,9 +1,7 @@
 package me.hapyl.mmu3.outcast.fishing;
 
-import me.hapyl.spigotutils.module.inventory.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 
 import javax.annotation.Nonnull;
 import java.util.UUID;
@@ -42,16 +40,15 @@ public class Fish {
     }
 
     public ItemStack getItem(FishData data) {
-        final ItemBuilder builder = new ItemBuilder(material);
+        final FishItemBuilder builder = new FishItemBuilder(material);
         final int fishSize = data.getRandomSize(this);
         final FishGrade fishGrade = properties.getGrade(fishSize);
 
         builder.setName(name + fishGrade.getSuffix());
 
-        builder.setPersistentData("FishSize", PersistentDataType.INTEGER, fishSize);
-        builder.setPersistentData("Uuid", PersistentDataType.STRING, UUID.randomUUID().toString());
-        builder.setPersistentData("Cather", PersistentDataType.STRING, data.getPlayer().getName());
-        builder.setPersistentData("CatherUuid", PersistentDataType.STRING, data.getPlayer().getUniqueId().toString());
+        builder.setFishSize(fishSize);
+        builder.setFishUuid(UUID.randomUUID());
+        builder.setCatcher(data.getPlayer());
 
         builder.addLore("Length: &b%s cm.", fishSize);
 

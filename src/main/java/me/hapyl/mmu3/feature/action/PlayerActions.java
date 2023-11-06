@@ -1,71 +1,108 @@
 package me.hapyl.mmu3.feature.action;
 
 import com.google.common.collect.Maps;
+import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.entity.Entities;
-import me.hapyl.spigotutils.module.util.Nulls;
+import me.hapyl.spigotutils.module.reflect.npc.HumanNPC;
+import me.hapyl.spigotutils.module.reflect.npc.NPCPose;
 import org.bukkit.Location;
-import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
-public enum PlayerActions {
+public enum PlayerActions implements PlayerAction {
 
-    SIT(new PlayerStoppableAction() {
-
-        private final Map<Player, Entity> arrows = Maps.newHashMap();
+    SIT {
+        private final Map<Player, Entity> sittingMap = Maps.newHashMap();
 
         @Override
-        public void perform(Player player) {
+        public void start(@Nonnull Player player) {
             final Location location = player.getLocation();
-            arrows.put(player, Entities.ARROW.spawn(location, self -> {
-                self.setDamage(0.0d);
-                self.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
-                self.setGravity(false);
-                self.setVelocity(new Vector(0.0d, 0.0d, 0.0d));
-                self.addPassenger(player);
-            }));
 
-            Message.info(player, "You are now sitting.");
+            location.subtract(0.0d, 0.08d, 0.0d);
+
+            final Entity entity = Entities.BAT.spawn(location, self -> {
+                self.setAI(false);
+                self.setSilent(true);
+                self.setInvisible(true);
+                self.setInvulnerable(true);
+                self.addPassenger(player);
+            });
+
+            sittingMap.put(player, entity);
         }
 
         @Override
-        public void stopPerforming(Player player) {
-            Nulls.runIfNotNull(arrows.get(player), (entity) -> {
+        public void stop(@Nonnull Player player) {
+            final Entity entity = sittingMap.remove(player);
+
+            if (entity != null) {
                 entity.remove();
-                Message.info(player, "You are no longer sitting.");
-                arrows.remove(player);
-            });
+            }
         }
-    }),
+    },
 
-    LAY(player -> {
+    LAY {
+        private final Map<Player, HumanNPC> layingMap = Maps.newHashMap();
 
-    }),
+        @Override
+        public void start(@Nonnull Player player) {
+            if (true) {
+                super.start(player);
+                return;
+            }
 
-    SWING_HAND(LivingEntity::swingMainHand),
-    SWING_OFF_HAND(LivingEntity::swingOffHand),
+            final Location location = player.getLocation();
+
+            final HumanNPC npc = new HumanNPC(location, player.getCustomName(), player.getName());
+            npc.setEquipment(player.getEquipment());
+            npc.setPose(NPCPose.SLEEPING);
+            npc.showAll();
+
+            layingMap.put(player, npc);
+        }
+
+        @Override
+        public void stop(@Nonnull Player player) {
+            final HumanNPC npc = layingMap.remove(player);
+
+            if (npc != null) {
+                npc.remove();
+            }
+        }
+    },
+
+    SWING_HAND {
+        @Override
+        public void start(@Nonnull Player player) {
+            player.swingMainHand();
+        }
+    },
+
+    SWING_OFF_HAND {
+        @Override
+        public void start(@Nonnull Player player) {
+            player.swingOffHand();
+        }
+    },
 
     ;
 
-    private final PlayerAction action;
+    public void perform(@Nonnull Player player) {
+        final PlayerActionFeature playerActionFeature = Main.getRegistry().playerActionFeature;
 
-    PlayerActions(PlayerAction action) {
-        this.action = action;
+        playerActionFeature.perform(player, this);
     }
 
-    public void perform(Player player) {
-        // stop old actions if present
-        for (PlayerActions value : values()) {
-            if (value.action instanceof PlayerStoppableAction stoppableAction) {
-                stoppableAction.stopPerforming(player);
-            }
-        }
-        action.perform(player);
+    @Override
+    public void start(@Nonnull Player player) {
+        Message.error(player, "This action is currently disabled!");
     }
 
+    @Override
+    public void stop(@Nonnull Player player) {
+    }
 }

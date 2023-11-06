@@ -7,7 +7,6 @@ import me.hapyl.mmu3.outcast.hypixel.slayer.boss.SlayerBossDrop;
 import me.hapyl.mmu3.outcast.hypixel.slayer.boss.SlayerSpawnedBoss;
 import me.hapyl.mmu3.outcast.hypixel.slayer.quest.ZombieEasy;
 import me.hapyl.mmu3.outcast.hypixel.slayer.quest.ZombieNormal;
-import me.hapyl.mmu3.outcast.hypixel.slayer.quest.ocelot.OcelotEasy;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.player.PlayerLib;
 import org.bukkit.Material;
@@ -35,9 +34,6 @@ public class Slayer extends Feature {
         // Zombie
         SlayerType.ZOMBIE.getQuests().setTier(1, new ZombieEasy());
         SlayerType.ZOMBIE.getQuests().setTier(2, new ZombieNormal());
-
-        SlayerType.OCELOT.getQuests().setTier(1, new OcelotEasy());
-
     }
 
     private void registerSlayerDrops() {
