@@ -78,6 +78,7 @@ public class CommandRegistry {
         register(new FixTreeOrientationCommand("fixTreeOrientation"));
         register(new SearchCommand("search"));
         register(new TrimCommand("trim"));
+        register(new WaterlogCommand("waterlog"));
 
         registerTestCommand("datafields", (player, strings) -> {
             final PersistentPlayerData data = PersistentPlayerData.getData(player);

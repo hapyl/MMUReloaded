@@ -17,7 +17,7 @@ import java.util.UUID;
 public class BackpackCommand extends SimplePlayerAdminCommand {
     public BackpackCommand(String name) {
         super(name);
-        setDescription("Allows to open backpacks without an item.");
+        setDescription("Allows opening backpacks without an item.");
         addCompleterValues(1, "open", "create", "delete", "item");
     }
 
