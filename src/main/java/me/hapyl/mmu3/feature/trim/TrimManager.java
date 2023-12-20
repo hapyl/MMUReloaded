@@ -7,6 +7,7 @@ import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.utils.HexId;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -98,6 +99,13 @@ public class TrimManager extends Feature implements Listener {
         if (editor == null
                 || item == null
                 || (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK)) {
+            return;
+        }
+
+        final Block clickedBlock = ev.getClickedBlock();
+
+        if (clickedBlock != null) {
+            Message.error(player, "Click away from blocks!");
             return;
         }
 

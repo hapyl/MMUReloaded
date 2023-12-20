@@ -2,9 +2,12 @@ package me.hapyl.mmu3.feature.trim;
 
 import me.hapyl.spigotutils.module.chat.Chat;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public enum EnumTrimMaterial implements EnumTrim {
 
@@ -37,5 +40,23 @@ public enum EnumTrimMaterial implements EnumTrim {
     @Nonnull
     public Material getMaterial() {
         return material;
+    }
+
+    @Nullable
+    public static EnumTrimMaterial fromItem(ItemStack item) {
+        final ArmorTrim trim = EnumTrimPattern.getTrim(item);
+
+        return trim != null ? fromBukkit(trim.getMaterial()) : null;
+    }
+
+    @Nonnull
+    public static EnumTrimMaterial fromBukkit(@Nonnull TrimMaterial material) {
+        for (EnumTrimMaterial trimMaterial : values()) {
+            if (trimMaterial.bukkit == material) {
+                return trimMaterial;
+            }
+        }
+
+        throw new IllegalArgumentException("Invalid material.");
     }
 }

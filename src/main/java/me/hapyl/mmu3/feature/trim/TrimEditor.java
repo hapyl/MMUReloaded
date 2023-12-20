@@ -106,8 +106,8 @@ public class TrimEditor implements Editor {
         }
 
         final TrimData data = getData();
-        data.setItem(item);
 
+        data.setItem(item);
         update();
 
         // Fx
@@ -165,7 +165,7 @@ public class TrimEditor implements Editor {
             final TrimData data = trimData[i];
             final ArmorStand stand = data.getStand();
 
-            itemStack[i] = data.getItem();
+            itemStack[i] = data.getNonDefaultItem();
             stand.remove();
         }
 

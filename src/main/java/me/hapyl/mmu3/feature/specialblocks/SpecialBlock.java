@@ -2,6 +2,7 @@ package me.hapyl.mmu3.feature.specialblocks;
 
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.message.Message;
+import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
 import me.hapyl.spigotutils.module.inventory.ItemEventHandler;
 import me.hapyl.spigotutils.module.math.Numbers;
@@ -23,9 +24,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class SpecialBlock {
 
-    private static final String[] SPECIAL_BLOCK_INFO = { "&8Special Block",
-                                                         "Place to transform into %s&7.",
-                                                         "Use &e/specialblocks &7to browse all special blocks." };
+    private static final String SPECIAL_BLOCK_INFO2 = """
+            &8Special Block, %s
+                        
+            Place to transform into &a%s&7!
+                        
+            Use &e/specialBlocks&7 to browse all special blocks.
+                        
+            &8;;Breaking a block while holding a special block will cause no updates.
+            """;
+
     private final int slot;
     private final String name;
     private final Material icon;
@@ -34,27 +42,25 @@ public class SpecialBlock {
     private final ItemStack itemIcon;
     private final ItemStack itemReal;
 
-    public SpecialBlock(int slot, Material icon, Material block, String name, String id, int amount, boolean glow) {
+    public SpecialBlock(Type type, int slot, Material icon, Material block, String name, String id, int amount, boolean glow) {
         this.slot = slot;
         this.name = ChatColor.GREEN + name;
         this.icon = icon;
         this.glow = glow;
         this.id = "sb." + id;
 
+        final String blockInfo = SPECIAL_BLOCK_INFO2.formatted(Chat.capitalize(type), this.name);
+
         this.itemIcon = new ItemBuilder(icon)
                 .setName(this.name)
                 .setAmount(amount)
-                .addSmartLore(SPECIAL_BLOCK_INFO[0])
-                .addSmartLore(SPECIAL_BLOCK_INFO[1].formatted(this.name))
-                .addLore().addSmartLore(SPECIAL_BLOCK_INFO[2])
+                .addTextBlockLore(blockInfo)
                 .predicate(glow, ItemBuilder::glow)
                 .build();
 
         this.itemReal = new ItemBuilder(block, this.id)
                 .setName(this.name)
-                .addSmartLore(SPECIAL_BLOCK_INFO[0])
-                .addSmartLore(SPECIAL_BLOCK_INFO[1].formatted(this.name))
-                .addLore().addSmartLore(SPECIAL_BLOCK_INFO[2])
+                .addTextBlockLore(blockInfo)
                 .setEventHandler(new ItemEventHandler() {
                     @Override
                     public void onBlockPlace(Player player, BlockPlaceEvent ev) {
@@ -157,5 +163,11 @@ public class SpecialBlock {
                 runnable.run();
             }
         }.runTaskLater(Main.getInstance(), 1L);
+    }
+
+    public static boolean isSpecialBlock(ItemStack handItem) {
+        final String id = ItemBuilder.getItemID(handItem);
+
+        return id != null && id.contains("sb.");
     }
 }

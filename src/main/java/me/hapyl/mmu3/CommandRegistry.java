@@ -52,10 +52,7 @@ public class CommandRegistry {
         register(new BrushCommand("mmuBrush"));
         register(new SelfTeleportCommand("self"));
         register(new DesignerCommand("designer"));
-        register(new SlayerCommand("slayer"));
-        register(new SlayerBossCommand("slayerboss"));
         register(new SoundCommand("sound"));
-        register(new BackpackCommand("backpack"));
         register(new NumericIdCommand("id"));
         register(new BukkitTagCommand("tags"));
         register(new CommandBlockPreviewCommand("commandBlockPreview"));
@@ -65,7 +62,6 @@ public class CommandRegistry {
         register(new TeleportShortcutCommand(">"));
         register(new NightVisionCommand("nightvision"));
         register(new WatcherCommand("watcher"));
-        register(new FishingCommand("fish"));
         register(new WarpCommand("warp"));
         register(new LineOfSightCommand("los"));
         register(new ActivityCommand("activity"));

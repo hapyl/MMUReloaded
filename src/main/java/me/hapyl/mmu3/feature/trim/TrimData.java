@@ -1,9 +1,11 @@
 package me.hapyl.mmu3.feature.trim;
 
 import org.bukkit.Color;
+import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ArmorMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 
@@ -11,6 +13,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class TrimData {
+
+    public static final TrimArmor DEFAULT_TRIM = TrimArmor.IRON;
 
     private final TrimType type;
     private final ArmorStand stand;
@@ -28,7 +32,7 @@ public class TrimData {
         this.pattern = null;
         this.material = null;
 
-        type.setItem(stand, createItem(new ItemStack(TrimArmor.IRON.getMaterial(type))));
+        type.setItem(stand, createItem(new ItemStack(DEFAULT_TRIM.getMaterial(type))));
     }
 
     public void update() {
@@ -40,8 +44,30 @@ public class TrimData {
         return type.getItem(stand);
     }
 
+    @Nonnull
+    public ItemStack getNonDefaultItem() {
+        final ItemStack item = getItem();
+        final ItemMeta meta = item.getItemMeta();
+
+        if (meta == null) {
+            return new ItemStack(Material.AIR);
+        }
+
+        if (!DEFAULT_TRIM.contains(item.getType()) || !(meta instanceof ArmorMeta armorMeta)) {
+            return item;
+        }
+
+        return armorMeta.getTrim() != null ? item : new ItemStack(Material.AIR);
+    }
+
     public void setItem(ItemStack item) {
         type.setItem(stand, item);
+
+        // If no pattern, copy the item's pattern
+        if (pattern == null && material == null) {
+            pattern = EnumTrimPattern.fromItem(item);
+            material = EnumTrimMaterial.fromItem(item);
+        }
     }
 
     public boolean isCurrent() {

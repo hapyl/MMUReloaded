@@ -2,9 +2,14 @@ package me.hapyl.mmu3.feature.trim;
 
 import me.hapyl.spigotutils.module.chat.Chat;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ArmorMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public enum EnumTrimPattern implements EnumTrim {
 
@@ -45,4 +50,32 @@ public enum EnumTrimPattern implements EnumTrim {
         return material;
     }
 
+    @Nullable
+    public static EnumTrimPattern fromItem(ItemStack item) {
+        final ArmorTrim trim = getTrim(item);
+
+        return trim != null ? fromBukkit(trim.getPattern()) : null;
+    }
+
+    @Nonnull
+    public static EnumTrimPattern fromBukkit(@Nonnull TrimPattern pattern) {
+        for (EnumTrimPattern trimPattern : values()) {
+            if (trimPattern.bukkit == pattern) {
+                return trimPattern;
+            }
+        }
+
+        throw new IllegalStateException("Invalid pattern.");
+    }
+
+    @Nullable
+    public static ArmorTrim getTrim(ItemStack item) {
+        final ItemMeta meta = item.getItemMeta();
+
+        if (meta instanceof ArmorMeta armorMeta) {
+            return armorMeta.getTrim();
+        }
+
+        return null;
+    }
 }
