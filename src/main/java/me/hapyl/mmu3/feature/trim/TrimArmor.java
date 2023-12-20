@@ -21,8 +21,19 @@ public enum TrimArmor implements EnumTrim {
         this.materials = new Material[] { helmet, chest, legs, feet };
     }
 
-    public Material getMaterial(TrimType slot) {
+    @Nonnull
+    public Material getMaterial(@Nonnull TrimType slot) {
         return materials[slot == TrimType.HELMET ? 0 : slot == TrimType.CHESTPLATE ? 1 : slot == TrimType.LEGGINGS ? 2 : 3];
+    }
+
+    public boolean contains(@Nonnull Material material) {
+        for (Material mat : this.materials) {
+            if (mat == material) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Material[] getMaterials() {

@@ -6,12 +6,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public abstract class GameInstance {
+
+    protected final GameGUI gui;
 
     private final Player player;
     private final Game game;
     private final boolean debug;
-    protected final GameGUI gui;
 
     public GameInstance(Player player, Game game, boolean debug) {
         this.player = player;
@@ -48,25 +51,44 @@ public abstract class GameInstance {
 
     /**
      * Called whenever player closes inventory.
-     * <b>If overriding, do not forget to call {@link this#stopPlaying()} to remove player from playing the game.</b>
+     *
+     * @return true if the game should be stopped, false otherwise.
      */
-    public void onGameStop() {
-        stopPlaying();
+    public boolean onGameStop() {
+        return true;
     }
 
-    // Call onGameStop if not overwritten.
-    // Do not forget to call this to actually stop player playing the game.
     public final void stopPlaying() {
+        final boolean shouldStopPlaying = onGameStop();
+
+        if (!shouldStopPlaying) {
+            return;
+        }
+
         getGame().removePlaying(player);
     }
 
     /**
-     * Called every tick the game is running.
+     * Called every tick, the game is running.
      *
-     * @param tickTotal - Total ticks passed from starting the game.
-     * @param tickMod20 - Modulo of 20 of passed ticks.
+     * @param tick - Total ticks passed from starting the game.
      */
-    public void onTick(int tickTotal, int tickMod20) {
+    public void onTick(int tick) {
+    }
+
+    @Nonnull
+    public Player getPlayer() {
+        return player;
+    }
+
+    @Nonnull
+    public Game getGame() {
+        return game;
+    }
+
+    @Nonnull
+    public String getName() {
+        return game.getName();
     }
 
     protected final void setItem(int slot, ItemStack item) {
@@ -75,18 +97,6 @@ public abstract class GameInstance {
 
     protected final void setItem(int slot, ItemStack item, Action action) {
         gui.setItem(slot, item, action);
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public String getName() {
-        return game.getName();
     }
 
 }

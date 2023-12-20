@@ -15,16 +15,14 @@ import java.util.Locale;
 public abstract class AmountSubGUI extends ItemCreatorSubGUI {
 
     private static final ItemStack ITEM_INCREASE_AMOUNT = ItemBuilder
-            .playerHead(
-                    "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2VkZDIwYmU5MzUyMDk0OWU2Y2U3ODlkYzRmNDNlZmFlYjI4YzcxN2VlNmJmY2JiZTAyNzgwMTQyZjcxNiJ9fX0=")
+            .playerHeadUrl("3edd20be93520949e6ce789dc4f43efaeb28c717ee6bfcbbe02780142f716")
             .setName("&aIncrease")
             .addLore("&eLeft Click to increase by 1.")
             .addLore("&6Right Click to increase by 10.")
             .toItemStack();
 
     private static final ItemStack ITEM_DECREASE_AMOUNT = ItemBuilder
-            .playerHead(
-                    "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmQ4YTk5ZGIyYzM3ZWM3MWQ3MTk5Y2Q1MjYzOTk4MWE3NTEzY2U5Y2NhOTYyNmEzOTM2Zjk2NWIxMzExOTMifX19")
+            .playerHeadUrl("bd8a99db2c37ec71d7199cd52639981a7513ce9cca9626a3936f965b131193")
             .setName("&aDecrease")
             .addLore("&eLeft Click to decrease by 1.")
             .addLore("&6Right Click to decrease by 10.")

@@ -4,6 +4,8 @@ import me.hapyl.mmu3.utils.PanelGUI;
 import me.hapyl.spigotutils.module.inventory.gui.CancelType;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nonnull;
+
 public class GameGUI extends PanelGUI {
 
     private final GameInstance game;
@@ -17,15 +19,15 @@ public class GameGUI extends PanelGUI {
             final int rawSlot = ev.getRawSlot();
             game.onClick(rawSlot, ev.getClick());
         }));
-        setCloseEvent((p) -> game.onGameStop());
+        setCloseEvent((p) -> game.stopPlaying());
     }
 
+    @Nonnull
     public GameInstance getGame() {
         return game;
     }
 
     @Override
     public void updateInventory() {
-
     }
 }

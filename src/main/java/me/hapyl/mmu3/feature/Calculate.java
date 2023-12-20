@@ -9,7 +9,17 @@ import org.bukkit.entity.Player;
 
 public class Calculate extends Feature {
 
-    private final char[] validArguments = { '-', '+', '*', '/', '^', '(', ')' };
+    private final char[] validArguments = {
+            '-', // minus
+            '+', // plus
+            '*', // multiply
+            '/', // divide
+            '^', // power
+            '(', // left parenthesis
+            ')', // right parenthesis
+            '%'  // modulo
+    };
+
     private final String argumentColor = "&a";
     private final String numberColor = "&b";
 
@@ -44,7 +54,7 @@ public class Calculate extends Feature {
             expression = expression.replace(validArgument + "", argumentColor + validArgument + numberColor);
         }
 
-        Chat.sendMessage(player, Message.PREFIX + "&a→ &b" + expression);
+        Chat.sendMessage(player, Message.PREFIX + "&a→ &b" + expression.replace("%", "%%")); // I have java sometimes
 
         Chat.sendClickableHoverableMessage(
                 player,
@@ -104,6 +114,9 @@ public class Calculate extends Feature {
                     }
                     else if (eat('-')) {
                         x -= parseTerm(); // subtraction
+                    }
+                    else if (eat('%')) {
+                        x %= parseTerm(); // modulo
                     }
                     else {
                         return x;

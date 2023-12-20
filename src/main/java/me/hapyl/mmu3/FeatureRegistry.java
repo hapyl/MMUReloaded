@@ -1,6 +1,7 @@
 package me.hapyl.mmu3;
 
 import me.hapyl.mmu3.feature.*;
+import me.hapyl.mmu3.feature.action.PlayerActionFeature;
 import me.hapyl.mmu3.feature.activity.WorldActivity;
 import me.hapyl.mmu3.feature.bb.BoundingBoxManager;
 import me.hapyl.mmu3.feature.block.BlockReplacer;
@@ -17,8 +18,6 @@ import me.hapyl.mmu3.feature.statechanger.StateChanger;
 import me.hapyl.mmu3.feature.trim.TrimManager;
 import me.hapyl.mmu3.feature.warp.Warps;
 import me.hapyl.mmu3.outcast.chatgame.ChatGameManager;
-import me.hapyl.mmu3.outcast.fishing.Fishing;
-import me.hapyl.mmu3.outcast.hypixel.slayer.Slayer;
 
 public final class FeatureRegistry {
 
@@ -33,10 +32,8 @@ public final class FeatureRegistry {
     public final BrushManager brushManager;
     public final Designer designer;
     public final ColoredSign coloredSign;
-    public final Slayer slayer;
     public final CommandBlockPreview commandBlockPreview;
     public final EmptyCommandBlockLocator cbLocator;
-    public final Fishing fishing;
     public final Warps warps;
     public final WorldActivity worldActivity;
     public final BoundingBoxManager boundingBoxManager;
@@ -44,6 +41,9 @@ public final class FeatureRegistry {
     public final ChatGameManager chatGameManager;
     public final Search search;
     public final TrimManager trimManager;
+    public final DecorativePotFeature decorativePot;
+    public final PlayerActionFeature playerActionFeature;
+    public final UndoManager undoManager;
 
     public FeatureRegistry(Main main) {
         stateChanger = new StateChanger(main);
@@ -57,10 +57,8 @@ public final class FeatureRegistry {
         brushManager = new BrushManager(main);
         designer = new Designer(main);
         coloredSign = new ColoredSign(main);
-        slayer = new Slayer(main);
         commandBlockPreview = new CommandBlockPreview(main);
         cbLocator = new EmptyCommandBlockLocator(main);
-        fishing = new Fishing(main);
         warps = new Warps(main);
         worldActivity = new WorldActivity(main);
         boundingBoxManager = new BoundingBoxManager(main);
@@ -68,6 +66,9 @@ public final class FeatureRegistry {
         chatGameManager = new ChatGameManager(main);
         search = new Search(main);
         trimManager = new TrimManager(main);
+        decorativePot = new DecorativePotFeature(main);
+        playerActionFeature = new PlayerActionFeature(main);
+        undoManager = new UndoManager(main);
 
         // These features don't require to be accessed
         new DotCommand(main);

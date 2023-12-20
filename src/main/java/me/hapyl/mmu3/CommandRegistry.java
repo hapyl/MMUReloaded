@@ -3,7 +3,6 @@ package me.hapyl.mmu3;
 import me.hapyl.mmu3.command.*;
 import me.hapyl.mmu3.command.brush.BrushCommand;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.test.CommandWithArguments;
 import me.hapyl.spigotutils.module.command.CommandProcessor;
 import me.hapyl.spigotutils.module.command.SimpleCommand;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
@@ -30,7 +29,6 @@ public class CommandRegistry {
         register(new CalculateCommand("calculate"));
         register(new BackCommand("back"));
         register(new CenterCommand("center"));
-        register(new ConsoleCommand("console"));
         register(new SayCommand("say"));
         register(new ItemCreatorCommand("itemCreator"));
         register(new EntityRemovalCommand("entityRemoval"));
@@ -51,13 +49,10 @@ public class CommandRegistry {
         register(new PacketCommand("playerpacket"));
         register(new CalculateRelative("relative"));
         register(new PingCommand("ping"));
-        register(new BrushCommand("tinybrush"));
+        register(new BrushCommand("mmuBrush"));
         register(new SelfTeleportCommand("self"));
         register(new DesignerCommand("designer"));
-        register(new SlayerCommand("slayer"));
-        register(new SlayerBossCommand("slayerboss"));
         register(new SoundCommand("sound"));
-        register(new BackpackCommand("backpack"));
         register(new NumericIdCommand("id"));
         register(new BukkitTagCommand("tags"));
         register(new CommandBlockPreviewCommand("commandBlockPreview"));
@@ -67,7 +62,6 @@ public class CommandRegistry {
         register(new TeleportShortcutCommand(">"));
         register(new NightVisionCommand("nightvision"));
         register(new WatcherCommand("watcher"));
-        register(new FishingCommand("fish"));
         register(new WarpCommand("warp"));
         register(new LineOfSightCommand("los"));
         register(new ActivityCommand("activity"));
@@ -80,9 +74,7 @@ public class CommandRegistry {
         register(new FixTreeOrientationCommand("fixTreeOrientation"));
         register(new SearchCommand("search"));
         register(new TrimCommand("trim"));
-
-        // TEST
-        register(new CommandWithArguments("_testcommandwitharguments"));
+        register(new WaterlogCommand("waterlog"));
 
         registerTestCommand("datafields", (player, strings) -> {
             final PersistentPlayerData data = PersistentPlayerData.getData(player);

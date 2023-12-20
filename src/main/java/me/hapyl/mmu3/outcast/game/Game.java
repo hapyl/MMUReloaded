@@ -14,7 +14,7 @@ public abstract class Game {
 
     private final Set<Player> playing;
     private final String name;
-    private String info;
+    private String description;
     private final PanelGUI.Size size;
 
     public Game(String name) {
@@ -24,16 +24,16 @@ public abstract class Game {
     public Game(String name, PanelGUI.Size size) {
         this.name = name;
         this.size = size;
-        this.info = "Someone forgor 💀 to add info for this game, oh well ¯\\_(ツ)_/¯";
+        this.description = "No description.";
         this.playing = Sets.newHashSet();
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getInfo() {
-        return info;
+    public String getDescription() {
+        return description;
     }
 
     protected void start(Player player, @Nonnull Arguments arguments) {
@@ -53,7 +53,7 @@ public abstract class Game {
                     this.cancel();
                     return;
                 }
-                instance.onTick(tickTotal, tickTotal % 20);
+                instance.onTick(tickTotal);
                 ++tickTotal;
             }
         }.runTaskTimer(Main.getPlugin(), 0L, 1L);

@@ -222,9 +222,9 @@ public class Wordle extends Game {
             }
 
             @Override
-            public void onGameStop() {
+            public boolean onGameStop() {
                 if (status == Status.WAIT_RESPONSE) {
-                    return;
+                    return false;
                 }
 
                 // if closed inventory while guessing = left
@@ -232,7 +232,7 @@ public class Wordle extends Game {
                     Message.info(getPlayer(), "Finished Wordle! The word was %s.", hiddenWord);
                 }
 
-                stopPlaying();
+                return true;
             }
 
             private List<String> generateCubes() {

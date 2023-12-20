@@ -1,15 +1,20 @@
 package me.hapyl.mmu3.feature.trim;
 
 import org.bukkit.Color;
+import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ArmorMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class TrimData {
+
+    public static final TrimArmor DEFAULT_TRIM = TrimArmor.IRON;
 
     private final TrimType type;
     private final ArmorStand stand;
@@ -24,23 +29,45 @@ public class TrimData {
         this.type = type;
         this.stand = stand;
         this.color = null;
-        this.pattern = EnumTrimPattern.SENTRY;
-        this.material = EnumTrimMaterial.QUARTZ;
+        this.pattern = null;
+        this.material = null;
 
-        type.setItem(stand, createItem(new ItemStack(TrimArmor.IRON.getMaterial(type))));
+        type.setItem(stand, createItem(new ItemStack(DEFAULT_TRIM.getMaterial(type))));
     }
 
     public void update() {
         setItem(createItem(type.getItem(stand)));
     }
 
-    public void setItem(ItemStack item) {
-        type.setItem(stand, item);
-    }
-
     @Nonnull
     public ItemStack getItem() {
         return type.getItem(stand);
+    }
+
+    @Nonnull
+    public ItemStack getNonDefaultItem() {
+        final ItemStack item = getItem();
+        final ItemMeta meta = item.getItemMeta();
+
+        if (meta == null) {
+            return new ItemStack(Material.AIR);
+        }
+
+        if (!DEFAULT_TRIM.contains(item.getType()) || !(meta instanceof ArmorMeta armorMeta)) {
+            return item;
+        }
+
+        return armorMeta.getTrim() != null ? item : new ItemStack(Material.AIR);
+    }
+
+    public void setItem(ItemStack item) {
+        type.setItem(stand, item);
+
+        // If no pattern, copy the item's pattern
+        if (pattern == null && material == null) {
+            pattern = EnumTrimPattern.fromItem(item);
+            material = EnumTrimMaterial.fromItem(item);
+        }
     }
 
     public boolean isCurrent() {
@@ -51,10 +78,17 @@ public class TrimData {
         this.current = current;
     }
 
+    @Nonnull
+    public TrimType getType() {
+        return type;
+    }
+
+    @Nonnull
     public ArmorStand getStand() {
         return stand;
     }
 
+    @Nullable
     public Color getColor() {
         return color;
     }
@@ -63,20 +97,38 @@ public class TrimData {
         this.color = color;
     }
 
+    @Nonnull
     public EnumTrimPattern getPattern() {
+        defaultTrimIfNull();
         return pattern;
     }
 
-    public void setPattern(EnumTrimPattern pattern) {
+    public void setPattern(@Nullable EnumTrimPattern pattern) {
         this.pattern = pattern;
     }
 
+    @Nonnull
     public EnumTrimMaterial getMaterial() {
+        defaultTrimIfNull();
         return material;
     }
 
-    public void setMaterial(EnumTrimMaterial material) {
+    public void setMaterial(@Nullable EnumTrimMaterial material) {
         this.material = material;
+    }
+
+    public void removeTrim() {
+        this.pattern = null;
+        this.material = null;
+    }
+
+    public void defaultTrimIfNull() {
+        if (pattern == null) {
+            pattern = EnumTrimPattern.SENTRY;
+        }
+        if (material == null) {
+            material = EnumTrimMaterial.QUARTZ;
+        }
     }
 
     public final ItemStack createItem(ItemStack stack) {
@@ -86,7 +138,14 @@ public class TrimData {
             return item;
         }
 
-        meta.setTrim(new ArmorTrim(material.bukkit, pattern.bukkit));
+        // Apply trim if trimmed
+        if (material != null && pattern != null) {
+            meta.setTrim(new ArmorTrim(material.bukkit, pattern.bukkit));
+        }
+        else {
+            meta.setTrim(null);
+        }
+
         item.setItemMeta(meta);
 
         // Apply color

@@ -6,19 +6,25 @@ import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
 import me.hapyl.spigotutils.module.block.BlockTag;
 import me.hapyl.spigotutils.module.chat.Chat;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Snow;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-public class SpecialBlocks extends Feature {
+public class SpecialBlocks extends Feature implements Listener {
 
     private final Map<String, SpecialBlock> global; // contains all special blocks no matter the type
     private final Map<Type, Set<SpecialBlock>> perType;
@@ -29,13 +35,52 @@ public class SpecialBlocks extends Feature {
         super(mmu3plugin);
         global = Maps.newHashMap();
         perType = Maps.newHashMap();
-        doorToTrapdoorMap = Maps.newHashMap();
+        doorToTrapdoorMap = Maps.newLinkedHashMap();
+
         fillMaps();
         createItems();
     }
 
+    @EventHandler()
+    public void handleBlockBreakEvent(BlockBreakEvent ev) {
+        final Player player = ev.getPlayer();
+        final Block block = ev.getBlock();
+        final PlayerInventory inventory = player.getInventory();
+        final ItemStack handItem = inventory.getItemInMainHand();
+
+        if (!SpecialBlock.isSpecialBlock(handItem)) {
+            return;
+        }
+
+        // Fx
+        final Location location = block.getLocation();
+        final BlockData blockData = block.getBlockData();
+        final World world = block.getWorld();
+
+        world.playSound(location, blockData.getSoundGroup().getBreakSound(), 1, 1);
+        world.spawnParticle(Particle.BLOCK_CRACK, location, 1, 0, 0, 0, 1, blockData);
+
+        // If holding a special block, cancel the event and replace the block instead.
+        // This is done because most of the special blocks will break upon update.
+        ev.setCancelled(true);
+        block.setType(Material.AIR, false);
+    }
+
     public Set<SpecialBlock> getByType(Type type) {
         return perType.getOrDefault(type, new HashSet<>());
+    }
+
+    @Nullable
+    public SpecialBlock byId(String id) {
+        return global.get(id);
+    }
+
+    public List<String> getIdsNoSb() {
+        final List<String> strings = Lists.newArrayList();
+        for (String value : global.keySet()) {
+            strings.add(value.replace("sb.", ""));
+        }
+        return strings;
     }
 
     private void addByType(Type type, SpecialBlock block) {
@@ -45,15 +90,18 @@ public class SpecialBlocks extends Feature {
     }
 
     private void fillMaps() {
-        doorToTrapdoorMap.put(Material.IRON_DOOR, Material.IRON_TRAPDOOR);
-        doorToTrapdoorMap.put(Material.ACACIA_DOOR, Material.ACACIA_TRAPDOOR);
-        doorToTrapdoorMap.put(Material.DARK_OAK_DOOR, Material.DARK_OAK_TRAPDOOR);
-        doorToTrapdoorMap.put(Material.BIRCH_DOOR, Material.BIRCH_TRAPDOOR);
-        doorToTrapdoorMap.put(Material.JUNGLE_DOOR, Material.JUNGLE_TRAPDOOR);
         doorToTrapdoorMap.put(Material.OAK_DOOR, Material.OAK_TRAPDOOR);
         doorToTrapdoorMap.put(Material.SPRUCE_DOOR, Material.SPRUCE_TRAPDOOR);
+        doorToTrapdoorMap.put(Material.BIRCH_DOOR, Material.BIRCH_TRAPDOOR);
+        doorToTrapdoorMap.put(Material.JUNGLE_DOOR, Material.JUNGLE_TRAPDOOR);
+        doorToTrapdoorMap.put(Material.ACACIA_DOOR, Material.ACACIA_TRAPDOOR);
+        doorToTrapdoorMap.put(Material.DARK_OAK_DOOR, Material.DARK_OAK_TRAPDOOR);
+        doorToTrapdoorMap.put(Material.MANGROVE_DOOR, Material.MANGROVE_TRAPDOOR);
+        doorToTrapdoorMap.put(Material.CHERRY_DOOR, Material.CHERRY_TRAPDOOR);
+        doorToTrapdoorMap.put(Material.BAMBOO_DOOR, Material.BAMBOO_TRAPDOOR);
         doorToTrapdoorMap.put(Material.CRIMSON_DOOR, Material.CRIMSON_TRAPDOOR);
         doorToTrapdoorMap.put(Material.WARPED_DOOR, Material.WARPED_TRAPDOOR);
+        doorToTrapdoorMap.put(Material.IRON_DOOR, Material.IRON_TRAPDOOR);
     }
 
     @SuppressWarnings("all")
@@ -62,43 +110,49 @@ public class SpecialBlocks extends Feature {
             throw new IllegalStateException("special items already created");
         }
 
-        createBlock(10, Material.SUNFLOWER, Material.GREEN_CONCRETE, "Sunflower Flower", true);
-        createBlock(19, Material.SUNFLOWER, Material.GREEN_CONCRETE, "Sunflower Stem", false);
+        // Nature
+        create(Type.NATURE, 10, Material.SUNFLOWER, Material.GREEN_CONCRETE, "Sunflower Flower", true);
+        create(Type.NATURE, 19, Material.SUNFLOWER, Material.GREEN_CONCRETE, "Sunflower Stem", false);
 
-        createBlock(11, Material.ROSE_BUSH, Material.MAGENTA_CONCRETE, "Rose Bush", true);
-        createBlock(20, Material.ROSE_BUSH, Material.MAGENTA_CONCRETE, "Rose Stem", false);
+        create(Type.NATURE, 11, Material.ROSE_BUSH, Material.MAGENTA_CONCRETE, "Rose Bush", true);
+        create(Type.NATURE, 20, Material.ROSE_BUSH, Material.MAGENTA_CONCRETE, "Rose Stem", false);
 
-        createBlock(12, Material.LILAC, Material.PINK_CONCRETE, "Lilac Flower", true);
-        createBlock(21, Material.LILAC, Material.PINK_CONCRETE, "Lilac Stem", false);
+        create(Type.NATURE, 12, Material.LILAC, Material.PINK_CONCRETE, "Lilac Flower", true);
+        create(Type.NATURE, 21, Material.LILAC, Material.PINK_CONCRETE, "Lilac Stem", false);
 
-        createBlock(13, Material.PEONY, Material.PINK_GLAZED_TERRACOTTA, "Peony Flower", true);
-        createBlock(22, Material.PEONY, Material.PINK_GLAZED_TERRACOTTA, "Peony Stem", false);
+        create(Type.NATURE, 13, Material.PEONY, Material.PINK_GLAZED_TERRACOTTA, "Peony Flower", true);
+        create(Type.NATURE, 22, Material.PEONY, Material.PINK_GLAZED_TERRACOTTA, "Peony Stem", false);
 
-        createBlock(14, Material.TALL_GRASS, Material.GREEN_WOOL, "Tall Grass Top", true);
-        createBlock(23, Material.TALL_GRASS, Material.GREEN_WOOL, "Tall Grass Bottom", false);
+        create(Type.NATURE, 14, Material.TALL_GRASS, Material.GREEN_WOOL, "Tall Grass Top", true);
+        create(Type.NATURE, 23, Material.TALL_GRASS, Material.GREEN_WOOL, "Tall Grass Bottom", false);
 
-        createBlock(15, Material.LARGE_FERN, Material.GREEN_GLAZED_TERRACOTTA, "Large Fern Top", true);
-        createBlock(24, Material.LARGE_FERN, Material.GREEN_GLAZED_TERRACOTTA, "Large Fern Bottom", false);
+        create(Type.NATURE, 15, Material.LARGE_FERN, Material.GREEN_GLAZED_TERRACOTTA, "Large Fern Top", true);
+        create(Type.NATURE, 24, Material.LARGE_FERN, Material.GREEN_GLAZED_TERRACOTTA, "Large Fern Bottom", false);
 
-        createBlock(
-                16,
+        create(Type.NATURE, 16, Material.PITCHER_PLANT, Material.SNIFFER_EGG, "Pitcher Plant Top", true);
+        create(Type.NATURE, 25, Material.PITCHER_PLANT, Material.SNIFFER_EGG, "Pitcher Plant Bottom", false);
+
+        create(
+                Type.NATURE,
+                39,
                 Material.CACTUS,
                 Material.GREEN_CONCRETE,
                 "Cactus",
                 (self, event) -> self.setBlock(event.getBlockReplacedState(), Material.CACTUS)
         );
 
-        createBlock(25, Material.DEAD_BUSH, Material.SOUL_SAND, "Dead Bush");
+        create(Type.NATURE, 41, Material.DEAD_BUSH, Material.SOUL_SAND, "Dead Bush");
 
-        createBlock(2, Material.RED_MUSHROOM, Material.RED_MUSHROOM_BLOCK, "Red Mushroom");
-        createBlock(6, Material.BROWN_MUSHROOM, Material.BROWN_MUSHROOM_BLOCK, "Brown Mushroom");
-        createBlock(3, Material.CRIMSON_FUNGUS, Material.NETHER_WART_BLOCK, "Crimson Fungus");
-        createBlock(5, Material.WARPED_FUNGUS, Material.WARPED_WART_BLOCK, "Warped Fungus");
+        create(Type.NATURE, 36, Material.BROWN_MUSHROOM, Material.BROWN_MUSHROOM_BLOCK, "Brown Mushroom");
+        create(Type.NATURE, 37, Material.RED_MUSHROOM, Material.RED_MUSHROOM_BLOCK, "Red Mushroom");
+        create(Type.NATURE, 43, Material.CRIMSON_FUNGUS, Material.NETHER_WART_BLOCK, "Crimson Fungus");
+        create(Type.NATURE, 44, Material.WARPED_FUNGUS, Material.WARPED_WART_BLOCK, "Warped Fungus");
 
         // Create Doors
         doors:
         {
-            int slot = 9;
+            int slot = 10;
+
             for (Material door : doorToTrapdoorMap.keySet()) {
                 final Material trapdoor = doorToTrapdoorMap.get(door);
                 create(
@@ -111,6 +165,7 @@ public class SpecialBlocks extends Feature {
                         (self, event) -> self.setDoor(event, door, Bisected.Half.TOP),
                         true
                 );
+
                 create(
                         Type.DOOR,
                         slot + 9,
@@ -121,7 +176,12 @@ public class SpecialBlocks extends Feature {
                         (self, event) -> self.setDoor(event, door, Bisected.Half.BOTTOM),
                         false
                 );
+
                 ++slot;
+
+                if (slot == 17) {
+                    slot = 29;
+                }
             }
         }
 
@@ -205,21 +265,23 @@ public class SpecialBlocks extends Feature {
             }
         }
 
-        // Disabled blocks (1.20)
-        disabled:
-        {
-        }
 
+    }
 
-    } // end of the method
+    private void create(Type type, int slot, Material icon, Material block, String name) {
+        create(type, slot, icon, block, name, false);
+    }
 
-    @Nullable
-    public SpecialBlock byId(String id) {
-        return global.get(id);
+    private void create(Type type, int slot, Material icon, Material block, String name, boolean glow) {
+        create(type, slot, icon, block, name, 1, null, glow);
+    }
+
+    private void create(Type type, int slot, Material icon, Material block, String name, BiConsumer<SpecialBlock, BlockPlaceEvent> event) {
+        create(type, slot, icon, block, name, 1, event, false);
     }
 
     private void create(Type type, int slot, Material icon, Material block, String name, String id, int amount, BiConsumer<SpecialBlock, BlockPlaceEvent> event, boolean glow) {
-        final SpecialBlock specialBlock = new SpecialBlock(slot, icon, block, name, id, amount, glow) {
+        final SpecialBlock specialBlock = new SpecialBlock(type, slot, icon, block, name, id, amount, glow) {
             @Override
             public void acceptEvent(BlockPlaceEvent ev) {
                 if (event == null) {
@@ -239,27 +301,4 @@ public class SpecialBlocks extends Feature {
         create(type, slot, icon, block, name, id, amount, event, glow);
     }
 
-    private void createBlock(int slot, Material icon, Material block, String name, int amount, BiConsumer<SpecialBlock, BlockPlaceEvent> event, boolean glow) {
-        create(Type.COMMON, slot, icon, block, name, amount, event, glow);
-    }
-
-    private void createBlock(int slot, Material icon, Material block, String name) {
-        createBlock(slot, icon, block, name, 1, null, false);
-    }
-
-    private void createBlock(int slot, Material icon, Material block, String name, boolean glow) {
-        createBlock(slot, icon, block, name, 1, null, glow);
-    }
-
-    private void createBlock(int slot, Material icon, Material block, String name, BiConsumer<SpecialBlock, BlockPlaceEvent> consumer) {
-        createBlock(slot, icon, block, name, 1, consumer, false);
-    }
-
-    public List<String> getIdsNoSb() {
-        final List<String> strings = Lists.newArrayList();
-        for (String value : global.keySet()) {
-            strings.add(value.replace("sb.", ""));
-        }
-        return strings;
-    }
 }

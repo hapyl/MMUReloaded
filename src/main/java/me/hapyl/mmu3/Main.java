@@ -13,8 +13,6 @@ import me.hapyl.mmu3.feature.statechanger.StateChangerListener;
 import me.hapyl.mmu3.listener.EntityListener;
 import me.hapyl.mmu3.listener.EntityRemovalListener;
 import me.hapyl.mmu3.listener.PlayerListener;
-import me.hapyl.mmu3.outcast.backpack.BackpackListener;
-import me.hapyl.mmu3.outcast.hypixel.slayer.listener.SlayerListener;
 import me.hapyl.mmu3.test.Test;
 import me.hapyl.spigotutils.EternaAPI;
 import org.bukkit.Bukkit;
@@ -43,7 +41,7 @@ public class Main extends JavaPlugin {
         instance = this;
 
         if (pluginManager.getPlugin("EternaAPI") == null) {
-            Bukkit.getLogger().severe("This plugins depends on EternaAPI! Please put it in you plugins folder.");
+            Bukkit.getLogger().severe("This plugin depends on EternaAPI! Please put it in your 'plugins' folder.");
             pluginManager.disablePlugin(this);
             return;
         }
@@ -75,9 +73,7 @@ public class Main extends JavaPlugin {
         new StandEditorListener(this);
         new StateChangerListener(this);
         new LastLocationListener(this);
-        new SlayerListener(this);
         new EntityListener(this);
-        new BackpackListener(this);
 
         // Initiate features
         registry = new FeatureRegistry(this);

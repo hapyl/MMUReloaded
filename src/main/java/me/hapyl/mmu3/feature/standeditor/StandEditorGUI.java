@@ -48,7 +48,7 @@ public class StandEditorGUI extends PlayerGUI implements Editor {
 
     @Override
     public void showUsage(@Nonnull Player player) {
-        Message.info(player, "&a&lYou've entered the Trim Editor!");
+        Message.info(player, "&a&lYou've entered the Move Mode!");
         Message.info(player, "&f&lMOVE AROUND&7 to move the armor stand.");
         Message.info(player, "&f&lJUMP&7 to move the armor stand up.");
         Message.info(player, "&f&lSNEAK&7 to move the armor stand down.");

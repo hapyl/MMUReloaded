@@ -1,7 +1,9 @@
 package me.hapyl.mmu3.feature.statechanger;
 
+import com.google.common.collect.Maps;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
+import me.hapyl.mmu3.feature.statechanger.adapter.*;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.chat.Gradient;
@@ -11,15 +13,19 @@ import me.hapyl.spigotutils.module.util.ThreadRandom;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.*;
-import org.bukkit.block.data.type.*;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
+import java.util.Collection;
+import java.util.Map;
 
 public class StateChanger extends Feature {
+
+    private final Map<Class<?>, Adapter<?>> adapters;
 
     private final ItemStack baseItem = new ItemBuilder(Material.SHEARS, "state_changer")
             .setName("&aState Changer")
@@ -32,7 +38,16 @@ public class StateChanger extends Feature {
 
     public StateChanger(Main main) {
         super(main);
+
         setDescription("Gives player a state changer item.");
+        adapters = Maps.newLinkedHashMap();
+
+        registerAdapters();
+    }
+
+    @Nonnull
+    public Collection<Adapter<?>> getAdapters() {
+        return adapters.values();
     }
 
     public void openEditor(Player player, Block block) {
@@ -78,6 +93,74 @@ public class StateChanger extends Feature {
         Message.success(player, "Success!");
     }
 
+    public boolean isAllowedBlock(Block block) {
+        final BlockData data = block.getBlockData();
+
+        for (Class<?> clazz : adapters.keySet()) {
+            if (clazz.isInstance(data)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Hard-coded banned blocks
+    public boolean isBannedBlock(Material material) {
+        return switch (material) {
+            case BEDROCK -> true;
+            default -> false;
+        };
+    }
+
+    private void registerAdapters() {
+        registerAdapter(new AdapterWaterlogged()); // Yes
+        registerAdapter(new AdapterFence()); // yes
+        registerAdapter(new AdapterWall()); // Yes
+        registerAdapter(new AdapterSlab()); // Yes
+        registerAdapter(new AdapterBisected()); // Yes
+        registerAdapter(new AdapterDirectional()); // Yes
+        registerAdapter(new AdapterStairs()); // Yes
+        registerAdapter(new AdapterMultipleFacing()); // Yes
+        registerAdapter(new AdapterAgeable()); // Yes
+        registerAdapter(new AdapterBamboo()); // Yes
+        registerAdapter(new AdapterBed()); // Yes
+        registerAdapter(new AdapterRail()); // This has an issue with ascending shape
+        registerAdapter(new AdapterAnaloguePowerable()); // Yes
+        registerAdapter(new AdapterBeehive()); // Yes
+        registerAdapter(new AdapterBell()); // Yes
+        registerAdapter(new AdapterBigDripleaf()); // Yes
+        registerAdapter(new AdapterCake()); // Yes
+        registerAdapter(new AdapterCaveVines()); // Yes
+        registerAdapter(new AdapterFarmland()); // Yes
+        registerAdapter(new AdapterGate()); // Yes
+        registerAdapter(new AdapterLevelled()); // Yes
+        registerAdapter(new AdapterPiston()); // Yes
+        registerAdapter(new AdapterPistonHead()); // Yes
+        registerAdapter(new AdapterPointedDripstone()); // Yes
+        registerAdapter(new AdapterRedstoneWire()); // Yes
+        registerAdapter(new AdapterRotatable()); // Yes
+        registerAdapter(new AdapterScaffolding()); // Yes
+        registerAdapter(new AdapterSculkSensor()); // Yes
+        registerAdapter(new AdapterSnow()); // Yes
+        registerAdapter(new AdapterSnowable()); // Yes
+        registerAdapter(new AdapterPinkPetals()); // Yes
+        registerAdapter(new AdapterChiseledBookshelf()); // Yeppers
+    }
+
+    private void registerAdapter(@Nonnull Adapter<?> adapter) {
+        final Class<?> clazz = adapter.getDataClass();
+
+        if (adapters.containsKey(clazz)) {
+            throw new IllegalArgumentException("Adapter for %s is already registered by %s!".formatted(
+                    clazz.getSimpleName(),
+                    adapters.get(clazz).getClass().getSimpleName()
+            ));
+        }
+
+        adapters.put(clazz, adapter);
+    }
+
     private static String randomColorName(Player player) {
         final Gradient gradient = new Gradient(player.getName()).makeBold();
         return gradient.rgb(
@@ -85,26 +168,6 @@ public class StateChanger extends Feature {
                 new Color(ThreadRandom.nextInt(255), ThreadRandom.nextInt(255), ThreadRandom.nextInt(255)),
                 Interpolators.LINEAR
         );
-    }
-
-    @SuppressWarnings("all")
-    public boolean isAllowedBlock(Block block) {
-        final BlockData data = block.getBlockData();
-        return data instanceof Waterlogged || data instanceof Fence || data instanceof Slab || data instanceof Bisected ||
-                data instanceof Directional || data instanceof MultipleFacing || data instanceof Stairs || data instanceof Ageable ||
-                data instanceof Bamboo || data instanceof Bed || data instanceof Rail || data instanceof AnaloguePowerable ||
-                data instanceof Beehive || data instanceof Bell || data instanceof BigDripleaf || data instanceof Cake ||
-                data instanceof CaveVines || data instanceof Farmland || data instanceof Gate || data instanceof Levelled ||
-                data instanceof Piston || data instanceof PistonHead || data instanceof PointedDripstone || data instanceof Rotatable ||
-                data instanceof Scaffolding || data instanceof SculkSensor || data instanceof Snow ||
-                data instanceof Snowable || data instanceof PinkPetals;
-    }
-
-    public boolean isBannedBlock(Material material) {
-        return switch (material) {
-            case BEDROCK -> true;
-            default -> false;
-        };
     }
 
 }

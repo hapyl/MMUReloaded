@@ -1,39 +1,39 @@
 package me.hapyl.mmu3.feature.block;
 
-import com.google.common.collect.Maps;
 import me.hapyl.spigotutils.module.math.Cuboid;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 
-import java.util.Map;
+import javax.annotation.Nonnull;
 
 public final class BlockManipulations {
 
-    public static Map<Block, BlockState> fillBlocks(Cuboid cuboid, Material material) {
-        final Map<Block, BlockState> affectedBlocks = Maps.newHashMap();
+    @Nonnull
+    public static BlockChange fillBlocks(Cuboid cuboid, Material material) {
+        final MultiBlockChange blockChange = new MultiBlockChange();
 
         for (Block block : cuboid.getBlocks()) {
             if (!block.getType().isAir()) {
-                affectedBlocks.put(block, block.getState());
+                blockChange.add(block);
                 block.setType(material, false);
             }
         }
 
-        return affectedBlocks;
+        return blockChange;
     }
 
-    public static Map<Block, BlockState> fillBlocks(Cuboid cuboid, Material from, Material to) {
-        final Map<Block, BlockState> affectedBlocks = Maps.newHashMap();
+    @Nonnull
+    public static BlockChange fillBlocks(Cuboid cuboid, Material from, Material to) {
+        final MultiBlockChange blockChange = new MultiBlockChange();
 
         for (Block block : cuboid.getBlocks()) {
             if (block.getType() == from) {
-                affectedBlocks.put(block, block.getState());
+                blockChange.add(block);
                 block.setType(to, false);
             }
         }
 
-        return affectedBlocks;
+        return blockChange;
     }
 
 }

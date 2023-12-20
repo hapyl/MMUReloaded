@@ -7,6 +7,7 @@ import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.utils.HexId;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -78,7 +79,7 @@ public class TrimManager extends Feature implements Listener {
             to.setPitch(0.0f);
 
             ev.setCancelled(true);
-            player.teleport(to);
+            //player.teleport(to);
         }
     }
 
@@ -101,6 +102,13 @@ public class TrimManager extends Feature implements Listener {
             return;
         }
 
+        final Block clickedBlock = ev.getClickedBlock();
+
+        if (clickedBlock != null) {
+            Message.error(player, "Click away from blocks!");
+            return;
+        }
+
         final PlayerInventory inventory = player.getInventory();
         final ItemStack currentItem = editor.getCurrentItem();
 
@@ -108,19 +116,6 @@ public class TrimManager extends Feature implements Listener {
         editor.setCurrentItem(item);
 
         ev.setCancelled(true);
-    }
-
-    @EventHandler()
-    public void handleColor(PlayerSwapHandItemsEvent ev) {
-        final Player player = ev.getPlayer();
-        final TrimEditor editor = trimEditorMap.get(player);
-
-        if (editor == null) {
-            return;
-        }
-
-        ev.setCancelled(true);
-        editor.tryColor();
     }
 
     @EventHandler()
@@ -139,7 +134,7 @@ public class TrimManager extends Feature implements Listener {
     }
 
     @EventHandler()
-    public void handleRandomize(PlayerDropItemEvent ev) {
+    public void handleSneak(PlayerToggleSneakEvent ev) {
         final Player player = ev.getPlayer();
         final TrimEditor editor = trimEditorMap.get(player);
 
@@ -147,20 +142,7 @@ public class TrimManager extends Feature implements Listener {
             return;
         }
 
-        ev.setCancelled(true);
-        editor.randomize();
-    }
-
-    @EventHandler()
-    public void handleSneak(PlayerToggleSneakEvent ev) {
-        final Player player = ev.getPlayer();
-        final TrimEditor editor = trimEditorMap.remove(player);
-
-        if (editor == null) {
-            return;
-        }
-
-        editor.remove();
+        editor.openGUI();
     }
 
     @EventHandler()
@@ -187,14 +169,8 @@ public class TrimManager extends Feature implements Listener {
         trimEditorMap.put(player, new TrimEditor(player));
     }
 
-    public void exitEditor(Player player) {
-        final TrimEditor editor = trimEditorMap.remove(player);
-
-        if (editor == null) {
-            return;
-        }
-
-        editor.remove();
+    public boolean exitEditor(Player player) {
+        return trimEditorMap.remove(player) != null;
     }
 
     public void setTrim(CachedTrimData cachedTrimData) {
