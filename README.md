@@ -1,6 +1,6 @@
 # A plugin with a lot of utilities.
 
-### *This plugin ment to used only on creative servers!*
+### *This plugin ment to be used only on creative servers!*
 
 # Features:
 Read the wiki for now I'm too lazy to write them here for now.
