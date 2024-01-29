@@ -29,7 +29,6 @@ public class CommandRegistry {
         register(new CalculateCommand("calculate"));
         register(new BackCommand("back"));
         register(new CenterCommand("center"));
-        register(new SayCommand("say"));
         register(new ItemCreatorCommand("itemCreator"));
         register(new EntityRemovalCommand("entityRemoval"));
         register(new GameModeCommand("gm"));
@@ -75,6 +74,7 @@ public class CommandRegistry {
         register(new SearchCommand("search"));
         register(new TrimCommand("trim"));
         register(new WaterlogCommand("waterlog"));
+        register(new WikiCommand("mmuWiki"));
 
         registerTestCommand("datafields", (player, strings) -> {
             final PersistentPlayerData data = PersistentPlayerData.getData(player);

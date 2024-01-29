@@ -43,9 +43,7 @@ public class SoundCommand extends SimplePlayerAdminCommand {
                 Message.clickHover(
                         player,
                         LazyClickEvent.SUGGEST_COMMAND.of("execute as @a at @s run playsound %s record @s ~ ~ ~ 1 %s".formatted(
-                                sound
-                                        .getKey()
-                                        .getKey(),
+                                sound.getKey().getKey(),
                                 pitch
                         )),
                         LazyHoverEvent.SHOW_TEXT.of("&aClick to copy Minecraft command."),
@@ -103,7 +101,7 @@ public class SoundCommand extends SimplePlayerAdminCommand {
 
             PlayerLib.playSound(player, sound, pitch);
 
-            Message.success(player, "Played %s (%s) sound to you.", Chat.capitalize(sound), pitch);
+            Message.success(player, "Played %s (%s) sound to %s.", Chat.capitalize(sound), pitch, !playAll ? "you" : "everyone");
             Message.clickHover(
                     player,
                     LazyEvent.runCommand("/sound command %s %s", sound, pitch),

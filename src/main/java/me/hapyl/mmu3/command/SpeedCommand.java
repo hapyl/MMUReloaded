@@ -18,15 +18,44 @@ public class SpeedCommand extends SimplePlayerAdminCommand {
         addCompleterValues(1, "walking", "flying", "reset");
     }
 
+    public void setSpeed(Player player, float speed) {
+        setSpeed(player, getSpeedType(player), speed);
+    }
+
+    public Type getSpeedType(Player player) {
+        return player.isFlying() ? Type.FLYING : Type.WALKING;
+    }
+
+    public void setSpeed(Player player, Type type, float speed) {
+        speed = Numbers.clamp(speed, 0.0f, 1.0f);
+        if (type == Type.FLYING) {
+            player.setFlySpeed(speed);
+        }
+        else {
+            player.setWalkSpeed(speed);
+        }
+        Message.success(player, "Set your %s speed to %s.", type.getName(), speed);
+    }
+
+    public void resetSpeed(Player player, Type type) {
+        if (type == Type.WALKING) {
+            player.setWalkSpeed(type.getSpeed());
+        }
+        else {
+            player.setFlySpeed(type.getSpeed());
+        }
+        Message.success(player, "Reset your %s speed.", type.getName());
+    }
+
+    public float getSpeed(Player player, Type type) {
+        if (type == Type.WALKING) {
+            return player.getWalkSpeed();
+        }
+        return player.getFlySpeed();
+    }
+
     @Override
     protected void execute(Player player, String[] args) {
-        // speed 2
-        // speed reset
-
-        // speed walk 2
-        // speed walk reset
-
-        // speed walk 2 hapyl
         if (args.length == 0) {
             final Type speedType = getSpeedType(player);
             final float speed = getSpeed(player, speedType);
@@ -74,42 +103,6 @@ public class SpeedCommand extends SimplePlayerAdminCommand {
             Message.info(player, "Changed %s's %s speed to %s.", target.getName(), type.getName(), speed);
         }
 
-    }
-
-    public void setSpeed(Player player, float speed) {
-        setSpeed(player, getSpeedType(player), speed);
-    }
-
-    public Type getSpeedType(Player player) {
-        return player.isFlying() ? Type.FLYING : Type.WALKING;
-    }
-
-    public void setSpeed(Player player, Type type, float speed) {
-        speed = Numbers.clamp(speed, 0.0f, 1.0f);
-        if (type == Type.FLYING) {
-            player.setFlySpeed(speed);
-        }
-        else {
-            player.setWalkSpeed(speed);
-        }
-        Message.success(player, "Set your %s speed to %s.", type.getName(), speed);
-    }
-
-    public void resetSpeed(Player player, Type type) {
-        if (type == Type.WALKING) {
-            player.setWalkSpeed(type.getSpeed());
-        }
-        else {
-            player.setFlySpeed(type.getSpeed());
-        }
-        Message.success(player, "Reset your %s speed.", type.getName());
-    }
-
-    public float getSpeed(Player player, Type type) {
-        if (type == Type.WALKING) {
-            return player.getWalkSpeed();
-        }
-        return player.getFlySpeed();
     }
 
 

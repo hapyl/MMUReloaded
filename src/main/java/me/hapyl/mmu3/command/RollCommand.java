@@ -8,7 +8,7 @@ public class RollCommand extends SimplePlayerAdminCommand {
 
     public RollCommand(String name) {
         super(name);
-        setDescription("Throws a dice to roll a random number between 1-6.");
+        setDescription("Throws a die to roll a random number between 1-6.");
         setAliases("dice");
         setCooldownTick(40);
     }

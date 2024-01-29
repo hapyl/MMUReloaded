@@ -13,7 +13,6 @@ import me.hapyl.mmu3.feature.statechanger.StateChangerListener;
 import me.hapyl.mmu3.listener.EntityListener;
 import me.hapyl.mmu3.listener.EntityRemovalListener;
 import me.hapyl.mmu3.listener.PlayerListener;
-import me.hapyl.mmu3.test.Test;
 import me.hapyl.spigotutils.EternaAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -85,9 +84,6 @@ public class Main extends JavaPlugin {
 
         // Load warp config
         registry.warps.getConfig().loadWarps();
-
-        // Test
-        new Test();
     }
 
     // Feature getter

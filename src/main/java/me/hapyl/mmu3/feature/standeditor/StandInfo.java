@@ -1,6 +1,7 @@
 package me.hapyl.mmu3.feature.standeditor;
 
 import me.hapyl.mmu3.Main;
+import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
@@ -18,18 +19,19 @@ public class StandInfo {
     private final boolean isSmall;
     private final boolean isMarker;
     private final boolean hasBasePlate;
-    private ItemStack helmet;
-    private ItemStack chestplate;
-    private ItemStack leggings;
-    private ItemStack boots;
-    private ItemStack mainHand;
-    private ItemStack offHand;
     private final EulerAngle headPos;
     private final EulerAngle bodyPos;
     private final EulerAngle leftArmPos;
     private final EulerAngle rightArmPos;
     private final EulerAngle leftLegPos;
     private final EulerAngle rightLegPos;
+    private final float yaw;
+    private ItemStack helmet;
+    private ItemStack chestplate;
+    private ItemStack leggings;
+    private ItemStack boots;
+    private ItemStack mainHand;
+    private ItemStack offHand;
 
     public StandInfo(ArmorStand stand) {
         this.customName = stand.getCustomName() == null ? "Armor Stand" : stand.getCustomName();
@@ -43,7 +45,9 @@ public class StandInfo {
         this.isSmall = stand.isSmall();
         this.isMarker = stand.isMarker();
         this.hasBasePlate = stand.hasBasePlate();
-        EntityEquipment equipment = stand.getEquipment();
+
+        final EntityEquipment equipment = stand.getEquipment();
+
         if (equipment != null) {
             this.helmet = equipment.getHelmet();
             this.chestplate = equipment.getChestplate();
@@ -59,6 +63,7 @@ public class StandInfo {
         this.rightArmPos = stand.getRightArmPose();
         this.leftLegPos = stand.getLeftLegPose();
         this.rightLegPos = stand.getRightLegPose();
+        this.yaw = stand.getLocation().getYaw();
     }
 
     public String getName() {
@@ -77,7 +82,9 @@ public class StandInfo {
         stand.setSmall(this.isSmall);
         stand.setMarker(this.isMarker);
         stand.setBasePlate(this.hasBasePlate);
-        EntityEquipment equipment = stand.getEquipment();
+
+        final EntityEquipment equipment = stand.getEquipment();
+
         if (equipment != null) {
             equipment.setHelmet(this.helmet);
             equipment.setChestplate(this.chestplate);
@@ -93,6 +100,11 @@ public class StandInfo {
         stand.setRightArmPose(this.rightArmPos);
         stand.setLeftLegPose(this.leftLegPos);
         stand.setRightLegPose(this.rightLegPos);
+
+        final Location location = stand.getLocation();
+        location.setYaw(yaw);
+
+        stand.teleport(location);
     }
 
 }

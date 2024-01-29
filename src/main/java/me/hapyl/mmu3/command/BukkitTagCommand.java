@@ -25,30 +25,8 @@ public class BukkitTagCommand extends SimplePlayerAdminCommand {
         addCompleterValues(1, byName.keySet().toArray(new String[] {}));
     }
 
-    private void populateTags() {
-        for (Field field : Tag.class.getFields()) {
-            if (field.getType() != Tag.class) {
-                continue;
-            }
-
-            try {
-                final Tag<?> tag = (Tag<?>) field.get(null);
-                if (tag == null) {
-                    continue;
-                }
-                byName.put(tag.getKey().getKey().toLowerCase(Locale.ROOT), tag);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     @Override
     protected void execute(Player player, String[] args) {
-        //
-        // bukkittag (Tag)
-        // bukkittag (Tag) (value)
-        //
         if (args.length == 0) {
             Message.NOT_ENOUGH_ARGUMENTS_EXPECTED_AT_LEAST.send(player, 1);
             return;
@@ -70,14 +48,30 @@ public class BukkitTagCommand extends SimplePlayerAdminCommand {
         final String str = args[1].toLowerCase();
         final boolean present = isPresent(tag, str);
 
-        // FIXME: 006, Nov 6, 2022 - Incorrect isPresent check
         if (present) {
-            Message.error(player, "%s is not present in %s tag!", str, tagName);
-        }
-        else {
             Message.success(player, "%s is present in %s tag!", str, tagName);
         }
+        else {
+            Message.error(player, "%s is not present in %s tag!", str, tagName);
+        }
+    }
 
+    private void populateTags() {
+        for (Field field : Tag.class.getFields()) {
+            if (field.getType() != Tag.class) {
+                continue;
+            }
+
+            try {
+                final Tag<?> tag = (Tag<?>) field.get(null);
+                if (tag == null) {
+                    continue;
+                }
+                byName.put(tag.getKey().getKey().toLowerCase(Locale.ROOT), tag);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private boolean isPresent(Tag<?> tag, String str) {
