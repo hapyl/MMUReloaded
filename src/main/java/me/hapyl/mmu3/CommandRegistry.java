@@ -75,6 +75,7 @@ public class CommandRegistry {
         register(new SearchCommand("search"));
         register(new TrimCommand("trim"));
         register(new WaterlogCommand("waterlog"));
+        register(new WikiCommand("mmuWiki"));
 
         registerTestCommand("datafields", (player, strings) -> {
             final PersistentPlayerData data = PersistentPlayerData.getData(player);

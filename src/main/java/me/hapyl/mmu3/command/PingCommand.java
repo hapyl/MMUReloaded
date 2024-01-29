@@ -14,8 +14,9 @@ public class PingCommand extends SimplePlayerAdminCommand {
     @Override
     protected void execute(Player player, String[] args) {
         final Player target = args.length == 0 ? player : Bukkit.getPlayer(args[0]);
+
         if (target == null) {
-            Message.PLAYER_NOT_ONLINE.send(player);
+            Message.PLAYER_NOT_ONLINE.send(player, args[0]);
             return;
         }
 

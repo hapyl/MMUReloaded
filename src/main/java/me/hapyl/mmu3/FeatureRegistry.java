@@ -26,7 +26,6 @@ public final class FeatureRegistry {
     public final SpecialBlocks specialBlocks;
     public final Calculate calculate;
     public final LastLocation lastLocation;
-    public final ServerPro serverPro;
     public final ItemCreatorFeature itemCreator;
     public final CandleController candleController;
     public final BrushManager brushManager;
@@ -51,7 +50,6 @@ public final class FeatureRegistry {
         specialBlocks = new SpecialBlocks(main);
         calculate = new Calculate(main);
         lastLocation = new LastLocation(main);
-        serverPro = new ServerPro(main);
         itemCreator = new ItemCreatorFeature(main);
         candleController = new CandleController(main);
         brushManager = new BrushManager(main);

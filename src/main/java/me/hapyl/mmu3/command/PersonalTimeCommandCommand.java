@@ -44,7 +44,6 @@ public class PersonalTimeCommandCommand extends SimplePlayerAdminCommand {
         final long time = args.length >= 2 ? getTime(args[1].toLowerCase()) : 0L;
 
         switch (argument) {
-
             case "reset" -> {
                 player.resetPlayerTime();
                 Message.info(player, "Reset your personal time.");
