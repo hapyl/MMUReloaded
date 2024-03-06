@@ -1,6 +1,14 @@
-# A plugin with a lot of utilities.
+# A plugin with a lot of utilities for builders and map makers.
 
-### *This plugin ment to be used only on creative servers!*
+> MMUReloaded is always supported for the newest Minecraft version.
+
+### *This plugin is ment to be used only on creative and build servers!*
+
+# Installation:
+
+- Download [ProtocolLib](https://ci.dmulloy2.net/job/ProtocolLib/) and put it in your `/plugins` folder.
+- Download [EternaAPI](https://github.com/hapyl/EternaAPI/releases) and put it in your `/plugins` folder.
+- Download the plugin and put it in your `/plugins` folder.
 
 # Features:
 Read the wiki for now I'm too lazy to write them here for now.
