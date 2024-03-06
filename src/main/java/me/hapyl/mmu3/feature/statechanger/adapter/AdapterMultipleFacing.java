@@ -15,11 +15,11 @@ public class AdapterMultipleFacing extends BlockFaceAdapter<MultipleFacing> {
     @Override
     public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull MultipleFacing blockData) {
         for (BlockFace face : blockData.getAllowedFaces()) {
-            if (isUnknownFace(face)) {
+            if (isUnknownFace(face, player)) {
                 continue;
             }
 
-            final int slot = getSlot(face);
+            final int slot = getSlot(face, player);
             final String faceName = getFaceName(face);
             final boolean hasFace = blockData.hasFace(face);
 

@@ -19,11 +19,11 @@ public class AdapterPointedDripstone extends BlockFaceAdapter<PointedDripstone> 
         final BlockFace verticalDirection = blockData.getVerticalDirection();
 
         for (BlockFace face : blockData.getVerticalDirections()) {
-            if (isUnknownFace(face)) {
+            if (isUnknownFace(face, player)) {
                 continue;
             }
 
-            final int slot = getSlot(face);
+            final int slot = getSlot(face, player);
             final String faceName = getFaceName(face);
             final boolean isFacing = face == verticalDirection;
 
