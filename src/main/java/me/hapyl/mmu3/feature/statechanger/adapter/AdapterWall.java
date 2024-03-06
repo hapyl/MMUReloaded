@@ -25,11 +25,11 @@ public class AdapterWall extends BlockFaceAdapter<Wall> {
         gui.applyState(22, blockData, d -> d.setUp(!isUp));
 
         for (BlockFace face : allowedFaces) {
-            if (isUnknownFace(face)) {
+            if (isUnknownFace(face, player)) {
                 continue;
             }
 
-            final int slot = getSlot(face);
+            final int slot = getSlot(face, player);
             final Wall.Height height = blockData.getHeight(face);
 
             gui.setSwitchItem(

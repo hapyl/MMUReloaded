@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.feature;
 
-import me.hapyl.spigotutils.module.reflect.ReflectPacket;
+import me.hapyl.spigotutils.module.reflect.Reflect;
 import net.minecraft.network.protocol.game.PacketPlayOutGameStateChange;
 import org.bukkit.entity.Player;
 
@@ -25,6 +25,7 @@ public enum PlayerPacket {
     }
 
     public void sendPacket(Player player) {
-        ReflectPacket.send(new PacketPlayOutGameStateChange(action, value), player);
+        // jesus fuck why you need ProtocolLib you're using the other method
+        Reflect.sendPacket(player, new PacketPlayOutGameStateChange(action, value));
     }
 }

@@ -16,11 +16,11 @@ public class AdapterRedstoneWire extends BlockFaceAdapter<RedstoneWire> {
     @Override
     public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull RedstoneWire blockData) {
         for (BlockFace face : blockData.getAllowedFaces()) {
-            if (isUnknownFace(face)) {
+            if (isUnknownFace(face, player)) {
                 continue;
             }
 
-            final int slot = getSlot(face);
+            final int slot = getSlot(face, player);
             final String faceName = getFaceName(face);
             final RedstoneWire.Connection connection = blockData.getFace(face);
 

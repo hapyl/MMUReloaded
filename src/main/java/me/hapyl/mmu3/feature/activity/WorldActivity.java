@@ -1,10 +1,12 @@
 package me.hapyl.mmu3.feature.activity;
 
-import com.google.common.collect.Sets;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
+import me.hapyl.mmu3.feature.MMURunnable;
 import me.hapyl.mmu3.message.Message;
+import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.util.Runnables;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -17,40 +19,37 @@ import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 
-import java.util.Set;
+public class WorldActivity extends Feature implements Listener, MMURunnable {
 
-public class WorldActivity extends Feature implements Listener {
-
-    private final Set<Activity> enabledActivity;
+    private boolean enabled;
 
     public WorldActivity(Main mmu3plugin) {
         super(mmu3plugin);
-        enabledActivity = Sets.newHashSet();
+        enabled = false;
     }
 
-    public boolean isEnabled(Activity activity) {
-        return enabledActivity.contains(activity);
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void setEnabled(Activity activity, boolean flag) {
-        if (flag) {
-            enabledActivity.add(activity);
-        }
-        else {
-            enabledActivity.remove(activity);
-        }
+    public void setEnabled(boolean flag) {
+        this.enabled = flag;
     }
 
-    public void toggleActivity(Activity activity, boolean broadcastStatus) {
-        setEnabled(activity, !isEnabled(activity));
+    public void toggleActivity(boolean broadcastStatus) {
+        setEnabled(!enabled);
 
         if (!broadcastStatus) {
             return;
         }
 
-        final boolean enabled = isEnabled(activity);
-        Message.broadcast("%s activity is now %s!", activity.getName(), enabled ? "enabled" : "disabled");
-        Message.broadcast("&o" + (enabled ? activity.getEnableMessage() : activity.getDisableMessage()));
+        Message.broadcast("Block Updates are now %s!", !enabled ? "enabled" : "disabled");
+
+        if (enabled) {
+            Message.broadcast("&oBlocks won't update, such as powders won't fall, liquids won't flow, etc.");
+        }
+
+        Message.broadcast("&oBlocks work as normal.");
     }
 
     // Listeners
@@ -58,15 +57,14 @@ public class WorldActivity extends Feature implements Listener {
     @EventHandler()
     public void handleLiquidFlowing(BlockFromToEvent ev) {
         final Block block = ev.getBlock();
+
         if (!block.isLiquid()) {
             return;
         }
 
         final Material type = block.getType();
-        if (type == Material.LAVA && isEnabled(Activity.LAVA_FLOWING)) {
-            ev.setCancelled(true);
-        }
-        else if (type == Material.WATER && isEnabled(Activity.WATER_FLOWING)) {
+
+        if ((type == Material.LAVA || type == Material.WATER) && enabled) {
             ev.setCancelled(true);
         }
     }
@@ -75,7 +73,7 @@ public class WorldActivity extends Feature implements Listener {
     public void handleEntityChangeBlockEvent(EntityChangeBlockEvent ev) {
         final Block block = ev.getBlock();
         final Material type = block.getType();
-        if (type.hasGravity() && isEnabled(Activity.BLOCK_FALLING)) {
+        if (type.hasGravity() && enabled) {
             ev.setCancelled(true);
             block.getState().update(true, false);
         }
@@ -84,7 +82,8 @@ public class WorldActivity extends Feature implements Listener {
     @EventHandler()
     public void handleBlockBreakEvent(BlockBreakEvent ev) {
         final Block block = ev.getBlock();
-        if (isEnabled(Activity.BLOCK_UPDATE)) {
+
+        if (enabled) {
             ev.setCancelled(true);
             block.setType(Material.AIR, false);
         }
@@ -96,7 +95,7 @@ public class WorldActivity extends Feature implements Listener {
         final BlockState state = ev.getBlockReplacedState();
         final Player player = ev.getPlayer();
 
-        if (!isEnabled(Activity.BLOCK_UPDATE)) {
+        if (!enabled) {
             return;
         }
 
@@ -109,6 +108,23 @@ public class WorldActivity extends Feature implements Listener {
             state.setBlockData(blockData);
             state.update(true, false);
         }, 1L);
+    }
+
+    @Override
+    public void run() {
+        if (!enabled) {
+            return;
+        }
+
+        Bukkit.getOnlinePlayers()
+                .stream()
+                .filter(Player::isOp)
+                .forEach(player -> Chat.sendActionbar(player, Message.PREFIX + "Block Update Suppressed!"));
+    }
+
+    @Override
+    public int period() {
+        return 20;
     }
 
 }

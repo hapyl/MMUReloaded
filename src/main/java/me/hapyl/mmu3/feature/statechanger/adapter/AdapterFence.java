@@ -19,11 +19,11 @@ public class AdapterFence extends BlockFaceAdapter<Fence> {
         final Set<BlockFace> allowedFaces = blockData.getAllowedFaces();
 
         for (BlockFace face : allowedFaces) {
-            if (isUnknownFace(face)) {
+            if (isUnknownFace(face, player)) {
                 continue;
             }
 
-            final int slot = getSlot(face);
+            final int slot = getSlot(face, player);
             final String faceName = getFaceName(face);
             final boolean isCurrentFace = blockData.hasFace(face);
 

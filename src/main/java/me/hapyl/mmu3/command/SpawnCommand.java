@@ -2,11 +2,9 @@ package me.hapyl.mmu3.command;
 
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.utils.StaticUpdate20EntitySpawn;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
 import me.hapyl.spigotutils.module.math.Numbers;
 import me.hapyl.spigotutils.module.util.Validate;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -71,30 +69,16 @@ public class SpawnCommand extends SimplePlayerAdminCommand {
                     return;
                 }
 
-                try {
-                    if (!entity.isSpawnable()) {
-                        Message.error(player, "Cannot spawn %s!", entity.name());
-                        cancel();
-                        return;
-                    }
-
-                    player.getWorld().spawnEntity(player.getLocation(), entity);
-
-                } catch (Exception ignored) {
-                    final Entity spawnedEntity = StaticUpdate20EntitySpawn.spawn(
-                            player.getLocation(),
-                            StaticUpdate20EntitySpawn.EntityType20.fromEntity(entity)
-                    );
-
-                    if (spawnedEntity == null) {
-                        Message.error(player, "Unable to spawn disabled entity, blame mojang!");
-                        cancel();
-                    }
+                if (!entity.isSpawnable()) {
+                    Message.error(player, "Cannot spawn %s!", entity.name());
+                    cancel();
+                    return;
                 }
-            }
-        }.
 
-                runTaskTimer(Main.getInstance(), 0L, 1L);
+                player.getWorld().spawnEntity(player.getLocation(), entity);
+
+            }
+        }.runTaskTimer(Main.getInstance(), 0L, 1L);
 
     }
 }

@@ -6,10 +6,10 @@ import me.hapyl.mmu3.PersistentPlayerData;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.chat.Chat;
 import me.hapyl.spigotutils.module.chat.LazyEvent;
+import me.hapyl.spigotutils.module.entity.packet.NMSEntityType;
 import me.hapyl.spigotutils.module.reflect.Reflect;
 import me.hapyl.spigotutils.module.util.Nulls;
 import me.hapyl.spigotutils.module.util.Validate;
-import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.EntityShulker;
 import net.minecraft.world.level.block.entity.TileEntityCommand;
 import org.apache.commons.lang.StringUtils;
@@ -158,7 +158,7 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
             return;
         }
 
-        final EntityShulker entity = new EntityShulker(EntityTypes.aG, Reflect.getMinecraftWorld(world));
+        final EntityShulker entity = new EntityShulker(NMSEntityType.SHULKER, Reflect.getMinecraftWorld(world));
         Reflect.setEntityLocation(entity, location);
 
         final Shulker shulker = (Shulker) entity.getBukkitEntity();

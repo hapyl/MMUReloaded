@@ -30,7 +30,7 @@ public class StandEditorListener extends InjectListener {
         final EquipmentSlot hand = ev.getHand();
         final Action action = ev.getAction();
 
-        if (!player.isOp() || hand == EquipmentSlot.OFF_HAND) {
+        if (!player.isOp() || player.getGameMode() != GameMode.CREATIVE || hand == EquipmentSlot.OFF_HAND) {
             return;
         }
 
@@ -84,7 +84,10 @@ public class StandEditorListener extends InjectListener {
 
     @EventHandler()
     public void handleEntityDamageByEntityEvent(EntityDamageByEntityEvent ev) {
-        if (!(ev.getDamager() instanceof Player player) || !player.isOp() || !(ev.getEntity() instanceof ArmorStand stand)) {
+        if (!(ev.getDamager() instanceof Player player)
+                || !player.isOp()
+                || player.getGameMode() != GameMode.CREATIVE
+                || !(ev.getEntity() instanceof ArmorStand stand)) {
             return;
         }
 

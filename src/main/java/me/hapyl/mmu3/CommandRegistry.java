@@ -2,15 +2,11 @@ package me.hapyl.mmu3;
 
 import me.hapyl.mmu3.command.*;
 import me.hapyl.mmu3.command.brush.BrushCommand;
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.spigotutils.module.command.CommandProcessor;
 import me.hapyl.spigotutils.module.command.SimpleCommand;
 import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
-import me.hapyl.spigotutils.module.config.DataField;
-import org.apache.commons.lang.reflect.FieldUtils;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Field;
 import java.util.function.BiConsumer;
 
 public class CommandRegistry {
@@ -63,7 +59,7 @@ public class CommandRegistry {
         register(new WatcherCommand("watcher"));
         register(new WarpCommand("warp"));
         register(new LineOfSightCommand("los"));
-        register(new ActivityCommand("activity"));
+        register(new ActivityCommand("suppressBlockUpdates"));
         register(new BoundingBoxCommand("boundingBox"));
         register(new SpawnCommand("spawn"));
         register(new DeleteCommand("delete"));
@@ -75,30 +71,6 @@ public class CommandRegistry {
         register(new TrimCommand("trim"));
         register(new WaterlogCommand("waterlog"));
         register(new WikiCommand("mmuWiki"));
-
-        registerTestCommand("datafields", (player, strings) -> {
-            final PersistentPlayerData data = PersistentPlayerData.getData(player);
-
-            try {
-                for (Field field : data.getClass().getDeclaredFields()) {
-                    final DataField annotation = field.getAnnotation(DataField.class);
-                    if (annotation == null) {
-                        continue;
-                    }
-
-                    final Object value = FieldUtils.readField(field, data, true);
-                    Message.debug(
-                            player,
-                            "%s %s: %s",
-                            "&7" + field.getName(),
-                            "&e(" + field.getType().getSimpleName() + ")",
-                            value == null ? "null" : value
-                    );
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
 
     }
 

@@ -4,6 +4,7 @@ import me.hapyl.mmu3.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 
 public class Feature {
 
@@ -15,11 +16,24 @@ public class Feature {
 
     public Feature(Main mmu3plugin) {
         this.mmu3plugin = mmu3plugin;
-        if (isListener()) {
-            mmu3plugin.getServer().getPluginManager().registerEvents((Listener) this, mmu3plugin);
+        this.enabled = true;
+
+        if (this instanceof Listener listener) {
+            mmu3plugin.getServer().getPluginManager().registerEvents(listener, mmu3plugin);
         }
 
-        this.enabled = true;
+        if (this instanceof MMURunnable runnable) {
+            final BukkitScheduler scheduler = Bukkit.getScheduler();
+            final int delay = runnable.delay();
+            final int period = runnable.period();
+
+            if (runnable.async()) {
+                scheduler.runTaskTimerAsynchronously(mmu3plugin, runnable, delay, period);
+            }
+            else {
+                scheduler.runTaskTimer(mmu3plugin, runnable, delay, period);
+            }
+        }
     }
 
     public boolean isEnabled() {
@@ -59,10 +73,6 @@ public class Feature {
 
     public final String getDescription() {
         return description;
-    }
-
-    public final boolean isListener() {
-        return this instanceof Listener;
     }
 
     public final Main getPlugin() {
