@@ -105,7 +105,14 @@ public class ParticleCommand extends SimplePlayerAdminCommand {
 
         Message.clickHover(
                 player,
-                LazyEvent.runCommand("/particles command %s %s %s %s %s %s", particle.name(), amount, offsetX, offsetY, offsetZ, speed),
+                LazyEvent.runCommand("/particles command %s %s %s %s %s %s".formatted(
+                        particle.name(),
+                        amount,
+                        offsetX,
+                        offsetY,
+                        offsetZ,
+                        speed
+                )),
                 LazyEvent.showText("&eClick to generate commands!"),
                 "&e&lCLICK HERE &6to generate commands!"
         );

@@ -82,7 +82,7 @@ public class StandEditorGUI extends PlayerGUI implements Editor {
                 .setName("Rotate")
                 .addSmartLore("Rotate armor stands around its axis.")
                 .addLore()
-                .addLore("&aCurrent Yaw: &f&l%.2f", getYaw())
+                .addLore("&aCurrent Yaw: &f&l%.2f".formatted(getYaw()))
                 .addLore()
                 .addLore("&eClick to rotate clockwise.")
                 .addLore("&6Right Click to rotate counter-clockwise.")
@@ -340,9 +340,9 @@ public class StandEditorGUI extends PlayerGUI implements Editor {
         return new ItemBuilder(part.getMaterial())
                 .setName("&a" + part.getName())
                 .addLore()
-                .addLore("You are currently editing in &b&l%s &7vector.", data.getAxis())
+                .addLore("You are currently editing in &b&l%s &7vector.".formatted(data.getAxis()))
                 .addLore()
-                .addLore("Current Values: &b&l%s", getCurrentTuningValues(part))
+                .addLore("Current Values: &b&l%s".formatted(getCurrentTuningValues(part)))
                 .addLore()
                 .addLore("&6[Middle] &eto switch vector")
                 .addLore("&6[Drop] &eto reset vectors")
@@ -387,7 +387,7 @@ public class StandEditorGUI extends PlayerGUI implements Editor {
         builder.addLore("&7Your Loadouts:");
 
         for (int i = 0; i < 9; ++i) {
-            builder.addLore(Chat.format("&8%s. %s", i + 1, editor.getLoadoutName(getPlayer(), i + 1)));
+            builder.addLore(Chat.format("&8%s. %s".formatted(i + 1, editor.getLoadoutName(getPlayer(), i + 1))));
         }
 
         builder.addLore("");
@@ -536,7 +536,7 @@ public class StandEditorGUI extends PlayerGUI implements Editor {
         if (team != null) {
             builder.addLore("Current Team: " + team.getColor() + team.getName());
             builder.addLore();
-            builder.addLore("&e/team modify %s color <color>", team.getName());
+            builder.addLore("&e/team modify %s color <color>".formatted(team.getName()));
             builder.addLore("To change team's color.");
         }
         else {
@@ -566,7 +566,7 @@ public class StandEditorGUI extends PlayerGUI implements Editor {
         }
         else {
             for (String tag : tags) {
-                builder.addLore("&7- &e%s", tag);
+                builder.addLore("&7- &e%s".formatted(tag));
             }
         }
 
@@ -587,7 +587,7 @@ public class StandEditorGUI extends PlayerGUI implements Editor {
             builder.setName((condition ? "&a" : "&c") + ChatColor.stripColor(name));
         }
 
-        builder.addLore().addLore("&eClick to %s", condition ? "disable" : "enable");
+        builder.addLore().addLore("&eClick to %s".formatted(condition ? "disable" : "enable"));
         return builder.toItemStack();
     }
 }

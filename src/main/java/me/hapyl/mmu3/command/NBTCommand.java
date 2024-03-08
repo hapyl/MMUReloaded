@@ -87,7 +87,7 @@ public class NBTCommand extends SimplePlayerAdminCommand {
         Message.clickHover(
                 player,
                 LazyEvent.copyToClipboard(key + ": " + nbt),
-                LazyEvent.showText("&eClick to copy '&6%s&e'.", key),
+                LazyEvent.showText("&eClick to copy '&6%s&e'.".formatted(key)),
                 color(key, nbt)
         );
     }

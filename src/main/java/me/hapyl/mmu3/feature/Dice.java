@@ -95,7 +95,7 @@ public class Dice {
 
     private void showRolledNumber() {
         stand.setHeadPose(EulerAngle.ZERO);
-        stand.setCustomName(Chat.format("%s&l%s", number < 3 ? "&c" : number == 5 ? "&d" : "&a", number + 1));
+        stand.setCustomName(Chat.format("%s&l%s".formatted(number < 3 ? "&c" : number == 5 ? "&d" : "&a", number + 1)));
         stand.setCustomNameVisible(true);
 
         final Location location = stand.getLocation();

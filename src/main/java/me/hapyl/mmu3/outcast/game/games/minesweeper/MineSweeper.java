@@ -138,7 +138,8 @@ public class MineSweeper extends Game {
                         else {
                             setItem(
                                     slot,
-                                    new ItemBuilder(Material.STONE_BUTTON).setName(color + "There are %s mines nearby!", nearbyMines)
+                                    new ItemBuilder(Material.STONE_BUTTON).setName(
+                                                    color + "There are %s mines nearby!".formatted(nearbyMines))
                                             .setAmount(nearbyMines)
                                             .build()
                             );
@@ -165,7 +166,7 @@ public class MineSweeper extends Game {
                 // If clicking when won, display time.
                 if (state == State.WON) {
                     final String gameTime = new SimpleDateFormat("ss.SSS").format(finishedAt - startedAt);
-                    Chat.broadcast("&a%s &7defused %s mines in &a%s!", player.getName(), mines, gameTime);
+                    Chat.broadcast("&a%s &7defused %s mines in &a%s!".formatted(player.getName(), mines, gameTime));
                 }
 
                 // If clicked when not playing, close inventory.

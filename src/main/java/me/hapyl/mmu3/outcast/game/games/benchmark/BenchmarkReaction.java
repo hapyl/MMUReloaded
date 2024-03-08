@@ -74,12 +74,11 @@ public class BenchmarkReaction extends Game {
                 }
 
                 if (status == Status.FINISHED) {
-                    Chat.broadcast(
-                            "&d&lREACTION! &a%s's &7average reaction is &b%sms &7(%sms)!",
+                    Chat.broadcast("&d&lREACTION! &a%s's &7average reaction is &b%sms &7(%sms)!".formatted(
                             getPlayer().getName(),
                             averageReactionPing,
                             averageReaction
-                    );
+                    ));
                     gui.closeInventory();
                     return;
                 }
@@ -90,11 +89,11 @@ public class BenchmarkReaction extends Game {
                     roundData.put(roundData.size(), data);
                     status = Status.PRE_GAME;
                     fillPlayableArea(new ItemBuilder(Material.BLUE_STAINED_GLASS_PANE)
-                                             .setName("Round Results")
-                                             .addLore("&b&l%s&bms &7(%s)", data.getReactTimePingRelative(), data.getReactTime())
-                                             .addLore()
-                                             .addLore("&eClick to continue")
-                                             .build());
+                            .setName("Round Results")
+                            .addLore("&b&l%s&bms &7(%s)".formatted(data.getReactTimePingRelative(), data.getReactTime()))
+                            .addLore()
+                            .addLore("&eClick to continue")
+                            .build());
                     Message.sound(getPlayer(), Sound.ENTITY_VILLAGER_YES);
                     return;
                 }
@@ -103,9 +102,9 @@ public class BenchmarkReaction extends Game {
                     task.cancel();
                     status = Status.PRE_GAME;
                     fillPlayableArea(new ItemBuilder(Material.BLUE_STAINED_GLASS_PANE)
-                                             .setName("&cToo Soon!")
-                                             .addLore("&eClick to try again")
-                                             .build());
+                            .setName("&cToo Soon!")
+                            .addLore("&eClick to try again")
+                            .build());
                     Message.sound(getPlayer(), Sound.ENTITY_VILLAGER_NO);
                 }
             }
@@ -126,12 +125,11 @@ public class BenchmarkReaction extends Game {
                         final RoundData data = roundData.get(round);
                         average += data.getReactTime();
                         averagePing += data.getReactTimePingRelative();
-                        builder.addLore(
-                                "&7Round %s: &b&l%s&bms &7(%sms)",
+                        builder.addLore("&7Round %s: &b&l%s&bms &7(%sms)".formatted(
                                 round + 1,
                                 data.getReactTimePingRelative(),
                                 data.getReactTime()
-                        );
+                        ));
                     }
 
                     averageReaction = average / roundData.size();
@@ -139,7 +137,7 @@ public class BenchmarkReaction extends Game {
 
                     builder.addLore();
                     builder.addLore("&7Average Reaction Time");
-                    builder.addLore("&b&l%s &7(%sms)", averageReactionPing, averageReaction);
+                    builder.addLore("&b&l%s &7(%sms)".formatted(averageReactionPing, averageReaction));
                     builder.addLore();
                     builder.addLore("&eClick to announce");
 

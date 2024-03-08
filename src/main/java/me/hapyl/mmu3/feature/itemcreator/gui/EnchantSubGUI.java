@@ -46,7 +46,7 @@ public class EnchantSubGUI extends ItemCreatorSubGUI {
                                 .setName((isPresent ? "&a&l" : "&c") + enchantName)
                                 .addSmartLore(enchant.getDescription())
                                 .addLore()
-                                .addLore("Max vanilla level: &b%s", enchant.getVanillaMaxLvl())
+                                .addLore("Max vanilla level: &b%s".formatted(enchant.getVanillaMaxLvl()))
                                 .addLore()
                                 .addLore("&eClick to choose level")
                                 .addLoreIf("&eRight Click to remove enchant", isPresent)
@@ -113,7 +113,7 @@ public class EnchantSubGUI extends ItemCreatorSubGUI {
         }
         else {
             creator().getEnchantMap().forEach((enchant, lvl) -> {
-                builder.addLore(" &9%s &l%s", Chat.capitalize(enchant.getKey().getKey()), lvl);
+                builder.addLore(" &9%s &l%s".formatted(Chat.capitalize(enchant.getKey().getKey()), lvl));
             });
         }
         return builder.addLore().addLore("&eClick to confirm").build();

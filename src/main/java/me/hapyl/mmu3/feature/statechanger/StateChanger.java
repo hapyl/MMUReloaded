@@ -87,7 +87,7 @@ public class StateChanger extends Feature {
 
         inventory.addItem(new ItemBuilder(baseItem)
                 .addLore()
-                .addLore("Created by almighty %s&7.", randomColorName(player))
+                .addLore("Created by almighty %s&7.".formatted(randomColorName(player)))
                 .toItemStack());
 
         Message.success(player, "Success!");

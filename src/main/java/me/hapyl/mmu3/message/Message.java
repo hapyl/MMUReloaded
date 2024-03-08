@@ -111,7 +111,7 @@ public enum Message {
     }
 
     public static void debug(Object message, Object... replacements) {
-        Chat.broadcastOp(PREFIX_DEBUG + message, colorReplacements(ChatColor.GRAY, ChatColor.RED, replacements));
+        Chat.broadcastOp((PREFIX_DEBUG + message).formatted(colorReplacements(ChatColor.GRAY, ChatColor.RED, replacements)));
     }
 
     public static void success(Player player, String message, Object... replacements) {
@@ -130,8 +130,7 @@ public enum Message {
         Chat.sendClickableMessage(
                 player,
                 event,
-                PREFIX + prompt.toString(),
-                colorReplacements(ChatColor.GRAY, ChatColor.YELLOW, replacements)
+                (PREFIX + prompt.toString()).formatted(colorReplacements(ChatColor.GRAY, ChatColor.YELLOW, replacements))
         );
     }
 
@@ -140,8 +139,7 @@ public enum Message {
                 player,
                 event,
                 eventHover,
-                PREFIX + prompt.toString(),
-                colorReplacements(ChatColor.GRAY, ChatColor.YELLOW, replacements)
+                (PREFIX + prompt.toString()).formatted(colorReplacements(ChatColor.GRAY, ChatColor.YELLOW, replacements))
         );
     }
 
@@ -186,7 +184,10 @@ public enum Message {
     }
 
     private static void raw(Player player, ChatColor color, ChatColor replacementsColor, String message, Object... replacements) {
-        Chat.sendMessage(player, PREFIX + color + message, colorReplacements(color.toString(), replacementsColor.toString(), replacements));
+        Chat.sendMessage(
+                player,
+                (PREFIX + color + message).formatted(colorReplacements(color.toString(), replacementsColor.toString(), replacements))
+        );
     }
 
     public enum Type {

@@ -23,7 +23,7 @@ public class AdapterBamboo extends Adapter<Bamboo> {
             gui.setItem(
                     slot,
                     createItem(Material.JUNGLE_LEAVES)
-                            .setName("&a%s Leaves", Chat.capitalize(value))
+                            .setName("&a%s Leaves".formatted(Chat.capitalize(value)))
                             .setAmount(slot - 20)
                             .setSmartLore("Represents the size of the leaves on this bamboo block.")
                             .predicate(leaves.equals(value), ItemBuilder::glow)

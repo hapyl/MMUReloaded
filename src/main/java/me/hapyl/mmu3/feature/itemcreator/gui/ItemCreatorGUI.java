@@ -167,7 +167,7 @@ public final class ItemCreatorGUI extends PanelGUI {
                 33,
                 ItemBuilder.of(Material.PAINTING, "Custom Model Data", "Set custom model data value")
                         .addLore()
-                        .addLore("Current Value: %s%s", customModelData, customModelData == 0 ? " &8Default" : "")
+                        .addLore("Current Value: %s%s".formatted(customModelData, customModelData == 0 ? " &8Default" : ""))
                         .addLore()
                         .addLore("&eClick to set custom model data")
                         .build(),
@@ -222,9 +222,8 @@ public final class ItemCreatorGUI extends PanelGUI {
                         ItemBuilder.of(Material.WHITE_DYE, "Change Color")
                                 .addSmartLore("Change leather armor color.")
                                 .addLore()
-                                .addLore(
-                                        "&aCurrent Color: %s",
-                                        color == null ? "&8None!" : (creator.getArmorColorAsChatColor() + "")
+                                .addLore("&aCurrent Color: %s".formatted(
+                                        color == null ? "&8None!" : (creator.getArmorColorAsChatColor() + ""))
                                 )
                                 .addLore()
                                 .addLore("&eClick to change color")

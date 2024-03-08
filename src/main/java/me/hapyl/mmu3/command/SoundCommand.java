@@ -104,7 +104,7 @@ public class SoundCommand extends SimplePlayerAdminCommand {
             Message.success(player, "Played %s (%s) sound to %s.", Chat.capitalize(sound), pitch, !playAll ? "you" : "everyone");
             Message.clickHover(
                     player,
-                    LazyEvent.runCommand("/sound command %s %s", sound, pitch),
+                    LazyEvent.runCommand("/sound command %s %s".formatted(sound, pitch)),
                     LazyEvent.showText("&eClick to generate commands!"),
                     "&e&lCLICK HERE &6to generate commands!"
             );

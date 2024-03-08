@@ -33,20 +33,10 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if (instance != null) {
-            throw new IllegalStateException("Instance already initiated!");
-        }
-
         instance = this;
 
-        if (pluginManager.getPlugin("EternaAPI") == null) {
-            Bukkit.getLogger().severe("This plugin depends on EternaAPI! Please put it in your 'plugins' folder.");
-            pluginManager.disablePlugin(this);
-            return;
-        }
-
         // Initiate API
-        eternaAPI = new EternaAPI(this);
+        eternaAPI = new EternaAPI(this, "2.50.0");
 
         // Register Commands
         new CommandRegistry(this);

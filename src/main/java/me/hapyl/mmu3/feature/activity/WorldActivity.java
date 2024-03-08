@@ -48,8 +48,9 @@ public class WorldActivity extends Feature implements Listener, MMURunnable {
         if (enabled) {
             Message.broadcast("&oBlocks won't update, such as powders won't fall, liquids won't flow, etc.");
         }
-
-        Message.broadcast("&oBlocks work as normal.");
+        else {
+            Message.broadcast("&oBlocks work as normal.");
+        }
     }
 
     // Listeners

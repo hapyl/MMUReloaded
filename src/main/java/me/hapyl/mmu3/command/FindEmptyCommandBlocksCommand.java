@@ -76,7 +76,7 @@ public class FindEmptyCommandBlocksCommand extends SimplePlayerAdminCommand {
             final String locationString = "%s %s %s".formatted(location.getBlockX(), location.getBlockY(), location.getBlockZ());
             Message.clickHover(
                     player,
-                    LazyEvent.runCommand("/tp %s", locationString),
+                    LazyEvent.runCommand("/tp %s".formatted(locationString)),
                     LazyEvent.showText("&eClick to teleport!"),
                     "&a%s &6&lTP".formatted(locationString)
             );

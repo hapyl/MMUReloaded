@@ -143,7 +143,7 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
 
         if (command.length() >= 120) {
             final String commandSignature = command.split(" ")[0];
-            Chat.sendActionbar(player, "&f&oCommand is too long! &e(%s)", commandSignature);
+            Chat.sendActionbar(player, "&f&oCommand is too long! &e(%s)".formatted(commandSignature));
         }
         else {
             Chat.sendActionbar(player, colorCommand(command));

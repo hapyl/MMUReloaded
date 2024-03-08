@@ -89,7 +89,7 @@ public class Wordle extends Game {
                                 36,
                                 new ItemBuilder(Material.MAP)
                                         .setName("&aYou Won!")
-                                        .addLore("The word was &e%s&7!", hiddenWord)
+                                        .addLore("The word was &e%s&7!".formatted(hiddenWord))
                                         .addLore("")
                                         .addSmartLore("You guessed it within %s tries.".formatted(collector.getGuessedWords().size()))
                                         .addLore()
@@ -107,7 +107,7 @@ public class Wordle extends Game {
                                 36,
                                 new ItemBuilder(Material.BARRIER)
                                         .setName("&aYou Lost!")
-                                        .addLore("The word was &e%s&7!", hiddenWord)
+                                        .addLore("The word was &e%s&7!".formatted(hiddenWord))
                                         .addLore()
                                         .addLore("&eClick to cry")
                                         .build()
@@ -142,10 +142,11 @@ public class Wordle extends Game {
 
                 if (status == Status.WON) {
                     Chat.broadcast(
-                            "&a&lWORDLE! &a%s &7guessed wordle &a#%s &7in &a%s &7tries.",
-                            getPlayer().getName(),
-                            wordId,
-                            collector.getGuessedWords().size()
+                            "&a&lWORDLE! &a%s &7guessed wordle &a#%s &7in &a%s &7tries.".formatted(
+                                    getPlayer().getName(),
+                                    wordId,
+                                    collector.getGuessedWords().size()
+                            )
                     );
 
                     generateCubes().forEach(cube -> Chat.broadcast("  " + cube));

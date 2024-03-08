@@ -191,10 +191,11 @@ public class Ultrasequencer extends Game {
                         .addLore("&eClick to flex!")
                         .build(), player -> {
                     Chat.broadcast(
-                            "&d&l%s! &a%s &7reached round &b%s&7!",
-                            getGame().getName().toUpperCase(),
-                            player.getName(),
-                            round
+                            "&d&l%s! &a%s &7reached round &b%s&7!".formatted(
+                                    getGame().getName().toUpperCase(),
+                                    player.getName(),
+                                    round
+                            )
                     );
                     player.closeInventory();
                 });

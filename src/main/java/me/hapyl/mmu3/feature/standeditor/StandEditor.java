@@ -69,7 +69,7 @@ public class StandEditor extends Feature {
         }
 
         // Using title to not spam the chat
-        Chat.sendActionbar(player, "&6%s &f%s &l%s Axis", part.getName(), nonZero, data.getAxis().name());
+        Chat.sendActionbar(player, "&6%s &f%s &l%s Axis".formatted(part.getName(), nonZero, data.getAxis().name()));
         Message.sound(player, Sound.BLOCK_NOTE_BLOCK_HAT, player.isSneaking() ? 1.25f : 1.0f);
     }
 
