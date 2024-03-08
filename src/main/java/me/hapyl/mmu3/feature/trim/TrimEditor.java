@@ -273,8 +273,10 @@ public class TrimEditor implements Editor {
     public void sendInfo(Object info, Object... format) {
         Chat.sendActionbar(
                 player,
-                ChatColor.GREEN + String.valueOf(info),
-                Message.colorReplacements("&a", "&f&l", format)
+                ChatColor.GREEN + String.format(
+                        String.valueOf(info),
+                        Message.colorReplacements("&a", "&f&l", format)
+                )
         );
     }
 

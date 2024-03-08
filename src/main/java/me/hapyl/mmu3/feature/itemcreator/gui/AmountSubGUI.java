@@ -57,7 +57,7 @@ public abstract class AmountSubGUI extends ItemCreatorSubGUI {
                         .setAmount(amount)
                         .addSmartLore(about)
                         .addLore()
-                        .addLore("Current %s: &b%s", name.toLowerCase(Locale.ROOT), amount)
+                        .addLore("Current %s: &b%s".formatted(name.toLowerCase(Locale.ROOT), amount))
                         .addLore()
                         .hideFlags()
                         .addLore("&eClick to confirm")

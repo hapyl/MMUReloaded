@@ -50,10 +50,10 @@ public class AttributeSubGUI extends ItemCreatorSubGUI {
                 final EquipmentSlot slot = modifier.getSlot();
 
                 builder.addLore("Current Values:");
-                builder.addLore(" Name: &a%s", modifier.getName());
-                builder.addLore(" Slot: &a%s", (slot == null ? "Any" : Chat.capitalize(slot)));
-                builder.addLore(" Operation: &a%s", modifier.getOperation());
-                builder.addLore(" Amount: &a%s", modifier.getAmount());
+                builder.addLore(" Name: &a%s".formatted(modifier.getName()));
+                builder.addLore(" Slot: &a%s".formatted((slot == null ? "Any" : Chat.capitalize(slot))));
+                builder.addLore(" Operation: &a%s".formatted(modifier.getOperation()));
+                builder.addLore(" Amount: &a%s".formatted(modifier.getAmount()));
 
                 builder.addLore();
                 builder.addLore("&eClick to modify");

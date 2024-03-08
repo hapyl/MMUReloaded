@@ -39,7 +39,7 @@ public class LoreSubGUI extends ItemCreatorSubGUI {
                 setItem(
                         slot,
                         new ItemBuilder(Material.FILLED_MAP)
-                                .setName("&aLine %s", index + 1)
+                                .setName("&aLine %s".formatted(index + 1))
                                 .setAmount(index + 1)
                                 .addLore("&aCurrent Lore:")
                                 .addLore(currentLore)
@@ -72,7 +72,7 @@ public class LoreSubGUI extends ItemCreatorSubGUI {
                         slot,
                         new ItemBuilder(nextLine ? Material.MAP : Material.PAPER)
                                 .setAmount(index + 1)
-                                .setName("%sLine %s", (nextLine ? "&e" : "&c"), index + 1)
+                                .setName("%sLine %s".formatted((nextLine ? "&e" : "&c"), index + 1))
                                 .hideFlags()
                                 .predicate(nextLine, ItemBuilder::glow)
                                 .addSmartLore("There is no lore yet. Click the flower to insert lore to next available slot.")

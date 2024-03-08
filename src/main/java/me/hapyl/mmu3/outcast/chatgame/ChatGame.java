@@ -33,7 +33,7 @@ public abstract class ChatGame {
     public abstract ChatGameInstance newInstance(@Nonnull Arguments args);
 
     public void log(String str, Object... format) {
-        Chat.broadcast("&b&l" + getName() + "! &a" + Chat.format(str, format));
+        Chat.broadcast("&b&l" + getName() + "! &a" + Chat.format(str.formatted(format)));
     }
 
 }

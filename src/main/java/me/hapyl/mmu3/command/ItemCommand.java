@@ -291,16 +291,16 @@ public class ItemCommand extends SimplePlayerAdminCommand {
 
         Message.clickHover(
                 player,
-                LazyEvent.runCommand("%s help %s", getUsage().toLowerCase(), previous),
-                LazyEvent.showText("&7Click to see help for %s!", Chat.capitalize(previous)),
+                LazyEvent.runCommand("%s help %s".formatted(getUsage().toLowerCase(), previous)),
+                LazyEvent.showText("&7Click to see help for %s!".formatted(Chat.capitalize(previous))),
                 "&e&lCLICK &eto see help about %s.",
                 Chat.capitalize(previous)
         );
 
         Message.clickHover(
                 player,
-                LazyEvent.runCommand("%s help %s", getUsage(), next),
-                LazyEvent.showText("&7Click to see help for %s!", Chat.capitalize(next)),
+                LazyEvent.runCommand("%s help %s".formatted(getUsage(), next)),
+                LazyEvent.showText("&7Click to see help for %s!".formatted(Chat.capitalize(next))),
                 "&e&lCLICK &eto see help about %s.",
                 Chat.capitalize(next)
         );

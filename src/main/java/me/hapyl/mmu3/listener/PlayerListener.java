@@ -81,11 +81,12 @@ public class PlayerListener implements Listener {
     public void handleInventoryClickEvent(InventoryClickEvent ev) {
         final ClickType click = ev.getClick();
         final HumanEntity player = ev.getWhoClicked();
+
         if (click == ClickType.SHIFT_RIGHT && player.isOp()) {
             final int rawSlot = ev.getRawSlot();
 
             ev.setCancelled(true);
-            Chat.sendMessage(player, "&fClicked &l%s&f. &7(%s of %% 9)", rawSlot, rawSlot % 9);
+            Message.info((Player) player, "&fClicked &l%s&f. &7(%s of %% 9)", rawSlot, rawSlot % 9);
         }
     }
 
