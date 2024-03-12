@@ -5,6 +5,7 @@ import me.hapyl.mmu3.feature.statechanger.adapter.Adapter;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.utils.PanelGUI;
 import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.spigotutils.module.chat.LazyEvent;
 import me.hapyl.spigotutils.module.inventory.ItemBuilder;
 import me.hapyl.spigotutils.module.player.PlayerLib;
 import me.hapyl.spigotutils.module.util.CollectionUtils;
@@ -24,6 +25,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class StateChangerGUI extends PanelGUI {
+
+    private static final String REPORT_MISSING_MODIFIER_URL = "https://github.com/hapyl/MMUReloaded/issues/new?template=replacer-missing-modifiers.md";
 
     private final Data data;
 
@@ -46,6 +49,7 @@ public class StateChangerGUI extends PanelGUI {
         openInventory();
     }
 
+    // FIXME (hapyl): 012, Mar 12: Maybe add like auto adapters but like I kinda like that water is always in the same slot idk man
     public void setItem(Adapter<?> adapter, int slot, boolean condition, @Nonnull Material material, @Nonnull String name, @Nonnull String description, @Nullable Object... format) {
         setItem(adapter, slot, ConditionedMaterial.of(condition, material, material), name, description, format);
     }
@@ -157,6 +161,27 @@ public class StateChangerGUI extends PanelGUI {
 
     private void setBottomPanel() {
         setPanelCloseMenu();
+
+        // Missing data
+        setPanelItem(
+                6,
+                new ItemBuilder(Material.MAP)
+                        .setName("Missing Modifiers?")
+                        .setSmartLore("If this block is missing some modifiers, you can report it!")
+                        .addLore()
+                        .addLore("&6Click to get link!")
+                        .build(), player -> {
+                    Chat.sendClickableHoverableMessage(
+                            player,
+                            LazyEvent.openUrl(REPORT_MISSING_MODIFIER_URL),
+                            LazyEvent.showText("&eClick to open the link!"),
+                            "&6&lCLICK HERE&f to report a missing modifier!"
+                    );
+
+                    PlayerLib.plingNote(player, 2.0f);
+                    player.closeInventory();
+                }
+        );
 
         // Restore
         setPanelItem(

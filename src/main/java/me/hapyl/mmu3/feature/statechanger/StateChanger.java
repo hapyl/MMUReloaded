@@ -146,6 +146,13 @@ public class StateChanger extends Feature {
         registerAdapter(new AdapterSnowable()); // Yes
         registerAdapter(new AdapterPinkPetals()); // Yes
         registerAdapter(new AdapterChiseledBookshelf()); // Yeppers
+
+        // No fucking idea why the comments are about, probably 'tests' ¯\_(ツ)_/¯
+        registerAdapter(new AdapterFaceAttachable());
+        registerAdapter(new AdapterOpenable());
+        registerAdapter(new AdapterCandle());
+        registerAdapter(new AdapterLit());
+        registerAdapter(new AdapterOrientable());
     }
 
     private void registerAdapter(@Nonnull Adapter<?> adapter) {
