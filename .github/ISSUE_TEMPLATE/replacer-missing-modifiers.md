@@ -10,7 +10,7 @@ assignees: ''
 **What block is missing modifiers**
 Candle
 
-**What modifiers are missing**
+**What modifier is missing**
 Number of candles
 
 **Describe the modifier if needed**
