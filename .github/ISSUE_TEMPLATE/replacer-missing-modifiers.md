@@ -11,10 +11,10 @@ assignees: ''
 Candle
 
 **What modifiers are missing**
-Candle amount
+Number of candles
 
 **Describe the modifier if needed**
-There should be a button to change the amount of candles, from 1 to 4
+There should be a button to change the number of candles, from 1 to 4
 
 **Preferred modifier Slot**
 10
