@@ -27,7 +27,6 @@ public class ItemCreator {
     private int amount;
     private int customModelData;
     private String headTexture;
-    private String nbt;
     private Color armorColor;
 
     private final Player player;
@@ -163,10 +162,6 @@ public class ItemCreator {
             builder.setHeadTextureUrl(headTexture);
         }
 
-        if (nbt != null) {
-            builder.setNbt(nbt);
-        }
-
         if (armorColor != null) {
             builder.setLeatherArmorColor(armorColor);
         }
@@ -231,14 +226,6 @@ public class ItemCreator {
     public AttributeModifier getAttributeModifierOrCompute(LinkedAttribute attribute) {
         final Attribute link = attribute.getLink();
         return attributes.computeIfAbsent(link, m -> new AttributeModifier(attribute.name(), 0.0d, AttributeModifier.Operation.ADD_NUMBER));
-    }
-
-    public void setNbt(String string) {
-        this.nbt = string;
-    }
-
-    public String getNbt() {
-        return nbt;
     }
 
     public void setArmorColor(Color color) {

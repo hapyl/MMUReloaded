@@ -58,7 +58,7 @@ public class SpecialBlocks extends Feature implements Listener {
         final World world = block.getWorld();
 
         world.playSound(location, blockData.getSoundGroup().getBreakSound(), 1, 1);
-        world.spawnParticle(Particle.BLOCK_CRACK, location, 1, 0, 0, 0, 1, blockData);
+        world.spawnParticle(Particle.BLOCK, location, 1, 0, 0, 0, 1, blockData);
 
         // If holding a special block, cancel the event and replace the block instead.
         // This is done because most of the special blocks will break upon update.

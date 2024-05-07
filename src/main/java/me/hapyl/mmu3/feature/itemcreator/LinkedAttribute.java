@@ -21,7 +21,7 @@ public enum LinkedAttribute {
     ARMOR(Attribute.GENERIC_ARMOR, Material.IRON_CHESTPLATE, "Armor bonus of an Entity.S"),
     ARMOR_TOUGHNESS(Attribute.GENERIC_ARMOR_TOUGHNESS, Material.IRON_BLOCK, "Armor durability bonus of an Entity."),
     LUCK(Attribute.GENERIC_LUCK, Material.BIG_DRIPLEAF, "Luck bonus of an Entity."),
-    HORSE_JUMP_STRENGTH(Attribute.HORSE_JUMP_STRENGTH, Material.LEATHER_HORSE_ARMOR, "Strength with which a horse will jump."),
+    HORSE_JUMP_STRENGTH(Attribute.GENERIC_JUMP_STRENGTH, Material.LEATHER_HORSE_ARMOR, "Strength with which a horse will jump."),
     ZOMBIE_SPAWN_REINFORCEMENTS(Attribute.ZOMBIE_SPAWN_REINFORCEMENTS, Material.ZOMBIE_HEAD, "Chance of a zombie to spawn reinforcements.");
 
     private final Attribute link;

@@ -66,14 +66,69 @@ public class ItemCommand extends SimplePlayerAdminCommand {
                 "&aName: &3name(&bYour Name&3)",
                 "&aLore: &3lore(&bThis is lore, And another line&3)",
                 "&aSmart Lore: &3smart(&bSmart lore automatically splits the lore lines!&3)",
-                "&aEnchants: &3enchant(&bsharpness:2&3) enchant(&bunbreaking:10&3, &blooting:69&3, &bthorns:420&3)",
-                "&aNBT: &3nbt(&bDamage: 123&3) &3nbt(&bTags: [\"TagList\"]&3)"
+                "&aEnchants: &3enchant(&bsharpness:2&3) enchant(&bunbreaking:10&3, &blooting:69&3, &bthorns:420&3)"
         );
 
     }
 
-    private void setHelp(Help help, String... strings) {
-        helpPages.put(help, strings);
+    public boolean parseArgumentsAndApply(Player player, ItemBuilder builder, String string) {
+        final String nameSubstring = findBetween(string, "name");
+        final String loreSubstring = findBetween(string, "lore");
+        final String smartLoreSubstring = findBetween(string, "smart");
+        final String enchantSubstring = findBetween(string, "enchant");
+
+        // Process name
+        if (nameSubstring != null) {
+            builder.setName(nameSubstring);
+        }
+
+        // Process lore
+        if (loreSubstring != null) {
+            if (loreSubstring.contains(",")) {
+                final String[] lines = loreSubstring.split(",");
+                for (String line : lines) {
+                    builder.addLore(line.trim());
+                }
+            }
+            else {
+                builder.addLore(loreSubstring);
+            }
+        }
+
+        if (smartLoreSubstring != null) {
+            builder.addSmartLore(smartLoreSubstring);
+        }
+
+        // Process enchants
+        if (enchantSubstring != null) {
+            final String[] enchants = (enchantSubstring.contains(",") ? enchantSubstring.split(",") : new String[] { enchantSubstring });
+            for (String str : enchants) {
+                if (!str.contains(":")) {
+                    Message.error(player, "Unable to parse %s as enchant! Missing %s.", str, ":");
+                    Message.error(player, "Example: sharpness:5");
+                    return false;
+                }
+
+                final String[] split = str.split(":");
+                final Enchantment enchantment = getEnchantByName(split[0]);
+                final int lvl = NumberConversions.toInt(split[1]);
+
+                if (enchantment == null) {
+                    Message.error(player, "%s is invalid enchantment!", split[0]);
+                    getSimilarString(getEnchantNames(), split[0], player);
+                    return false;
+                }
+
+                if (lvl <= 0 || lvl >= Short.MAX_VALUE) {
+                    Message.error(player, "Enchantment level cannot be less than 0 or more greater than %s.", Short.MAX_VALUE);
+                    return false;
+                }
+
+                builder.addEnchant(enchantment, lvl);
+            }
+        }
+
+        return true;
     }
 
     @Override
@@ -160,75 +215,14 @@ public class ItemCommand extends SimplePlayerAdminCommand {
     @Override
     protected List<String> tabComplete(CommandSender sender, String[] args) {
         if (args.length >= 2) {
-            return completerSort(Lists.newArrayList("name()", "lore()", "smart()", "enchant()", "nbt()"), args);
+            return completerSort(Lists.newArrayList("name()", "lore()", "smart()", "enchant()"), args);
         }
 
         return super.tabComplete(sender, args);
     }
 
-    public boolean parseArgumentsAndApply(Player player, ItemBuilder builder, String string) {
-        final String nameSubstring = findBetween(string, "name");
-        final String loreSubstring = findBetween(string, "lore");
-        final String smartLoreSubstring = findBetween(string, "smart");
-        final String enchantSubstring = findBetween(string, "enchant");
-        final String nbtSubstring = findBetween(string, "nbt");
-
-        // Process name
-        if (nameSubstring != null) {
-            builder.setName(nameSubstring);
-        }
-
-        // Process lore
-        if (loreSubstring != null) {
-            if (loreSubstring.contains(",")) {
-                final String[] lines = loreSubstring.split(",");
-                for (String line : lines) {
-                    builder.addLore(line.trim());
-                }
-            }
-            else {
-                builder.addLore(loreSubstring);
-            }
-        }
-
-        if (smartLoreSubstring != null) {
-            builder.addSmartLore(smartLoreSubstring);
-        }
-
-        // Process enchants
-        if (enchantSubstring != null) {
-            final String[] enchants = (enchantSubstring.contains(",") ? enchantSubstring.split(",") : new String[] { enchantSubstring });
-            for (String str : enchants) {
-                if (!str.contains(":")) {
-                    Message.error(player, "Unable to parse %s as enchant! Missing %s.", str, ":");
-                    Message.error(player, "Example: sharpness:5");
-                    return false;
-                }
-
-                final String[] split = str.split(":");
-                final Enchantment enchantment = getEnchantByName(split[0]);
-                final int lvl = NumberConversions.toInt(split[1]);
-
-                if (enchantment == null) {
-                    Message.error(player, "%s is invalid enchantment!", split[0]);
-                    getSimilarString(getEnchantNames(), split[0], player);
-                    return false;
-                }
-
-                if (lvl <= 0 || lvl >= Short.MAX_VALUE) {
-                    Message.error(player, "Enchantment level cannot be less than 0 or more greater than %s.", Short.MAX_VALUE);
-                    return false;
-                }
-
-                builder.addEnchant(enchantment, lvl);
-            }
-        }
-
-        if (nbtSubstring != null) {
-            builder.setNbt(nbtSubstring);
-        }
-
-        return true;
+    private void setHelp(Help help, String... strings) {
+        helpPages.put(help, strings);
     }
 
     @Nullable
@@ -259,7 +253,7 @@ public class ItemCommand extends SimplePlayerAdminCommand {
     private void getSimilarString(Object[] values, String str, Player player) {
         final String similar = getSimilarString(values, str);
         if (similar != null) {
-            Message.error(player, "Did you meant %s?", similar);
+            Message.error(player, "Did you mean %s?", similar);
         }
     }
 

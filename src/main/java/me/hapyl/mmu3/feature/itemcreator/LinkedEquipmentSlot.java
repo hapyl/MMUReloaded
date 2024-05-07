@@ -14,7 +14,9 @@ public enum LinkedEquipmentSlot {
     FEET(EquipmentSlot.FEET, Material.IRON_BOOTS, "Boots"),
     LEGS(EquipmentSlot.LEGS, Material.IRON_LEGGINGS, "Leggings"),
     CHEST(EquipmentSlot.CHEST, Material.IRON_CHESTPLATE, "Chestplate"),
-    HEAD(EquipmentSlot.HEAD, Material.IRON_HELMET, "Helmet");
+    HEAD(EquipmentSlot.HEAD, Material.IRON_HELMET, "Helmet"),
+    BODY(EquipmentSlot.BODY, Material.LEATHER_HORSE_ARMOR, "Body (Non-player)"),
+    ;
 
     private final EquipmentSlot link;
     private final Material material;
@@ -38,6 +40,7 @@ public enum LinkedEquipmentSlot {
             case LEGS -> LinkedEquipmentSlot.LEGS;
             case CHEST -> LinkedEquipmentSlot.CHEST;
             case HEAD -> LinkedEquipmentSlot.HEAD;
+            case BODY -> LinkedEquipmentSlot.BODY;
         };
     }
 
