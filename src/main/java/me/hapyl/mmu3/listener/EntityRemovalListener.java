@@ -50,7 +50,7 @@ public class EntityRemovalListener implements Listener {
 
     private boolean isInstantRemove(EntityType type) {
         return switch (type) {
-            case ENDER_CRYSTAL, PRIMED_TNT -> true;
+            case END_CRYSTAL, TNT -> true;
             default -> false;
         };
     }

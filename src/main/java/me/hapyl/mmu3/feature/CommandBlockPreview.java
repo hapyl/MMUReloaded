@@ -114,7 +114,7 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
 
         try {
             final TileEntityCommand tile = (TileEntityCommand) FieldUtils.readField(commandBlock, "tileEntity", true);
-            if (!tile.f()) {
+            if (!tile.c()) {
                 return ChatColor.WHITE;
             }
         } catch (Exception e) {
