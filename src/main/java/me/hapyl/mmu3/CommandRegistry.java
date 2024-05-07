@@ -53,7 +53,6 @@ public class CommandRegistry {
         register(new CommandBlockPreviewCommand("commandBlockPreview"));
         register(new ParticleCommand("particles"));
         register(new FindEmptyCommandBlocksCommand("findEmptyCommandBlocks"));
-        register(new NBTCommand("nbt"));
         register(new TeleportShortcutCommand(">"));
         register(new NightVisionCommand("nightvision"));
         register(new WatcherCommand("watcher"));
