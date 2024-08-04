@@ -105,6 +105,7 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
 
     private ChatColor getColor(Player player) {
         final Block block = player.getTargetBlockExact(50);
+
         if (!isCommandBlock(block)) {
             return ChatColor.WHITE;
         }
@@ -114,7 +115,9 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
 
         try {
             final TileEntityCommand tile = (TileEntityCommand) FieldUtils.readField(commandBlock, "tileEntity", true);
-            if (!tile.c()) {
+            final boolean isAutomatic = tile.d();
+
+            if (!isAutomatic) {
                 return ChatColor.WHITE;
             }
         } catch (Exception e) {
