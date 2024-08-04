@@ -1,6 +1,6 @@
 # A plugin with a lot of utilities for builders and map makers.
 
-> MMUReloaded is always supported for the newest Minecraft version.
+> MMUReloaded is always supported for the newest Minecraft version & for **Paper** only!
 
 ### *This plugin is ment to be used only on creative and build servers!*
 
