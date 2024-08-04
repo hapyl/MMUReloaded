@@ -6,7 +6,6 @@
 
 # Installation:
 
-- Download [ProtocolLib](https://ci.dmulloy2.net/job/ProtocolLib/) and put it in your `/plugins` folder.
 - Download [EternaAPI](https://github.com/hapyl/EternaAPI/releases) and put it in your `/plugins` folder.
 - Download the plugin and put it in your `/plugins` folder.
 
