@@ -36,7 +36,7 @@ public class Main extends JavaPlugin {
         instance = this;
 
         // Initiate API
-        eternaAPI = new EternaAPI(this, "2.50.0");
+        eternaAPI = new EternaAPI(this, "4.1.1");
 
         // Register Commands
         new CommandRegistry(this);
