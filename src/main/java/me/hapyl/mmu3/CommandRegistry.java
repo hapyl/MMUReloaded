@@ -70,7 +70,7 @@ public class CommandRegistry {
         register(new TrimCommand("trim"));
         register(new WaterlogCommand("waterlog"));
         register(new WikiCommand("mmuWiki"));
-
+        register(new BannerEditorCommand("bannerEditor"));
     }
 
     private void registerTestCommand(String command, BiConsumer<Player, String[]> consumer) {
