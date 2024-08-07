@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.feature;
 
-import me.hapyl.spigotutils.module.reflect.Reflect;
+import me.hapyl.eterna.module.reflect.Reflect;
 import net.minecraft.network.protocol.game.PacketPlayOutGameStateChange;
 import org.bukkit.entity.Player;
 

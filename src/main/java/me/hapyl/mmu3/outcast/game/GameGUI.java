@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.outcast.game;
 
 import me.hapyl.mmu3.utils.PanelGUI;
-import me.hapyl.spigotutils.module.inventory.gui.CancelType;
+import me.hapyl.eterna.module.inventory.gui.CancelType;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;

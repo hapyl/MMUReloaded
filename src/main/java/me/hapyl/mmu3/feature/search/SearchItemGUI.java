@@ -1,9 +1,9 @@
 package me.hapyl.mmu3.feature.search;
 
 import me.hapyl.mmu3.Main;
-import me.hapyl.spigotutils.module.inventory.gui.CancelType;
-import me.hapyl.spigotutils.module.inventory.gui.PlayerPageGUI;
-import me.hapyl.spigotutils.module.inventory.gui.Properties;
+import me.hapyl.eterna.module.inventory.gui.CancelType;
+import me.hapyl.eterna.module.inventory.gui.PlayerPageGUI;
+import me.hapyl.eterna.module.inventory.gui.Properties;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

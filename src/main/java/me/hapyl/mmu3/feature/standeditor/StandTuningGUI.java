@@ -2,8 +2,8 @@ package me.hapyl.mmu3.feature.standeditor;
 
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.spigotutils.module.inventory.ItemBuilder;
-import me.hapyl.spigotutils.module.inventory.gui.PlayerGUI;
+import me.hapyl.eterna.module.inventory.ItemBuilder;
+import me.hapyl.eterna.module.inventory.gui.PlayerGUI;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 

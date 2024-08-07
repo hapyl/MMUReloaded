@@ -1,8 +1,8 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
-import me.hapyl.spigotutils.module.chat.Chat;
-import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.eterna.module.chat.Chat;
+import me.hapyl.eterna.module.inventory.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.block.data.type.Bamboo;
 import org.bukkit.entity.Player;

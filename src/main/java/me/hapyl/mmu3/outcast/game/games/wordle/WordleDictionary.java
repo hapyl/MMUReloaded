@@ -2,7 +2,7 @@ package me.hapyl.mmu3.outcast.game.games.wordle;
 
 import com.google.common.collect.Lists;
 import me.hapyl.mmu3.Main;
-import me.hapyl.spigotutils.module.util.CollectionUtils;
+import me.hapyl.eterna.module.util.CollectionUtils;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;

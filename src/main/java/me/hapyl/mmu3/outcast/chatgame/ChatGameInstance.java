@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.outcast.chatgame;
 
 import com.google.common.collect.Maps;
-import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.eterna.module.chat.Chat;
 import org.bukkit.entity.Player;
 
 import java.util.Map;

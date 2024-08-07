@@ -3,7 +3,7 @@ package me.hapyl.mmu3.listener;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.utils.InjectListener;
-import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.eterna.module.chat.Chat;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntitySpawnEvent;

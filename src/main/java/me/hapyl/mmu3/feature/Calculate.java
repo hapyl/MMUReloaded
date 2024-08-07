@@ -2,9 +2,9 @@ package me.hapyl.mmu3.feature;
 
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.spigotutils.module.chat.Chat;
-import me.hapyl.spigotutils.module.chat.LazyClickEvent;
-import me.hapyl.spigotutils.module.chat.LazyHoverEvent;
+import me.hapyl.eterna.module.chat.Chat;
+import me.hapyl.eterna.module.chat.LazyClickEvent;
+import me.hapyl.eterna.module.chat.LazyHoverEvent;
 import org.bukkit.entity.Player;
 
 public class Calculate extends Feature {

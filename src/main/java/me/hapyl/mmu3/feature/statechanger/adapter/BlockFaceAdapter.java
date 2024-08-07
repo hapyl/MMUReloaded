@@ -2,7 +2,7 @@ package me.hapyl.mmu3.feature.statechanger.adapter;
 
 import com.google.common.collect.Maps;
 import me.hapyl.mmu3.utils.Direction;
-import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.eterna.module.chat.Chat;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;

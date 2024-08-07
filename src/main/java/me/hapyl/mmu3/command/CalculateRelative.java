@@ -2,12 +2,12 @@ package me.hapyl.mmu3.command;
 
 import com.google.common.collect.Maps;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.spigotutils.module.chat.Chat;
-import me.hapyl.spigotutils.module.chat.LazyClickEvent;
-import me.hapyl.spigotutils.module.chat.LazyHoverEvent;
-import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
-import me.hapyl.spigotutils.module.util.BukkitUtils;
-import me.hapyl.spigotutils.module.util.Validate;
+import me.hapyl.eterna.module.chat.Chat;
+import me.hapyl.eterna.module.chat.LazyClickEvent;
+import me.hapyl.eterna.module.chat.LazyHoverEvent;
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.util.BukkitUtils;
+import me.hapyl.eterna.module.util.Validate;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 

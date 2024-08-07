@@ -1,8 +1,8 @@
 package me.hapyl.mmu3.command;
 
-import me.hapyl.spigotutils.module.chat.Chat;
-import me.hapyl.spigotutils.module.command.SimpleCommand;
-import me.hapyl.spigotutils.module.util.ArgumentList;
+import me.hapyl.eterna.module.chat.Chat;
+import me.hapyl.eterna.module.command.SimpleCommand;
+import me.hapyl.eterna.module.util.ArgumentList;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

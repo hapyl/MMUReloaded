@@ -2,9 +2,9 @@ package me.hapyl.mmu3.command;
 
 import com.google.common.collect.Maps;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
-import me.hapyl.spigotutils.module.util.CollectionUtils;
-import me.hapyl.spigotutils.module.util.Wrap;
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.util.CollectionUtils;
+import me.hapyl.eterna.module.util.Wrap;
 import org.bukkit.Keyed;
 import org.bukkit.Tag;
 import org.bukkit.entity.Player;

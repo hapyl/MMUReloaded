@@ -2,8 +2,8 @@ package me.hapyl.mmu3.feature.itemcreator.gui;
 
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.utils.PanelGUI;
-import me.hapyl.spigotutils.module.inventory.ItemBuilder;
-import me.hapyl.spigotutils.module.math.Numbers;
+import me.hapyl.eterna.module.inventory.ItemBuilder;
+import me.hapyl.eterna.module.math.Numbers;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

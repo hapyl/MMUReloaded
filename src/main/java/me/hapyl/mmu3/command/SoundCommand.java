@@ -1,14 +1,14 @@
 package me.hapyl.mmu3.command;
 
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.spigotutils.module.chat.Chat;
-import me.hapyl.spigotutils.module.chat.LazyClickEvent;
-import me.hapyl.spigotutils.module.chat.LazyEvent;
-import me.hapyl.spigotutils.module.chat.LazyHoverEvent;
-import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
-import me.hapyl.spigotutils.module.math.Numbers;
-import me.hapyl.spigotutils.module.player.PlayerLib;
-import me.hapyl.spigotutils.module.util.Validate;
+import me.hapyl.eterna.module.chat.Chat;
+import me.hapyl.eterna.module.chat.LazyClickEvent;
+import me.hapyl.eterna.module.chat.LazyEvent;
+import me.hapyl.eterna.module.chat.LazyHoverEvent;
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.math.Numbers;
+import me.hapyl.eterna.module.player.PlayerLib;
+import me.hapyl.eterna.module.util.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;

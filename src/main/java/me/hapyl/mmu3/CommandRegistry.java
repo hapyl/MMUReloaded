@@ -2,9 +2,9 @@ package me.hapyl.mmu3;
 
 import me.hapyl.mmu3.command.*;
 import me.hapyl.mmu3.command.brush.BrushCommand;
-import me.hapyl.spigotutils.module.command.CommandProcessor;
-import me.hapyl.spigotutils.module.command.SimpleCommand;
-import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.command.CommandProcessor;
+import me.hapyl.eterna.module.command.SimpleCommand;
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import org.bukkit.entity.Player;
 
 import java.util.function.BiConsumer;

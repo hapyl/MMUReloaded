@@ -3,8 +3,8 @@ package me.hapyl.mmu3.command;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.outcast.game.Arguments;
 import me.hapyl.mmu3.outcast.game.Games;
-import me.hapyl.spigotutils.module.command.SimplePlayerCommand;
-import me.hapyl.spigotutils.module.util.Validate;
+import me.hapyl.eterna.module.command.SimplePlayerCommand;
+import me.hapyl.eterna.module.util.Validate;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

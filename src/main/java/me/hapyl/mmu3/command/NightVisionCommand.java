@@ -1,8 +1,8 @@
 package me.hapyl.mmu3.command;
 
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
-import me.hapyl.spigotutils.module.player.PlayerLib;
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.player.PlayerLib;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 

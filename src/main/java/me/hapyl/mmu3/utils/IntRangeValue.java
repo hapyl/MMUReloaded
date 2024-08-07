@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.utils;
 
-import me.hapyl.spigotutils.module.util.ThreadRandom;
+import me.hapyl.eterna.module.util.ThreadRandom;
 
 public class IntRangeValue {
 

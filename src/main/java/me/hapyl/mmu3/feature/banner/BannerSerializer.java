@@ -1,8 +1,8 @@
 package me.hapyl.mmu3.feature.banner;
 
 import me.hapyl.mmu3.utils.SensitiveInput;
-import me.hapyl.spigotutils.module.inventory.ItemBuilder;
-import me.hapyl.spigotutils.module.math.Numbers;
+import me.hapyl.eterna.module.inventory.ItemBuilder;
+import me.hapyl.eterna.module.math.Numbers;
 import org.apache.commons.lang.SerializationException;
 import org.bukkit.DyeColor;
 import org.bukkit.block.banner.Pattern;
