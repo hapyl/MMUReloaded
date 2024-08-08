@@ -13,7 +13,7 @@ import me.hapyl.mmu3.feature.statechanger.StateChangerListener;
 import me.hapyl.mmu3.listener.EntityListener;
 import me.hapyl.mmu3.listener.EntityRemovalListener;
 import me.hapyl.mmu3.listener.PlayerListener;
-import me.hapyl.spigotutils.EternaAPI;
+import me.hapyl.eterna.EternaAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;

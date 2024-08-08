@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.feature.trim;
 
-import me.hapyl.spigotutils.module.util.Enums;
+import me.hapyl.eterna.module.util.Enums;
 
 public enum TrimMode {
 

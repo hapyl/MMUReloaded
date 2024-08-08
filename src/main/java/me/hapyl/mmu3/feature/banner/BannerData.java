@@ -2,8 +2,8 @@ package me.hapyl.mmu3.feature.banner;
 
 import com.google.common.collect.Lists;
 import me.hapyl.mmu3.utils.Sized;
-import me.hapyl.spigotutils.module.chat.Chat;
-import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.eterna.module.chat.Chat;
+import me.hapyl.eterna.module.inventory.ItemBuilder;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.inventory.ItemStack;
 import org.joml.Math;

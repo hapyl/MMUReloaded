@@ -2,7 +2,7 @@ package me.hapyl.mmu3.feature.specialblocks;
 
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.utils.PanelGUI;
-import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.eterna.module.inventory.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

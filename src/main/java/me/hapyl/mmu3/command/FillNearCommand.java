@@ -4,12 +4,12 @@ import me.hapyl.mmu3.feature.UndoManager;
 import me.hapyl.mmu3.feature.block.BlockChange;
 import me.hapyl.mmu3.feature.block.BlockManipulations;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.spigotutils.module.chat.Chat;
-import me.hapyl.spigotutils.module.chat.LazyEvent;
-import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
-import me.hapyl.spigotutils.module.math.Cuboid;
-import me.hapyl.spigotutils.module.math.Numbers;
-import me.hapyl.spigotutils.module.util.Validate;
+import me.hapyl.eterna.module.chat.Chat;
+import me.hapyl.eterna.module.chat.LazyEvent;
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.math.Cuboid;
+import me.hapyl.eterna.module.math.Numbers;
+import me.hapyl.eterna.module.util.Validate;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 

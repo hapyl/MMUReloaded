@@ -1,9 +1,9 @@
 package me.hapyl.mmu3.command;
 
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.spigotutils.module.chat.Chat;
-import me.hapyl.spigotutils.module.chat.LazyEvent;
-import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.chat.Chat;
+import me.hapyl.eterna.module.chat.LazyEvent;
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

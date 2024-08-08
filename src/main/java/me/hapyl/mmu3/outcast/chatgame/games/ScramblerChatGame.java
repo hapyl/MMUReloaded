@@ -3,7 +3,7 @@ package me.hapyl.mmu3.outcast.chatgame.games;
 import me.hapyl.mmu3.outcast.chatgame.ChatGame;
 import me.hapyl.mmu3.outcast.chatgame.ChatGameInstance;
 import me.hapyl.mmu3.outcast.game.Arguments;
-import me.hapyl.spigotutils.module.util.CollectionUtils;
+import me.hapyl.eterna.module.util.CollectionUtils;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.TimeUnit;

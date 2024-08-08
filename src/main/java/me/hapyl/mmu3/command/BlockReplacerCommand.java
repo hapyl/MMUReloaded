@@ -3,7 +3,7 @@ package me.hapyl.mmu3.command;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.block.BlockReplacer;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

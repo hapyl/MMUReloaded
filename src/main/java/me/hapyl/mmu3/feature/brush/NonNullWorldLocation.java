@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.feature.brush;
 
-import me.hapyl.spigotutils.module.util.BukkitUtils;
+import me.hapyl.eterna.module.util.BukkitUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 

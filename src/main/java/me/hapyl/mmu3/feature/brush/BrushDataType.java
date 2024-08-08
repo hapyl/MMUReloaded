@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.feature.brush;
 
-import me.hapyl.spigotutils.module.util.TypeConverter;
+import me.hapyl.eterna.module.util.TypeConverter;
 
 import javax.annotation.Nonnull;
 

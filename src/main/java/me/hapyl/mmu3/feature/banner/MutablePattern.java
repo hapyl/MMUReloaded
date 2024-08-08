@@ -1,8 +1,8 @@
 package me.hapyl.mmu3.feature.banner;
 
 import com.google.common.collect.Maps;
-import me.hapyl.spigotutils.module.chat.Chat;
-import me.hapyl.spigotutils.module.util.ColorConverter;
+import me.hapyl.eterna.module.chat.Chat;
+import me.hapyl.eterna.module.util.ColorConverter;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.banner.Pattern;

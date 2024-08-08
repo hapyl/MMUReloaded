@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.command.worldedit;
 
-import me.hapyl.spigotutils.module.chat.Chat;
-import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.chat.Chat;
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;

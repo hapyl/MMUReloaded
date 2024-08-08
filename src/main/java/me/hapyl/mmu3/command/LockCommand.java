@@ -1,8 +1,8 @@
 package me.hapyl.mmu3.command;
 
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.spigotutils.module.chat.Chat;
-import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.chat.Chat;
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import org.apache.commons.lang.RandomStringUtils;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;

@@ -2,7 +2,7 @@ package me.hapyl.mmu3.command;
 
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.activity.WorldActivity;
-import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import org.bukkit.entity.Player;
 
 public class ActivityCommand extends SimplePlayerAdminCommand {

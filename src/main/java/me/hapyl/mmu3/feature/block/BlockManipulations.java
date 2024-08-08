@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.feature.block;
 
-import me.hapyl.spigotutils.module.math.Cuboid;
+import me.hapyl.eterna.module.math.Cuboid;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 

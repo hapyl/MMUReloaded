@@ -3,9 +3,9 @@ package me.hapyl.mmu3.command;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.bb.BoundingBoxManager;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.spigotutils.module.chat.LazyEvent;
-import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
-import me.hapyl.spigotutils.module.reflect.BoundingBox;
+import me.hapyl.eterna.module.chat.LazyEvent;
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.reflect.BoundingBox;
 import org.bukkit.entity.Player;
 
 public class BoundingBoxCommand extends SimplePlayerAdminCommand {

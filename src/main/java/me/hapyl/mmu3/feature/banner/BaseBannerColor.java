@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.feature.banner;
 
-import me.hapyl.spigotutils.module.util.ColorConverter;
+import me.hapyl.eterna.module.util.ColorConverter;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;

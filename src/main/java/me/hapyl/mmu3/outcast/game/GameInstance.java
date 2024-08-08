@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.outcast.game;
 
-import me.hapyl.spigotutils.module.inventory.gui.Action;
-import me.hapyl.spigotutils.module.util.Runnables;
+import me.hapyl.eterna.module.inventory.gui.Action;
+import me.hapyl.eterna.module.util.Runnables;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;

@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.feature;
 
 import me.hapyl.mmu3.Main;
-import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.eterna.module.chat.Chat;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;

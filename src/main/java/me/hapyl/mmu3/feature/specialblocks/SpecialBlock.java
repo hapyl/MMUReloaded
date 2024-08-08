@@ -2,10 +2,10 @@ package me.hapyl.mmu3.feature.specialblocks;
 
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.spigotutils.module.chat.Chat;
-import me.hapyl.spigotutils.module.inventory.ItemBuilder;
-import me.hapyl.spigotutils.module.inventory.ItemEventHandler;
-import me.hapyl.spigotutils.module.math.Numbers;
+import me.hapyl.eterna.module.chat.Chat;
+import me.hapyl.eterna.module.inventory.ItemBuilder;
+import me.hapyl.eterna.module.inventory.ItemEventHandler;
+import me.hapyl.eterna.module.math.Numbers;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;

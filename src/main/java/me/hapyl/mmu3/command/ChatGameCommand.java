@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.command;
 
 import me.hapyl.mmu3.outcast.chatgame.ChatGames;
-import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import org.bukkit.entity.Player;
 
 public class ChatGameCommand extends SimplePlayerAdminCommand {

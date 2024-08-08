@@ -1,8 +1,8 @@
 package me.hapyl.mmu3.command.worldedit;
 
 import me.hapyl.mmu3.Main;
-import me.hapyl.spigotutils.module.command.CommandProcessor;
-import me.hapyl.spigotutils.module.util.DependencyInjector;
+import me.hapyl.eterna.module.command.CommandProcessor;
+import me.hapyl.eterna.module.util.DependencyInjector;
 
 public class WorldEditShortcutRegistry extends DependencyInjector<Main> {
 

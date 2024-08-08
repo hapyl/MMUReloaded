@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.outcast.game.games.wordle;
 
-import me.hapyl.spigotutils.module.inventory.ItemBuilder;
+import me.hapyl.eterna.module.inventory.ItemBuilder;
 import org.bukkit.inventory.ItemStack;
 
 public enum WordleAlphabet {

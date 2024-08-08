@@ -1,10 +1,10 @@
 package me.hapyl.mmu3.feature.designer;
 
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.spigotutils.module.inventory.gui.CancelType;
-import me.hapyl.spigotutils.module.inventory.gui.PlayerGUI;
-import me.hapyl.spigotutils.module.inventory.gui.Properties;
-import me.hapyl.spigotutils.module.math.Numbers;
+import me.hapyl.eterna.module.inventory.gui.CancelType;
+import me.hapyl.eterna.module.inventory.gui.PlayerGUI;
+import me.hapyl.eterna.module.inventory.gui.Properties;
+import me.hapyl.eterna.module.math.Numbers;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

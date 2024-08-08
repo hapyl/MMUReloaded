@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.feature.dye;
 
-import me.hapyl.spigotutils.module.util.Holder;
+import me.hapyl.eterna.module.util.Holder;
 import org.bukkit.entity.Player;
 
 public class ArmorData extends Holder<Player> {

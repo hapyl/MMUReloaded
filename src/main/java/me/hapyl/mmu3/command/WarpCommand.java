@@ -4,7 +4,7 @@ import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.warp.Warp;
 import me.hapyl.mmu3.feature.warp.Warps;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

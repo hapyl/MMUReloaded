@@ -4,7 +4,7 @@ import com.google.common.collect.Sets;
 import me.hapyl.mmu3.feature.UndoManager;
 import me.hapyl.mmu3.feature.block.BlockChangeQueue;
 import me.hapyl.mmu3.feature.block.MultiBlockChange;
-import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.eterna.module.chat.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

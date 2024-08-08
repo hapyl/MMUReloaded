@@ -3,7 +3,7 @@ package me.hapyl.mmu3.command;
 import me.hapyl.mmu3.feature.UndoManager;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.feature.block.BlockChangeQueue;
-import me.hapyl.spigotutils.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import org.bukkit.entity.Player;
 
 public class MmuUndoCommand extends SimplePlayerAdminCommand {

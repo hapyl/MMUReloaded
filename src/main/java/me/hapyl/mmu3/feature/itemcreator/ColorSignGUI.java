@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.feature.itemcreator;
 
-import me.hapyl.spigotutils.module.inventory.Response;
-import me.hapyl.spigotutils.module.inventory.SignGUI;
+import me.hapyl.eterna.module.inventory.Response;
+import me.hapyl.eterna.module.inventory.SignGUI;
 import org.bukkit.Color;
 import org.bukkit.entity.Player;
 

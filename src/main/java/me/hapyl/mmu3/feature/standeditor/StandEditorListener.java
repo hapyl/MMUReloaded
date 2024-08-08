@@ -3,7 +3,7 @@ package me.hapyl.mmu3.feature.standeditor;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.utils.InjectListener;
-import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.eterna.module.chat.Chat;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;

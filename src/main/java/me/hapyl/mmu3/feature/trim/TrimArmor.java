@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.feature.trim;
 
-import me.hapyl.spigotutils.module.chat.Chat;
+import me.hapyl.eterna.module.chat.Chat;
 import org.bukkit.Material;
 
 import javax.annotation.Nonnull;

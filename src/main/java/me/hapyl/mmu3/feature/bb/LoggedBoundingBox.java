@@ -1,9 +1,9 @@
 package me.hapyl.mmu3.feature.bb;
 
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.spigotutils.module.player.PlayerLib;
-import me.hapyl.spigotutils.module.reflect.BoundingBox;
-import me.hapyl.spigotutils.module.util.BukkitUtils;
+import me.hapyl.eterna.module.player.PlayerLib;
+import me.hapyl.eterna.module.reflect.BoundingBox;
+import me.hapyl.eterna.module.util.BukkitUtils;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
