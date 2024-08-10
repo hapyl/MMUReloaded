@@ -1,6 +1,7 @@
 package me.hapyl.mmu3.feature.banner;
 
 import com.google.common.collect.Lists;
+import me.hapyl.eterna.module.util.BukkitUtils;
 import me.hapyl.mmu3.utils.Sized;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
@@ -40,7 +41,7 @@ public class BannerData implements Sized {
             if (data) {
                 builder.addLore("Patterns:");
                 subList.forEach(pattern -> {
-                    builder.addLore("› " + Chat.capitalize(pattern.getPattern()));
+                    builder.addLore("› " + Chat.capitalize(BukkitUtils.getKey(pattern.getPattern()).getKey()));
                 });
             }
         }

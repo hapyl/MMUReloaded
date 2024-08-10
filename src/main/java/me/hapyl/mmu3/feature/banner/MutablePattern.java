@@ -2,6 +2,7 @@ package me.hapyl.mmu3.feature.banner;
 
 import com.google.common.collect.Maps;
 import me.hapyl.eterna.module.chat.Chat;
+import me.hapyl.eterna.module.util.BukkitUtils;
 import me.hapyl.eterna.module.util.ColorConverter;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -97,7 +98,7 @@ public class MutablePattern {
 
     @Nonnull
     public String getPatternName() {
-        return Chat.capitalize(pattern);
+        return Chat.capitalize(BukkitUtils.getKey(pattern).getKey());
     }
 
     @Nonnull
