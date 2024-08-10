@@ -71,6 +71,7 @@ public class CommandRegistry {
         register(new WaterlogCommand("waterlog"));
         register(new WikiCommand("mmuWiki"));
         register(new BannerEditorCommand("bannerEditor"));
+        register(new SpawnDisplaySkullCommand("spawnSkullDisplay"));
     }
 
     private void registerTestCommand(String command, BiConsumer<Player, String[]> consumer) {

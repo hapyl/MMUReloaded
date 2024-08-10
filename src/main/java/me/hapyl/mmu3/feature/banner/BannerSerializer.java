@@ -1,8 +1,8 @@
 package me.hapyl.mmu3.feature.banner;
 
-import me.hapyl.mmu3.utils.SensitiveInput;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.math.Numbers;
+import me.hapyl.mmu3.utils.SensitiveInput;
 import org.apache.commons.lang.SerializationException;
 import org.bukkit.DyeColor;
 import org.bukkit.block.banner.Pattern;
@@ -42,7 +42,7 @@ public final class BannerSerializer {
         for (int i = 1; i < layerSplits.length; i++) {
             final String[] patternSplits = layerSplits[i].split(":");
 
-            final PatternType pattern = enumByOrdinal(PatternType.class, stringToInt(patternSplits[0]));
+            final PatternType pattern = patternTypeByOrdinal(stringToInt(patternSplits[0]));
             final DyeColor color = enumByOrdinal(DyeColor.class, stringToInt(patternSplits[1]));
 
             builder.addBannerPattern(pattern, color);
@@ -58,6 +58,11 @@ public final class BannerSerializer {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    // backwards compatibility my ass
+    private static PatternType patternTypeByOrdinal(int i) {
+        return PatternType.values()[i];
     }
 
     private static <E extends Enum<E>> E enumByOrdinal(Class<E> enumClass, int ordinal) {

@@ -1,21 +1,26 @@
 package me.hapyl.mmu3.feature.banner;
 
-import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.utils.PanelGUI;
+import com.google.common.collect.Lists;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.inventory.gui.GUI;
 import me.hapyl.eterna.module.inventory.gui.SlotPattern;
 import me.hapyl.eterna.module.inventory.gui.SmartComponent;
 import me.hapyl.eterna.module.util.ColorConverter;
+import me.hapyl.mmu3.Main;
+import me.hapyl.mmu3.utils.PanelGUI;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.Registry;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 public class BannerEditorLayerGUI extends PanelGUI {
 
@@ -55,7 +60,8 @@ public class BannerEditorLayerGUI extends PanelGUI {
                         .addLore()
                         .addLore("&eClick to change")
                         .build(),
-                player -> new SelectGUI<>("Select Pattern", PatternType.class, Size.FIVE) {
+                // Jesus fuck name one person in the fucking world who asked for them to change them from being a fucking enum
+                player -> new SelectGUI<>("Select Pattern", Registry.BANNER_PATTERN.iterator(), Size.FIVE) {
                     @Nonnull
                     @Override
                     protected SelectResponse of(int index, @Nonnull PatternType type) {
@@ -65,7 +71,7 @@ public class BannerEditorLayerGUI extends PanelGUI {
                             public ItemStack getItemStack(int i) {
                                 return data.builder()
                                         .setPattern(type, pattern.getColor())
-                                        .setName(Chat.capitalize(type))
+                                        .setName(Chat.capitalize(type.getKey().getKey()))
                                         .build();
                             }
 
@@ -85,7 +91,7 @@ public class BannerEditorLayerGUI extends PanelGUI {
                         .addLore()
                         .addLore("&eClick to change")
                         .asIcon(),
-                player -> new SelectGUI<>("Select Color", DyeColor.class, Size.TWO) {
+                player -> new SelectGUI<>("Select Color", DyeColor.values(), Size.TWO) {
                     @Nonnull
                     @Override
                     protected SelectResponse of(int index, @Nonnull DyeColor color) {
@@ -146,24 +152,41 @@ public class BannerEditorLayerGUI extends PanelGUI {
 
     }
 
-    private abstract class SelectGUI<E extends Enum<E>> extends PanelGUI {
+    private static <E> List<E> arrayToList(E[] array) {
+        return Arrays.asList(array);
+    }
 
-        private final Class<E> clazz;
+    private static <E> List<E> iteratorToList(Iterator<E> iterator) {
+        final List<E> list = Lists.newArrayList();
 
-        public SelectGUI(String name, Class<E> clazz, Size size) {
+        iterator.forEachRemaining(list::add);
+        return list;
+    }
+
+    private abstract class SelectGUI<E> extends PanelGUI {
+
+        private final List<E> list;
+
+        public SelectGUI(String name, E[] iterable, Size size) {
             super(BannerEditorLayerGUI.this.player, name, size);
 
-            this.clazz = clazz;
+            this.list = List.of(iterable);
+            this.updateInventory();
+        }
+
+        public SelectGUI(String name, Iterator<E> iterable, Size size) {
+            super(BannerEditorLayerGUI.this.player, name, size);
+
+            this.list = iteratorToList(iterable);
             this.updateInventory();
         }
 
         @Override
         public void updateInventory() {
-            final E[] enums = clazz.getEnumConstants();
             final SmartComponent component = newSmartComponent();
 
-            for (int i = 0; i < enums.length; i++) {
-                final E e = enums[i];
+            for (int i = 0; i < list.size(); i++) {
+                final E e = list.get(i);
                 final SelectResponse response = of(i, e);
 
                 component.add(response.getItemStack(i), player -> {
