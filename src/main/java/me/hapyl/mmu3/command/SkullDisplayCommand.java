@@ -1,10 +1,15 @@
 package me.hapyl.mmu3.command;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
+import com.google.common.collect.Maps;
+import me.hapyl.eterna.module.chat.LazyEvent;
 import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import me.hapyl.eterna.module.entity.Entities;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
+import me.hapyl.eterna.module.util.Runnables;
 import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.utils.Revertible;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -15,17 +20,23 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.util.Vector;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public class SkullDisplayCommand extends SimplePlayerAdminCommand {
 
     // TODO (Sat, Aug 10 2024 @xanyjl): Maybe bind to F or something but works for now
+
+    private final Map<UUID, Revertible> latestChange;
 
     public SkullDisplayCommand(String name) {
         super(name);
 
         setDescription("Allows spawning or changing head textures as item displays to later move via Axiom.");
         addCompleterValues(0, "spawn", "replace");
+
+        this.latestChange = Maps.newHashMap();
     }
 
     @Override
@@ -75,6 +86,18 @@ public class SkullDisplayCommand extends SimplePlayerAdminCommand {
                 replaceDisplay(player, display, skullMeta);
             }
 
+            case "undo" -> {
+                final Revertible revertible = latestChange.remove(player.getUniqueId());
+
+                if (revertible == null) {
+                    Message.error(player, "Nothing to undo!");
+                    return;
+                }
+
+                revertible.revert();
+                Message.success(player, "Reverted latest change!");
+            }
+
             default -> {
                 Message.error(player, "Invalid argument!");
             }
@@ -83,13 +106,19 @@ public class SkullDisplayCommand extends SimplePlayerAdminCommand {
 
     private void replaceDisplay(Player player, Display display, SkullMeta skullItem) {
         if (display instanceof ItemDisplay itemDisplay) {
+            final ItemStack revert = itemDisplay.getItemStack();
+            latestChange.put(player.getUniqueId(), () -> itemDisplay.setItemStack(revert));
+
             itemDisplay.setItemStack(asItem(skullItem));
         }
         else if (display instanceof BlockDisplay blockDisplay) {
+            final BlockData revert = blockDisplay.getBlock();
+            latestChange.put(player.getUniqueId(), () -> blockDisplay.setBlock(revert));
+
             blockDisplay.setBlock(asBlockData(skullItem));
         }
 
-        Message.success(player, "Replaced!");
+        Message.clickHover(player, LazyEvent.runCommand(getUsage().toLowerCase() + " undo"), LazyEvent.showText("&eClick to undo!"), "&aReplaced! &6&lUNDO");
     }
 
     private Display getTargetDisplay(Player player) {
@@ -104,17 +133,27 @@ public class SkullDisplayCommand extends SimplePlayerAdminCommand {
 
             location.add(x, y, z);
 
-            final Optional<Display> display = world.getNearbyEntitiesByType(Display.class, location, 0.5d, 0.5d)
+            final Optional<Display> optionalDisplay = world.getNearbyEntitiesByType(Display.class, location, 0.3d, 0.3d)
                     .stream()
                     .min((o1, o2) -> {
                         final double d1 = o1.getLocation().distance(location);
                         final double d2 = o2.getLocation().distance(location);
 
-                        return Double.compare(d2, d1);
+                        return Double.compare(d1, d2);
                     });
 
-            if (display.isPresent()) {
-                return display.get();
+            if (optionalDisplay.isPresent()) {
+                final Display display = optionalDisplay.get();
+
+                display.setGlowColorOverride(Color.ORANGE);
+                display.setGlowing(true);
+
+                Runnables.runLater(() -> {
+                    display.setGlowColorOverride(null);
+                    display.setGlowing(false);
+                }, 20);
+
+                return display;
             }
 
             location.subtract(x, y, z);
