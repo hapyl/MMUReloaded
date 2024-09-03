@@ -1,10 +1,10 @@
 package me.hapyl.mmu3.command;
 
 import com.google.common.collect.Lists;
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
-import me.hapyl.eterna.module.util.Validate;
+import me.hapyl.eterna.module.util.Enums;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.WeatherType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -40,7 +40,8 @@ public class PersonalWeatherCommand extends SimplePlayerAdminCommand {
             return;
         }
 
-        final WeatherType type = Validate.getEnumValue(WeatherType.class, args[0]);
+        final WeatherType type = Enums.byName(WeatherType.class, args[0]);
+
         if (type == null) {
             Message.error(player, "%s is invalid weather type!", args[0]);
             return;

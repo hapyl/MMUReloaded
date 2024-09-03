@@ -1,9 +1,9 @@
 package me.hapyl.mmu3.command;
 
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import me.hapyl.eterna.module.math.Numbers;
-import me.hapyl.eterna.module.util.Validate;
+import me.hapyl.eterna.module.util.Enums;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -27,7 +27,7 @@ public class SpeedCommand extends SimplePlayerAdminCommand {
     }
 
     public void setSpeed(Player player, Type type, float speed) {
-        speed = Numbers.clamp(speed, 0.0f, 1.0f);
+        speed = Math.clamp(speed, 0.0f, 1.0f);
         if (type == Type.FLYING) {
             player.setFlySpeed(speed);
         }
@@ -68,19 +68,19 @@ public class SpeedCommand extends SimplePlayerAdminCommand {
                 resetSpeed(player, getSpeedType(player));
             }
             else {
-                setSpeed(player, Validate.getFloat(args[0]));
+                setSpeed(player, Numbers.getFloat(args[0]));
             }
             return;
         }
 
-        final Type type = Validate.getEnumValue(Type.class, args[0]);
+        final Type type = Enums.byName(Type.class, args[0]);
 
         if (args[1].equalsIgnoreCase("reset")) {
             resetSpeed(player, type);
             return;
         }
 
-        float speed = Validate.getFloat(args[1]);
+        float speed = Numbers.getFloat(args[1]);
         final Player target = args.length >= 3 ? Bukkit.getPlayer(args[2]) : player;
 
         if (type == null) {
@@ -104,7 +104,6 @@ public class SpeedCommand extends SimplePlayerAdminCommand {
         }
 
     }
-
 
     private enum Type {
         WALKING(0.2f),

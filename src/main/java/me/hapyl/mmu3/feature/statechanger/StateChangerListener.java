@@ -1,8 +1,8 @@
 package me.hapyl.mmu3.feature.statechanger;
 
+import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.utils.InjectListener;
-import me.hapyl.eterna.module.inventory.ItemBuilder;
 import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -29,13 +29,12 @@ public class StateChangerListener extends InjectListener {
                 || clickedBlock == null
                 || action == Action.PHYSICAL
                 || item == null
-                || !ItemBuilder.itemContainsId(item, "state_changer")) {
+                || !ItemBuilder.compareItemKey(item, StateChanger.ITEM_KEY)) {
             return;
         }
 
         ev.setCancelled(true);
         stateChanger().openEditor(player, clickedBlock);
-
     }
 
 }

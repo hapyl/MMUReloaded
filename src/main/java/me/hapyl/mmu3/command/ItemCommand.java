@@ -2,13 +2,12 @@ package me.hapyl.mmu3.command;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.chat.LazyEvent;
 import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.util.Enums;
-import me.hapyl.eterna.module.util.Validate;
+import me.hapyl.mmu3.message.Message;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -153,7 +152,7 @@ public class ItemCommand extends SimplePlayerAdminCommand {
         // Parse material
         if (arg.contains(":")) {
             final String[] split = arg.split(":");
-            material = Validate.getEnumValue(Material.class, split[0]);
+            material = Enums.byName(Material.class, split[0]);
             amount = NumberConversions.toInt(split[1]);
         }
         // Check for self to modify items
@@ -165,14 +164,14 @@ public class ItemCommand extends SimplePlayerAdminCommand {
         }
         // Default to arg parsing
         else {
-            material = Validate.getEnumValue(Material.class, arg);
+            material = Enums.byName(Material.class, arg);
         }
 
         if (material == null) {
             // Try finding similar material
             final String similarString = getSimilarString(Material.values(), arg);
             if (similarString != null) {
-                final Material similarMaterial = Validate.getEnumValue(Material.class, similarString);
+                final Material similarMaterial = Enums.byName(Material.class, similarString);
                 if (similarMaterial != null) {
                     material = similarMaterial;
                     Message.error(player, "Could not find %s material, using %s instead.", arg, Chat.capitalize(similarMaterial));

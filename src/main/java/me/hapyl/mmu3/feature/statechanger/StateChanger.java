@@ -1,6 +1,7 @@
 package me.hapyl.mmu3.feature.statechanger;
 
 import com.google.common.collect.Maps;
+import me.hapyl.eterna.module.registry.Key;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
 import me.hapyl.mmu3.feature.statechanger.adapter.*;
@@ -25,9 +26,11 @@ import java.util.Map;
 
 public class StateChanger extends Feature {
 
+    public static final Key ITEM_KEY = Key.ofString("state_changer");
+
     private final Map<Class<?>, Adapter<?>> adapters;
 
-    private final ItemStack baseItem = new ItemBuilder(Material.SHEARS, "state_changer")
+    private final ItemStack baseItem = new ItemBuilder(Material.SHEARS, ITEM_KEY)
             .setName("&aState Changer")
             .addSmartLore(
                     "What looks like a normal pair or shears is actually an ancient item, used to modify shapes and forms of blocks. The unknown origin of this item makes it even more mysterious.",

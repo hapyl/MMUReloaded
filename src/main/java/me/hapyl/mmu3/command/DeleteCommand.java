@@ -1,10 +1,10 @@
 package me.hapyl.mmu3.command;
 
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import me.hapyl.eterna.module.math.Numbers;
-import me.hapyl.eterna.module.util.Validate;
+import me.hapyl.eterna.module.util.Enums;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -26,8 +26,8 @@ public class DeleteCommand extends SimplePlayerAdminCommand {
 
         addCompleterHandler(1, "&a&nWill delete: {}", "&c&nInvalid entity: {}!");
         addCompleterHandler(2, (player, arg, args) -> {
-            if (Validate.isInt(arg)) {
-                final int i = Validate.getInt(arg);
+            if (Numbers.isInt(arg)) {
+                final int i = Numbers.getInt(arg);
                 if (i < 1) {
                     return "&c&nToo little: {}!";
                 } else if (i > maxDeleteRadius) {
@@ -48,7 +48,7 @@ public class DeleteCommand extends SimplePlayerAdminCommand {
             return;
         }
 
-        final EntityType entity = Validate.getEnumValue(EntityType.class, args[0]);
+        final EntityType entity = Enums.byName(EntityType.class, args[0]);
         final int radius = args.length > 1 ? Numbers.getInt(args[1], 1) : 5;
 
         if (entity == null || entity == EntityType.PLAYER) {

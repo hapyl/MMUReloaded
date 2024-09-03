@@ -1,6 +1,5 @@
 package me.hapyl.mmu3.command;
 
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.chat.LazyClickEvent;
 import me.hapyl.eterna.module.chat.LazyEvent;
@@ -8,7 +7,8 @@ import me.hapyl.eterna.module.chat.LazyHoverEvent;
 import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import me.hapyl.eterna.module.math.Numbers;
 import me.hapyl.eterna.module.player.PlayerLib;
-import me.hapyl.eterna.module.util.Validate;
+import me.hapyl.eterna.module.util.Enums;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -31,8 +31,8 @@ public class SoundCommand extends SimplePlayerAdminCommand {
         // sound command (Sound) (Pitch)
         if (args.length >= 1) {
             if (args[0].equalsIgnoreCase("command") && (args.length == 3)) {
-                final Sound sound = Validate.getEnumValue(Sound.class, args[1]);
-                final float pitch = Numbers.clamp(Validate.getFloat(args[2]), 0.0f, 2.0f);
+                final Sound sound = Enums.byName(Sound.class, args[1]);
+                final float pitch = Math.clamp(Numbers.getFloat(args[2]), 0.0f, 2.0f);
 
                 if (sound == null) {
                     Message.error(player, "Invalid sound.");
@@ -80,8 +80,8 @@ public class SoundCommand extends SimplePlayerAdminCommand {
                 return;
             }
 
-            final Sound sound = Validate.getEnumValue(Sound.class, args[0]);
-            final float pitch = args.length >= 2 ? Numbers.clamp(Validate.getFloat(args[1]), 0.0f, 2.0f) : 1.0f;
+            final Sound sound = Enums.byName(Sound.class, args[0]);
+            final float pitch = args.length >= 2 ? Math.clamp(Numbers.getFloat(args[1]), 0.0f, 2.0f) : 1.0f;
             final boolean playAll = args.length >= 3 && (args[2].equalsIgnoreCase("all") || args[2].equalsIgnoreCase("a"));
 
             if (sound == null) {

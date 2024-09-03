@@ -1,13 +1,13 @@
 package me.hapyl.mmu3.command;
 
 import com.google.common.collect.Maps;
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.chat.LazyClickEvent;
 import me.hapyl.eterna.module.chat.LazyHoverEvent;
 import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import me.hapyl.eterna.module.util.BukkitUtils;
-import me.hapyl.eterna.module.util.Validate;
+import me.hapyl.eterna.module.util.CollectionUtils;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -28,7 +28,7 @@ public class CalculateRelative extends SimplePlayerAdminCommand {
     protected void execute(Player player, String[] strings) {
         Location location = player.getLocation();
 
-        if (Validate.checkArrayString(strings, 0, "c", "center")) {
+        if (CollectionUtils.contains(strings, "c") || CollectionUtils.contains(strings, "center")) {
             location = BukkitUtils.centerLocation(location).subtract(0.0d, 0.5d, 0.0d);
         }
 

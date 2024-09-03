@@ -1,11 +1,11 @@
 package me.hapyl.mmu3.feature.specialblocks;
 
-import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.inventory.ItemEventHandler;
-import me.hapyl.eterna.module.math.Numbers;
+import me.hapyl.eterna.module.registry.Key;
+import me.hapyl.mmu3.Main;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -22,18 +22,21 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.annotation.Nonnull;
+
 public class SpecialBlock {
+
+    public static final String KEY_PREFIX = "0special_block_";
 
     private static final String SPECIAL_BLOCK_INFO2 = """
             &8Special Block, %s
-                        
+            
             Place to transform into &a%s&7!
-                        
+            
             Use &e/specialBlocks&7 to browse all special blocks.
-                        
+            
             &8;;Breaking a block while holding a special block will cause no updates.
             """;
-
     private final int slot;
     private final String name;
     private final Material icon;
@@ -47,7 +50,7 @@ public class SpecialBlock {
         this.name = ChatColor.GREEN + name;
         this.icon = icon;
         this.glow = glow;
-        this.id = "sb." + id;
+        this.id = KEY_PREFIX + id;
 
         final String blockInfo = SPECIAL_BLOCK_INFO2.formatted(Chat.capitalize(type), this.name);
 
@@ -58,12 +61,12 @@ public class SpecialBlock {
                 .predicate(glow, ItemBuilder::glow)
                 .build();
 
-        this.itemReal = new ItemBuilder(block, this.id)
+        this.itemReal = new ItemBuilder(block, Key.ofString(this.id))
                 .setName(this.name)
                 .addTextBlockLore(blockInfo)
                 .setEventHandler(new ItemEventHandler() {
                     @Override
-                    public void onBlockPlace(Player player, BlockPlaceEvent ev) {
+                    public void onBlockPlace(@Nonnull Player player, @Nonnull BlockPlaceEvent ev) {
                         ev.setCancelled(true);
                         ev.setBuild(false);
                         SpecialBlock.this.acceptEvent(ev);
@@ -111,11 +114,11 @@ public class SpecialBlock {
 
         setBlock(state, material);
         if (data instanceof Snow snow) {
-            snow.setLayers(Numbers.clamp(lvl, snow.getMinimumLayers(), snow.getMaximumLayers()));
+            snow.setLayers(Math.clamp(lvl, snow.getMinimumLayers(), snow.getMaximumLayers()));
         }
 
         if (data instanceof Levelled levelled) {
-            levelled.setLevel(Numbers.clamp(lvl, 0, levelled.getMaximumLevel()));
+            levelled.setLevel(Math.clamp(lvl, 0, levelled.getMaximumLevel()));
         }
 
         setBlock(state, data);
@@ -166,8 +169,8 @@ public class SpecialBlock {
     }
 
     public static boolean isSpecialBlock(ItemStack handItem) {
-        final String id = ItemBuilder.getItemID(handItem);
+        final Key key = ItemBuilder.getItemKey(handItem);
 
-        return id != null && id.contains("sb.");
+        return !key.isEmpty() && key.getKey().startsWith(KEY_PREFIX);
     }
 }

@@ -2,13 +2,14 @@ package me.hapyl.mmu3.command.brush;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import me.hapyl.eterna.module.chat.Chat;
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.math.Numbers;
+import me.hapyl.eterna.module.util.Enums;
+import me.hapyl.eterna.module.util.Wrap;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.brush.*;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.eterna.module.chat.Chat;
-import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
-import me.hapyl.eterna.module.util.Validate;
-import me.hapyl.eterna.module.util.Wrap;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -169,7 +170,7 @@ public class BrushCommand extends SimplePlayerAdminCommand {
             }
 
             case "undo", "u" -> {
-                final int times = args.length == 2 ? Validate.getInt(args[1]) : 1;
+                final int times = args.length == 2 ? Numbers.getInt(args[1]) : 1;
                 final int undid = playerBrush.undo(times);
 
                 if (undid == 0) {
@@ -197,7 +198,7 @@ public class BrushCommand extends SimplePlayerAdminCommand {
                 final Set<Material> newMask = Sets.newHashSet();
 
                 for (int i = 1; i < args.length; i++) {
-                    final Material material = Validate.getEnumValue(Material.class, args[i]);
+                    final Material material = Enums.byName(Material.class, args[i]);
 
                     if (material == null || !material.isBlock()) {
                         Message.error(player, "%s is invalid material or not a block!", args[i]);
@@ -216,7 +217,7 @@ public class BrushCommand extends SimplePlayerAdminCommand {
         }
 
         // ** Brush Type change
-        final Brushes brush = Validate.getEnumValue(Brushes.class, firstArgument);
+        final Brushes brush = Enums.byName(Brushes.class, firstArgument);
 
         if (brush != null) {
             trySetBrush(playerBrush, brush);
@@ -224,7 +225,7 @@ public class BrushCommand extends SimplePlayerAdminCommand {
         }
 
         // ** Brush Size change
-        final int size = Validate.getInt(firstArgument);
+        final int size = Numbers.getInt(firstArgument);
 
         if (size > 0 && size < 50) {
             trySetSize(playerBrush, size);
@@ -232,7 +233,7 @@ public class BrushCommand extends SimplePlayerAdminCommand {
         }
 
         // ** Brush Material change
-        final Material material = Validate.getEnumValue(Material.class, firstArgument);
+        final Material material = Enums.byName(Material.class, firstArgument);
 
         if (material != null) {
             trySetMaterial(playerBrush, material);

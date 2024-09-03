@@ -1,15 +1,15 @@
 package me.hapyl.mmu3.command;
 
-import me.hapyl.mmu3.feature.UndoManager;
-import me.hapyl.mmu3.feature.block.BlockChange;
-import me.hapyl.mmu3.feature.block.BlockManipulations;
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.chat.LazyEvent;
 import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import me.hapyl.eterna.module.math.Cuboid;
 import me.hapyl.eterna.module.math.Numbers;
-import me.hapyl.eterna.module.util.Validate;
+import me.hapyl.eterna.module.util.Enums;
+import me.hapyl.mmu3.feature.UndoManager;
+import me.hapyl.mmu3.feature.block.BlockChange;
+import me.hapyl.mmu3.feature.block.BlockManipulations;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -32,8 +32,8 @@ public class FillNearCommand extends SimplePlayerAdminCommand {
         addCompleterValues(3, blocks);
 
         addCompleterHandler(1, (player, arg) -> {
-            if (Validate.isInt(arg)) {
-                final int i = Validate.getInt(arg);
+            if (Numbers.isInt(arg)) {
+                final int i = Numbers.getInt(arg);
 
                 if (i < 1) {
                     return "&c&nRadius cannot be less than 1!";
@@ -57,8 +57,8 @@ public class FillNearCommand extends SimplePlayerAdminCommand {
         }
 
         final int radius = Numbers.getInt(args[0], 5);
-        final Material from = Validate.getEnumValue(Material.class, args[1]);
-        final Material to = args.length > 2 ? Validate.getEnumValue(Material.class, args[2]) : Material.POTATO;
+        final Material from = Enums.byName(Material.class, args[1]);
+        final Material to = args.length > 2 ? Enums.byName(Material.class, args[2]) : Material.POTATO;
 
         if (radius < 1) {
             Message.error(player, "Radius must be at least 1.");

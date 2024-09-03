@@ -1,9 +1,9 @@
 package me.hapyl.mmu3.command;
 
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
-import me.hapyl.eterna.module.util.Validate;
+import me.hapyl.eterna.module.util.Enums;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -36,7 +36,7 @@ public class NumericIdCommand extends SimplePlayerAdminCommand {
             }
         }
         else {
-            item = new ItemStack(Validate.getEnumValue(Material.class, args[0], Material.AIR));
+            item = new ItemStack(Enums.byName(Material.class, args[0], Material.AIR));
         }
 
         if (item == null || item.getType().isAir()) {
@@ -53,7 +53,7 @@ public class NumericIdCommand extends SimplePlayerAdminCommand {
     }
 
     private int getNumericId(ItemStack item) {
-        final Material legacy = Validate.getEnumValue(Material.class, "LEGACY_" + item.getType().name());
+        final Material legacy = Enums.byName(Material.class, "LEGACY_" + item.getType().name());
         return legacy == null ? -1 : legacy.getId();
     }
 }
