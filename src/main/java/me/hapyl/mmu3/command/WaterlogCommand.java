@@ -1,12 +1,12 @@
 package me.hapyl.mmu3.command;
 
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.math.Cuboid;
+import me.hapyl.eterna.module.math.Numbers;
 import me.hapyl.mmu3.feature.UndoManager;
 import me.hapyl.mmu3.feature.block.BlockChangeQueue;
 import me.hapyl.mmu3.feature.block.MultiBlockChange;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
-import me.hapyl.eterna.module.math.Cuboid;
-import me.hapyl.eterna.module.util.Validate;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Player;
@@ -20,11 +20,11 @@ public class WaterlogCommand extends SimplePlayerAdminCommand {
         super(name);
         setDescription("Allows toggling water in blocks.");
         addCompleterHandler(1, (player, arg, args) -> {
-            if (!Validate.isInt(arg)) {
+            if (!Numbers.isInt(arg)) {
                 return "&cMust be an integer!";
             }
 
-            final int radius = Validate.getInt(arg);
+            final int radius = Numbers.getInt(arg);
 
             if (radius < minRadius) {
                 return "&c&nToo small!";

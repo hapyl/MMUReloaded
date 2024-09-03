@@ -1,10 +1,10 @@
 package me.hapyl.mmu3.command;
 
 import com.google.common.collect.Sets;
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
-import me.hapyl.eterna.module.util.Validate;
+import me.hapyl.eterna.module.util.Enums;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -54,7 +54,7 @@ public class SightBlockCommand extends SimplePlayerAdminCommand {
             arg = arg.substring(0, arg.lastIndexOf("["));
         }
 
-        final Material material = Validate.getEnumValue(Material.class, arg);
+        final Material material = Enums.byName(Material.class, arg);
         if (material == null) {
             Message.error(player, "%s is invalid material!", arg);
             return;

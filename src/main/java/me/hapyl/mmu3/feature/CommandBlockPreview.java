@@ -1,15 +1,15 @@
 package me.hapyl.mmu3.feature;
 
 import com.google.common.collect.Sets;
-import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.PersistentPlayerData;
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.chat.LazyEvent;
 import me.hapyl.eterna.module.entity.packet.NMSEntityType;
+import me.hapyl.eterna.module.math.Numbers;
 import me.hapyl.eterna.module.reflect.Reflect;
 import me.hapyl.eterna.module.util.Nulls;
-import me.hapyl.eterna.module.util.Validate;
+import me.hapyl.mmu3.Main;
+import me.hapyl.mmu3.PersistentPlayerData;
+import me.hapyl.mmu3.message.Message;
 import net.minecraft.world.entity.monster.EntityShulker;
 import net.minecraft.world.level.block.entity.TileEntityCommand;
 import org.apache.commons.lang.StringUtils;
@@ -236,7 +236,7 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
 
     private boolean containsNumbers(String str) {
         for (char c : str.toCharArray()) {
-            if (Validate.isInt(c) || Validate.isFloat(c) || Validate.isDouble(c) || Validate.isShort(c)) {
+            if (Numbers.isInt(c) || Numbers.isFloat(c) || Numbers.isDouble(c) || Numbers.isShort(c)) {
                 return true;
             }
         }

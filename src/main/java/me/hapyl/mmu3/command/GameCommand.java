@@ -1,10 +1,10 @@
 package me.hapyl.mmu3.command;
 
+import me.hapyl.eterna.module.command.SimplePlayerCommand;
+import me.hapyl.eterna.module.util.Enums;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.outcast.game.Arguments;
 import me.hapyl.mmu3.outcast.game.Games;
-import me.hapyl.eterna.module.command.SimplePlayerCommand;
-import me.hapyl.eterna.module.util.Validate;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -23,7 +23,7 @@ public class GameCommand extends SimplePlayerCommand {
             return;
         }
 
-        final Games game = Validate.getEnumValue(Games.class, args[0]);
+        final Games game = Enums.byName(Games.class, args[0]);
         if (game == null) {
             Message.error(player, "Invalid game.");
             return;

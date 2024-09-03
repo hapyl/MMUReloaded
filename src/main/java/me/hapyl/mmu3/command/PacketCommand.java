@@ -1,11 +1,10 @@
 package me.hapyl.mmu3.command;
 
-import me.hapyl.mmu3.feature.PlayerPacket;
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import me.hapyl.eterna.module.util.Enums;
-import me.hapyl.eterna.module.util.Validate;
+import me.hapyl.mmu3.feature.PlayerPacket;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -26,7 +25,7 @@ public class PacketCommand extends SimplePlayerAdminCommand {
             return;
         }
 
-        final PlayerPacket packet = Validate.getEnumValue(PlayerPacket.class, args[0]);
+        final PlayerPacket packet = Enums.byName(PlayerPacket.class, args[0]);
         final Player target = args.length > 1 ? Bukkit.getPlayer(args[1]) : player;
 
         if (packet == null) {

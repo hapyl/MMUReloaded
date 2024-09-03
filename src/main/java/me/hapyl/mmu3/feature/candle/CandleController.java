@@ -1,6 +1,7 @@
 package me.hapyl.mmu3.feature.candle;
 
 import com.google.common.collect.Maps;
+import me.hapyl.eterna.module.registry.Key;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
 import me.hapyl.mmu3.message.Message;
@@ -35,18 +36,18 @@ public class CandleController extends Feature implements Listener {
 
     private final Map<UUID, Data> playerData;
 
-    private final ItemStack CANDLE_ITEM = new ItemBuilder(Material.TORCH, "mmu3_Candle")
+    private final ItemStack CANDLE_ITEM = new ItemBuilder(Material.TORCH, Key.ofString("mmu3_candle"))
             .setName("&aCandle")
             .addSmartLore("Place on a block to create a candle. Left click to change candle texture.")
             .addClickEvent(CandleGUI::new, Action.LEFT_CLICK_AIR, Action.LEFT_CLICK_BLOCK)
             .setEventHandler(new ItemEventHandler() {
                 @Override
-                public void onLeftClick(Player player, PlayerInteractEvent ev) {
+                public void onLeftClick(@Nonnull Player player, @Nonnull PlayerInteractEvent ev) {
                     ev.setCancelled(true);
                 }
 
                 @Override
-                public void onBlockPlace(Player player, BlockPlaceEvent ev) {
+                public void onBlockPlace(@Nonnull Player player, @Nonnull BlockPlaceEvent ev) {
                     final Block block = ev.getBlock();
                     final Location location = block.getLocation();
                     final Data data = getData(player);

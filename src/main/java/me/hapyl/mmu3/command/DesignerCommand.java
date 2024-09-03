@@ -1,12 +1,11 @@
 package me.hapyl.mmu3.command;
 
+import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
+import me.hapyl.eterna.module.math.Numbers;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.designer.Designer;
 import me.hapyl.mmu3.feature.designer.DesignerGUI;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
-import me.hapyl.eterna.module.math.Numbers;
-import me.hapyl.eterna.module.util.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -43,9 +42,10 @@ public class DesignerCommand extends SimplePlayerAdminCommand {
             return;
         }
 
-        if (Validate.isInt(args[0])) {
-            final int size = Numbers.clamp(Numbers.getInt(args[0], 0), 1, 6);
+        if (Numbers.isInt(args[0])) {
+            final int size = Math.clamp(Numbers.getInt(args[0], 0), 1, 6);
             final DesignerGUI designer = new DesignerGUI(player, size);
+
             manager.setDesigner(player, designer);
             Message.success(player, "Creating new designer with size of %s.", size);
             designer.open(player);
