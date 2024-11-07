@@ -16,9 +16,13 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class SoundCommand extends SimplePlayerAdminCommand {
+
+    private final Registry<Sound> registry = Registry.SOUNDS;
+
     public SoundCommand(String name) {
         super(name);
-        setDescription("Allows to play sounds easily.");
+
+        setDescription("Allows playing sounds easily.");
         setAliases("snd");
     }
 
@@ -28,7 +32,7 @@ public class SoundCommand extends SimplePlayerAdminCommand {
         // sound command (Sound) (Pitch)
         if (args.length >= 1) {
             if (args[0].equalsIgnoreCase("command") && (args.length == 3)) {
-                final Sound sound = Registry.SOUNDS.get(NamespacedKey.minecraft(args[1]));
+                final Sound sound = registry.get(NamespacedKey.minecraft(args[0]));
                 final float pitch = Math.clamp(Numbers.getFloat(args[2]), 0.0f, 2.0f);
 
                 if (sound == null) {
@@ -77,7 +81,7 @@ public class SoundCommand extends SimplePlayerAdminCommand {
                 return;
             }
 
-            final Sound sound = Registry.SOUNDS.get(NamespacedKey.minecraft(args[0]));
+            final Sound sound = registry.get(NamespacedKey.minecraft(args[0]));
             final float pitch = args.length >= 2 ? Math.clamp(Numbers.getFloat(args[1]), 0.0f, 2.0f) : 1.0f;
             final boolean playAll = args.length >= 3 && (args[2].equalsIgnoreCase("all") || args[2].equalsIgnoreCase("a"));
 
@@ -92,7 +96,7 @@ public class SoundCommand extends SimplePlayerAdminCommand {
                         return;
                     }
                     PlayerLib.playSound(pl, sound, pitch);
-                    Message.info(pl, "%s played %s (%s) sound to you.", player.getName(), Chat.capitalize(sound.key().value()), pitch);
+                    Message.info(pl, "%s played %s (%s) sound to you.", player.getName(), getSoundName(sound), pitch);
                 });
             }
 
@@ -101,7 +105,7 @@ public class SoundCommand extends SimplePlayerAdminCommand {
             Message.success(
                     player,
                     "Played %s (%s) sound to %s.",
-                    Chat.capitalize(sound.key().value()),
+                    getSoundName(sound),
                     pitch,
                     !playAll ? "you" : "everyone"
             );
@@ -118,14 +122,24 @@ public class SoundCommand extends SimplePlayerAdminCommand {
         Message.NOT_ENOUGH_ARGUMENTS_EXPECTED_AT_LEAST.send(player, "one");
     }
 
+    private String getSoundName(Sound sound) {
+        if (sound == null) {
+            return "null";
+        }
+
+        final String value = sound.key().value();
+        return Chat.capitalize(value.replace(".", " ").replace("_", " "));
+    }
+
     @Override
     protected List<String> tabComplete(CommandSender sender, String[] args) {
         if (args.length == 1) {
-            return completerSort2(arrayToList(Sound.values()), args);
+            return completerSort2(registry.stream().map(s -> registry.getKeyOrThrow(s).value()).toList(), args);
         }
         else if (args.length == 3) {
             return completerSort(new String[] { "self", "all" }, args);
         }
         return null;
     }
+
 }
