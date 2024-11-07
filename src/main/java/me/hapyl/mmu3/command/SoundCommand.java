@@ -7,11 +7,8 @@ import me.hapyl.eterna.module.chat.LazyHoverEvent;
 import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import me.hapyl.eterna.module.math.Numbers;
 import me.hapyl.eterna.module.player.PlayerLib;
-import me.hapyl.eterna.module.util.Enums;
 import me.hapyl.mmu3.message.Message;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -31,7 +28,7 @@ public class SoundCommand extends SimplePlayerAdminCommand {
         // sound command (Sound) (Pitch)
         if (args.length >= 1) {
             if (args[0].equalsIgnoreCase("command") && (args.length == 3)) {
-                final Sound sound = Enums.byName(Sound.class, args[1]);
+                final Sound sound = Registry.SOUNDS.get(NamespacedKey.minecraft(args[1]));
                 final float pitch = Math.clamp(Numbers.getFloat(args[2]), 0.0f, 2.0f);
 
                 if (sound == null) {
@@ -80,7 +77,7 @@ public class SoundCommand extends SimplePlayerAdminCommand {
                 return;
             }
 
-            final Sound sound = Enums.byName(Sound.class, args[0]);
+            final Sound sound = Registry.SOUNDS.get(NamespacedKey.minecraft(args[0]));
             final float pitch = args.length >= 2 ? Math.clamp(Numbers.getFloat(args[1]), 0.0f, 2.0f) : 1.0f;
             final boolean playAll = args.length >= 3 && (args[2].equalsIgnoreCase("all") || args[2].equalsIgnoreCase("a"));
 
@@ -95,13 +92,19 @@ public class SoundCommand extends SimplePlayerAdminCommand {
                         return;
                     }
                     PlayerLib.playSound(pl, sound, pitch);
-                    Message.info(pl, "%s played %s (%s) sound to you.", player.getName(), Chat.capitalize(sound), pitch);
+                    Message.info(pl, "%s played %s (%s) sound to you.", player.getName(), Chat.capitalize(sound.key().value()), pitch);
                 });
             }
 
             PlayerLib.playSound(player, sound, pitch);
 
-            Message.success(player, "Played %s (%s) sound to %s.", Chat.capitalize(sound), pitch, !playAll ? "you" : "everyone");
+            Message.success(
+                    player,
+                    "Played %s (%s) sound to %s.",
+                    Chat.capitalize(sound.key().value()),
+                    pitch,
+                    !playAll ? "you" : "everyone"
+            );
             Message.clickHover(
                     player,
                     LazyEvent.runCommand("/sound command %s %s".formatted(sound, pitch)),
