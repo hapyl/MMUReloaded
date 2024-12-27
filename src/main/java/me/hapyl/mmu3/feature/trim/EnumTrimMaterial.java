@@ -20,7 +20,8 @@ public enum EnumTrimMaterial implements EnumTrim {
     EMERALD(TrimMaterial.EMERALD, Material.EMERALD),
     DIAMOND(TrimMaterial.DIAMOND, Material.DIAMOND),
     LAPIS(TrimMaterial.LAPIS, Material.LAPIS_LAZULI),
-    AMETHYST(TrimMaterial.AMETHYST, Material.AMETHYST_SHARD);
+    AMETHYST(TrimMaterial.AMETHYST, Material.AMETHYST_SHARD),
+    RESIN(TrimMaterial.RESIN, Material.RESIN_CLUMP);
 
     public final TrimMaterial bukkit;
     public final Material material;

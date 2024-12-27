@@ -28,7 +28,9 @@ public enum EnumTrimPattern implements EnumTrim {
     SHAPER(TrimPattern.SHAPER, Material.SHAPER_ARMOR_TRIM_SMITHING_TEMPLATE),
     SILENCE(TrimPattern.SILENCE, Material.SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE),
     RAISER(TrimPattern.RAISER, Material.RAISER_ARMOR_TRIM_SMITHING_TEMPLATE),
-    HOST(TrimPattern.HOST, Material.HOST_ARMOR_TRIM_SMITHING_TEMPLATE);
+    HOST(TrimPattern.HOST, Material.HOST_ARMOR_TRIM_SMITHING_TEMPLATE),
+    FLOW(TrimPattern.FLOW, Material.FLOW_ARMOR_TRIM_SMITHING_TEMPLATE),
+    BOLT(TrimPattern.BOLT, Material.BOLT_ARMOR_TRIM_SMITHING_TEMPLATE);
 
     public final TrimPattern bukkit;
     public final Material material;
