@@ -6,7 +6,7 @@ import me.hapyl.mmu3.feature.Feature;
 import me.hapyl.mmu3.message.Message;
 import me.hapyl.mmu3.utils.HexId;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
+import org.bukkit.Input;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,8 +22,6 @@ import java.util.Map;
 
 public class TrimManager extends Feature implements Listener {
 
-    private final double DIFFERENCE_THRESHOLD = 0.07d;
-
     private final Map<Player, TrimEditor> trimEditorMap = Maps.newHashMap();
     private final Map<HexId, CachedTrimData> cachedData = Maps.newHashMap();
 
@@ -31,55 +29,37 @@ public class TrimManager extends Feature implements Listener {
         super(plugin);
     }
 
-    @EventHandler()
-    public void handleMovement(PlayerMoveEvent ev) {
+    @EventHandler
+    public void handleControl(PlayerInputEvent ev) {
         final Player player = ev.getPlayer();
-        final Location from = ev.getFrom();
-        final Location to = ev.getTo();
+        final Input input = ev.getInput();
         final TrimEditor editor = trimEditorMap.get(player);
 
-        if (editor == null || to == null) {
+        if (editor == null) {
             return;
         }
-
-        if (editor.inOnCooldown()) {
-            ev.setCancelled(true);
-            return;
-        }
-
-        editor.startCooldown();
-
-        final double zDifference = to.getZ() - from.getZ();
-        final double xDifference = to.getX() - from.getX();
-        final double yDifference = to.getY() - from.getY();
 
         // W & S
-        if (zDifference > DIFFERENCE_THRESHOLD) {
+        if (input.isForward()) {
             editor.previousSlot();
         }
-        else if (zDifference < -DIFFERENCE_THRESHOLD) {
+        else if (input.isBackward()) {
             editor.nextSlot();
         }
-
         // A & D
-        if (xDifference > DIFFERENCE_THRESHOLD) {
+        else if (input.isLeft()) {
             editor.previousEntry();
         }
-        else if (xDifference < -DIFFERENCE_THRESHOLD) {
+        else if (input.isRight()) {
             editor.nextEntry();
         }
-
-        // UP
-        if (yDifference > DIFFERENCE_THRESHOLD) {
+        // Mode
+        else if (input.isJump()) {
             editor.switchMode();
         }
-
-        if (xDifference != 0 || yDifference != 0 || zDifference != 0) {
-            to.setYaw(0.0f);
-            to.setPitch(0.0f);
-
-            ev.setCancelled(true);
-            //player.teleport(to);
+        // Menu
+        else if (input.isSneak()) {
+            editor.openGUI();
         }
     }
 
@@ -131,18 +111,6 @@ public class TrimManager extends Feature implements Listener {
 
         Message.broadcastAdmins("%s left while editing a trim!", player.getName());
         Message.broadcastAdmins("Here's their trim code: %s.", data.getHexId());
-    }
-
-    @EventHandler()
-    public void handleSneak(PlayerToggleSneakEvent ev) {
-        final Player player = ev.getPlayer();
-        final TrimEditor editor = trimEditorMap.get(player);
-
-        if (editor == null) {
-            return;
-        }
-
-        editor.openGUI();
     }
 
     @EventHandler()

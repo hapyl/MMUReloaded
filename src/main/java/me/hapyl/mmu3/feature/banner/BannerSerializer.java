@@ -1,13 +1,17 @@
 package me.hapyl.mmu3.feature.banner;
 
+import io.papermc.paper.registry.RegistryKey;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.math.Numbers;
+import me.hapyl.eterna.module.util.BukkitUtils;
 import me.hapyl.mmu3.utils.SensitiveInput;
 import org.apache.commons.lang.SerializationException;
 import org.bukkit.DyeColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BannerMeta;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,7 +24,13 @@ public final class BannerSerializer {
         final StringBuilder builder = new StringBuilder(data.baseColor.ordinal() + ";");
 
         for (Pattern pattern : data.patterns) {
-            builder.append(pattern.getPattern().ordinal()).append(":").append(pattern.getColor().ordinal()).append(";");
+            final NamespacedKey key = BukkitUtils.getKey(pattern.getPattern());
+
+            builder
+                    .append(key.getKey())
+                    .append(":")
+                    .append(pattern.getColor().ordinal())
+                    .append(";");
         }
 
         return Base64.getEncoder().encodeToString(builder.toString().getBytes());
@@ -36,16 +46,16 @@ public final class BannerSerializer {
         final String[] layerSplits = string.split(";");
 
         final BaseBannerColor baseColor = enumByOrdinal(BaseBannerColor.class, stringToInt(layerSplits[0]));
-
         final ItemBuilder builder = new ItemBuilder(baseColor.material);
 
         for (int i = 1; i < layerSplits.length; i++) {
             final String[] patternSplits = layerSplits[i].split(":");
-
-            final PatternType pattern = patternTypeByOrdinal(stringToInt(patternSplits[0]));
+            final PatternType pattern = BukkitUtils.getKeyed(RegistryKey.BANNER_PATTERN, patternSplits[0], PatternType.BRICKS);
             final DyeColor color = enumByOrdinal(DyeColor.class, stringToInt(patternSplits[1]));
 
-            builder.addBannerPattern(pattern, color);
+            builder.modifyMeta(BannerMeta.class, meta -> {
+                meta.addPattern(new Pattern(color, pattern));
+            });
         }
 
         return builder.build();
@@ -60,10 +70,6 @@ public final class BannerSerializer {
         }
     }
 
-    // backwards compatibility my ass
-    private static PatternType patternTypeByOrdinal(int i) {
-        return PatternType.values()[i];
-    }
 
     private static <E extends Enum<E>> E enumByOrdinal(Class<E> enumClass, int ordinal) {
         final E[] enumConstants = enumClass.getEnumConstants();

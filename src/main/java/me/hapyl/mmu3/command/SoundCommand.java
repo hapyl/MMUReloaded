@@ -32,7 +32,7 @@ public class SoundCommand extends SimplePlayerAdminCommand {
         // sound command (Sound) (Pitch)
         if (args.length >= 1) {
             if (args[0].equalsIgnoreCase("command") && (args.length == 3)) {
-                final Sound sound = registry.get(NamespacedKey.minecraft(args[0]));
+                final Sound sound = registry.get(NamespacedKey.minecraft(args[1]));
                 final float pitch = Math.clamp(Numbers.getFloat(args[2]), 0.0f, 2.0f);
 
                 if (sound == null) {
