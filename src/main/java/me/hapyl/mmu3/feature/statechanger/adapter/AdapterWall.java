@@ -21,7 +21,7 @@ public class AdapterWall extends BlockFaceAdapter<Wall> {
         final boolean isUp = blockData.isUp();
         final Material material = blockData.getMaterial();
 
-        gui.setItem(this, 22, isUp, material, "Is Up", "Whether the well has a center post.");
+        gui.setItem(this, 22, isUp, material, "Is Up", "Whether the wall has a center post.");
         gui.applyState(22, blockData, d -> d.setUp(!isUp));
 
         for (BlockFace face : allowedFaces) {
