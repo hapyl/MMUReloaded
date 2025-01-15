@@ -91,7 +91,7 @@ public class BannerData implements Sized {
 
     @Nonnull
     public ItemStack createFinalItem() {
-        return createFinalBuilder().addLore("&8" + BannerSerializer.serialize(this)).toItemStack();
+        return builder().setPattern(patterns).addLore("&8" + BannerSerializer.serialize(this)).toItemStack();
     }
 
     public void move(int from, int to) {
@@ -106,13 +106,7 @@ public class BannerData implements Sized {
     }
 
     protected ItemBuilder createFinalBuilder() {
-        final ItemBuilder builder = new ItemBuilder(baseColor.material);
-
-        for (Pattern pattern : patterns) {
-            builder.addBannerPattern(pattern.getPattern(), pattern.getColor());
-        }
-
-        return builder;
+        return new BannerItemBuilder(this);
     }
 
     public void removePattern(int index) {

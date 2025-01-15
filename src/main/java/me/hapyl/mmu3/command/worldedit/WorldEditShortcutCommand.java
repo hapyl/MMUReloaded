@@ -19,6 +19,13 @@ public abstract class WorldEditShortcutCommand extends SimplePlayerAdminCommand 
         setDescription("A WorldEdit shortcut commands for " + getShortcut());
     }
 
+    public abstract String getShortcut();
+
+    @Override
+    protected void execute(Player player, String[] strings) {
+        player.performCommand("/" + getShortcut() + " " + Chat.arrayToString(strings, 0));
+    }
+
     public static WorldEditShortcutCommand create(
             @Nonnull String command,
             @Nonnull String shortcut,
@@ -30,13 +37,6 @@ public abstract class WorldEditShortcutCommand extends SimplePlayerAdminCommand 
                 return command;
             }
         };
-    }
-
-    public abstract String getShortcut();
-
-    @Override
-    protected void execute(Player player, String[] strings) {
-        player.performCommand("/" + getShortcut() + " " + Chat.arrayToString(strings, 0));
     }
 
 }

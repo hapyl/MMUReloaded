@@ -23,6 +23,7 @@ public class TrimEditor implements Editor {
     private final Player player;
     private final Location location;
     private final TrimData[] trimData;
+    private final float[] playerSpeed;
 
     private TrimMode trimMode;
     private int slot;
@@ -41,7 +42,14 @@ public class TrimEditor implements Editor {
         location.setPitch(0.0f);
 
         // Prepare player
+        playerSpeed = new float[] {
+                player.getWalkSpeed(),
+                player.getFlySpeed()
+        };
+
         player.teleport(location);
+        player.setFlySpeed(0.0f);
+        player.setWalkSpeed(0.0f);
         player.setAllowFlight(true);
         player.setFlying(true);
 
@@ -49,14 +57,6 @@ public class TrimEditor implements Editor {
         createArmorStands();
 
         showUsage(player);
-    }
-
-    public boolean inOnCooldown() {
-        return player.hasCooldown(Material.ARMOR_STAND);
-    }
-
-    public void startCooldown() {
-        player.setCooldown(Material.ARMOR_STAND, 5);
     }
 
     public void nextEntry() {
@@ -125,7 +125,14 @@ public class TrimEditor implements Editor {
             stand.setGlowing(false);
 
             if (data.isCurrent()) {
-                stand.setGlowing(true);
+                // Don't glow if it's chainmail because you can't see SHIT
+                final Material currentItem = getCurrentItem().getType();
+
+                switch (currentItem) {
+                    case CHAINMAIL_HELMET, CHAINMAIL_CHESTPLATE, CHAINMAIL_LEGGINGS, CHAINMAIL_BOOTS -> {
+                    }
+                    default -> stand.setGlowing(true);
+                }
             }
         }
     }
@@ -160,6 +167,9 @@ public class TrimEditor implements Editor {
         final ItemStack[] itemStack = new ItemStack[4];
 
         trimManager.exitEditor(player);
+
+        player.setWalkSpeed(playerSpeed[0]);
+        player.setFlySpeed(playerSpeed[1]);
 
         for (int i = 0; i < trimData.length; i++) {
             final TrimData data = trimData[i];
@@ -307,13 +317,15 @@ public class TrimEditor implements Editor {
         location.setYaw(-180.0f);
 
         for (int i = 0; i < trimData.length; i++) {
-            final TrimData data = new TrimData(TrimType.values()[i], Entities.ARMOR_STAND_MARKER.spawn(
+            final TrimData data = new TrimData(
+                    TrimType.values()[i], Entities.ARMOR_STAND_MARKER.spawn(
                     location,
                     self -> {
                         self.setVisible(false);
                         self.setSilent(true);
                     }
-            ));
+            )
+            );
 
             trimData[i] = data;
         }

@@ -1,16 +1,16 @@
 package me.hapyl.mmu3.feature.statechanger;
 
 import com.google.common.collect.Maps;
-import me.hapyl.eterna.module.registry.Key;
-import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.feature.Feature;
-import me.hapyl.mmu3.feature.statechanger.adapter.*;
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.chat.Gradient;
 import me.hapyl.eterna.module.chat.gradient.Interpolators;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
+import me.hapyl.eterna.module.registry.Key;
 import me.hapyl.eterna.module.util.ThreadRandom;
+import me.hapyl.mmu3.Main;
+import me.hapyl.mmu3.feature.Feature;
+import me.hapyl.mmu3.feature.statechanger.adapter.*;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -156,6 +156,7 @@ public class StateChanger extends Feature {
         registerAdapter(new AdapterCandle());
         registerAdapter(new AdapterLit());
         registerAdapter(new AdapterOrientable());
+        registerAdapter(new AdapterMossCarpet());
     }
 
     private void registerAdapter(@Nonnull Adapter<?> adapter) {

@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public enum Message {
@@ -102,41 +103,41 @@ public enum Message {
     }
 
     // static members
-    public static void info(Player player, String message, Object... replacements) {
-        raw(player, ChatColor.GRAY, ChatColor.YELLOW, message, replacements);
+    public static void info(CommandSender sender, String message, Object... replacements) {
+        raw(sender, ChatColor.GRAY, ChatColor.YELLOW, message, replacements);
     }
 
-    public static void debug(Player player, String message, Object... replacements) {
-        raw(player, ChatColor.GRAY, ChatColor.RED, message, replacements);
+    public static void debug(CommandSender sender, String message, Object... replacements) {
+        raw(sender, ChatColor.GRAY, ChatColor.RED, message, replacements);
     }
 
     public static void debug(Object message, Object... replacements) {
         Chat.broadcastOp((PREFIX_DEBUG + message).formatted(colorReplacements(ChatColor.GRAY, ChatColor.RED, replacements)));
     }
 
-    public static void success(Player player, String message, Object... replacements) {
-        raw(player, ChatColor.GREEN, ChatColor.DARK_GREEN, message, replacements);
+    public static void success(CommandSender sender, String message, Object... replacements) {
+        raw(sender, ChatColor.GREEN, ChatColor.DARK_GREEN, message, replacements);
     }
 
-    public static void error(Player player, String message, Object... replacements) {
-        raw(player, ChatColor.RED, ChatColor.DARK_RED, message, replacements);
+    public static void error(CommandSender sender, String message, Object... replacements) {
+        raw(sender, ChatColor.RED, ChatColor.DARK_RED, message, replacements);
     }
 
-    public static void severe(Player player, String message, Object... replacements) {
-        raw(player, ChatColor.DARK_RED, ChatColor.BOLD, message, replacements);
+    public static void severe(CommandSender sender, String message, Object... replacements) {
+        raw(sender, ChatColor.DARK_RED, ChatColor.BOLD, message, replacements);
     }
 
-    public static void click(Player player, ClickEvent event, Object prompt, Object... replacements) {
+    public static void click(CommandSender sender, ClickEvent event, Object prompt, Object... replacements) {
         Chat.sendClickableMessage(
-                player,
+                sender,
                 event,
                 (PREFIX + prompt.toString()).formatted(colorReplacements(ChatColor.GRAY, ChatColor.YELLOW, replacements))
         );
     }
 
-    public static void clickHover(Player player, ClickEvent event, HoverEvent eventHover, Object prompt, Object... replacements) {
+    public static void clickHover(CommandSender sender, ClickEvent event, HoverEvent eventHover, Object prompt, Object... replacements) {
         Chat.sendClickableHoverableMessage(
-                player,
+                sender,
                 event,
                 eventHover,
                 (PREFIX + prompt.toString()).formatted(colorReplacements(ChatColor.GRAY, ChatColor.YELLOW, replacements))
@@ -183,7 +184,7 @@ public enum Message {
         return coloredReplacements;
     }
 
-    private static void raw(Player player, ChatColor color, ChatColor replacementsColor, String message, Object... replacements) {
+    private static void raw(CommandSender player, ChatColor color, ChatColor replacementsColor, String message, Object... replacements) {
         Chat.sendMessage(
                 player,
                 (PREFIX + color + message).formatted(colorReplacements(color.toString(), replacementsColor.toString(), replacements))

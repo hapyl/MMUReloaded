@@ -1,10 +1,10 @@
 package me.hapyl.mmu3;
 
-import me.hapyl.mmu3.command.*;
-import me.hapyl.mmu3.command.brush.BrushCommand;
 import me.hapyl.eterna.module.command.CommandProcessor;
 import me.hapyl.eterna.module.command.SimpleCommand;
 import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
+import me.hapyl.mmu3.command.*;
+import me.hapyl.mmu3.command.brush.BrushCommand;
 import org.bukkit.entity.Player;
 
 import java.util.function.BiConsumer;
@@ -72,6 +72,7 @@ public class CommandRegistry {
         register(new WikiCommand("mmuWiki"));
         register(new BannerEditorCommand("bannerEditor"));
         register(new SkullDisplayCommand("skullDisplay"));
+        register(new MMUData("mdata"));
     }
 
     private void registerTestCommand(String command, BiConsumer<Player, String[]> consumer) {
