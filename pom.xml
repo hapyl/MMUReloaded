@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <name>MapmakerUtilitiesReloaded</name>
-    <version>2.3.1-SNAPSHOT</version>
+    <version>2.3.2-SNAPSHOT</version>
     <description>A utilities plugin for mapmakers by mapmakers.</description>
 
     <properties>
@@ -74,7 +74,7 @@
         <dependency>
             <groupId>io.github.hapyl</groupId>
             <artifactId>eternaapi</artifactId>
-            <version>4.7.1</version>
+            <version>4.7.4</version>
         </dependency>
     </dependencies>
 </project>
