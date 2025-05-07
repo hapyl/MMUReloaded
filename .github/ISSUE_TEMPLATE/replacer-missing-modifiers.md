@@ -2,7 +2,7 @@
 name: Replacer Missing Modifiers
 about: A block is missing some modifiers!
 title: ''
-labels: ''
+labels: 'enhancement'
 assignees: ''
 
 ---
