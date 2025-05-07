@@ -7,14 +7,11 @@ assignees: ''
 
 ---
 
-**What block is missing modifiers**
-Candle
+**What Block is Missing Modifiers?**
+...
 
-**What modifier is missing**
-Number of candles
+**What Modifier is Missing?**
+...
 
-**Describe the modifier if needed**
-There should be a button to change the number of candles, from 1 to 4
-
-**Preferred modifier Slot**
-10
+**Describe the Modifier if Needed**
+...
