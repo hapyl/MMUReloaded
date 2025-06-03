@@ -1,12 +1,13 @@
 package me.hapyl.mmu3.feature.banner;
 
-import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.utils.PanelGUI;
 import me.hapyl.eterna.module.chat.LazyEvent;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
+import me.hapyl.eterna.module.inventory.gui.PlayerPageGUI;
 import me.hapyl.eterna.module.inventory.gui.StrictAction;
 import me.hapyl.eterna.module.player.PlayerLib;
+import me.hapyl.mmu3.Main;
+import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.util.PanelGUI;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -39,21 +40,22 @@ public class BannerEditorGUI extends PanelGUI {
         this.page = page;
         this.moveIndex = MAGIC_MOVE_INDEX;
 
-        updateInventory();
+        openInventory();
     }
 
     @Override
-    public void updateInventory() {
-        clearItemsAndClicks(); // yuk
-        fillPanel();
+    public void onUpdate() {
+        super.onUpdate();
+
+        fillRow(0, PANEL_ITEM);
 
         setItem(
                 13,
                 data.currentItem()
                         .addLore("&8&oThis is preview of the banner!")
                         .addLore()
-                        .addLore("&eLeft Click to get the item")
-                        .addLore("&6Right Click to change base color")
+                        .addLore("&8◦ &eLeft-Click to get the item")
+                        .addLore("&8◦ &6Right-Click to change base color")
                         .asIcon(),
                 new StrictAction() {
                     @Override
@@ -110,12 +112,12 @@ public class BannerEditorGUI extends PanelGUI {
                                     .addLore("&cCannot move here!")
                                     .addLore("&8&o" + (isSameIndex ? "It's the same place!" : "There is no pattern here!"))
                                     .addLore()
-                                    .addLore("&eClick to cancel move")
+                                    .addLore("&8◦ &eLeft-Click to cancel")
                                     .predicate(isSameIndex, ItemBuilder::glow)
                                     .asIcon(),
                             player -> {
                                 moveIndex = MAGIC_MOVE_INDEX;
-                                updateInventory();
+                                openInventory();
                             }
                     );
                 }
@@ -123,14 +125,14 @@ public class BannerEditorGUI extends PanelGUI {
                     setItem(
                             slot,
                             new ItemBuilder(Material.LIME_DYE)
-                                    .setName("&aLayer " + layer)
+                                    .setName("Layer " + layer)
                                     .addLore()
-                                    .addLore("&eClick to move here")
+                                    .addLore("&8◦ &eLeft-Click to move here")
                                     .asIcon(),
                             player -> {
                                 data.move(moveIndex, index);
                                 moveIndex = MAGIC_MOVE_INDEX;
-                                updateInventory();
+                                openInventory();
                             }
                     );
                 }
@@ -138,16 +140,17 @@ public class BannerEditorGUI extends PanelGUI {
             else {
                 // No pattern
                 if (index >= data.size()) {
-                    setItem(slot, new ItemBuilder(Material.GRAY_DYE)
-                            .setAmount(layer)
-                            .setName("Layer " + layer)
-                            .addTextBlockLore("""
-                                    &8No pattern yet!
-
-                                    &eClick the button below
-                                    &eto add a pattern
-                                    """)
-                            .asIcon());
+                    setItem(
+                            slot, new ItemBuilder(Material.GRAY_DYE)
+                                    .setAmount(layer)
+                                    .setName("Layer " + layer)
+                                    .addTextBlockLore("""
+                                            &8No pattern yet!
+                                            
+                                            &7&o;;Click the button below to add a pattern!
+                                            """)
+                                    .asIcon()
+                    );
                     continue;
                 }
 
@@ -155,28 +158,30 @@ public class BannerEditorGUI extends PanelGUI {
                 builder.setName("Layer " + layer);
 
                 builder.addLore();
-                builder.addLore("&eLeft Click to modify");
-                builder.addLore("&6Right Click to remove");
-                builder.addLore("&bMiddle Click to move");
+                builder.addLore("&8◦ &eLeft-Click to modify");
+                builder.addLore("&8◦ &6Right-Click to remove");
+                builder.addLore("&8◦ &dMiddle-Click to move");
 
-                setItem(slot, builder.asIcon(), new StrictAction() {
-                    @Override
-                    public void onLeftClick(@Nonnull Player player) {
-                        new BannerEditorLayerGUI(player, index, BannerEditorGUI.this);
-                    }
+                setItem(
+                        slot, builder.asIcon(), new StrictAction() {
+                            @Override
+                            public void onLeftClick(@Nonnull Player player) {
+                                new BannerEditorLayerGUI(player, index, BannerEditorGUI.this);
+                            }
 
-                    @Override
-                    public void onRightClick(@Nonnull Player player) {
-                        data.removePattern(index);
-                        updateInventory();
-                    }
+                            @Override
+                            public void onRightClick(@Nonnull Player player) {
+                                data.removePattern(index);
+                                openInventory();
+                            }
 
-                    @Override
-                    public void onMiddleClick(@Nonnull Player player) {
-                        moveIndex = index;
-                        updateInventory();
-                    }
-                });
+                            @Override
+                            public void onMiddleClick(@Nonnull Player player) {
+                                moveIndex = index;
+                                openInventory();
+                            }
+                        }
+                );
             }
         }
 
@@ -184,12 +189,10 @@ public class BannerEditorGUI extends PanelGUI {
         if (page > 1) {
             setItem(
                     27,
-                    new ItemBuilder(Material.ARROW)
-                            .setName("Previous Page")
-                            .asIcon(),
+                    PlayerPageGUI.ICON_PAGE_PREVIOUS,
                     player -> {
                         page--;
-                        updateInventory();
+                        openInventory();
                     }
             );
         }
@@ -197,12 +200,10 @@ public class BannerEditorGUI extends PanelGUI {
         if (page * ITEMS_PER_PAGE <= BannerEditor.MAX_PATTERNS) {
             setItem(
                     35,
-                    new ItemBuilder(Material.ARROW)
-                            .setName("Next Page")
-                            .asIcon(),
+                    PlayerPageGUI.ICON_PAGE_NEXT,
                     player -> {
                         page++;
-                        updateInventory();
+                        openInventory();
                     }
             );
         }
@@ -217,8 +218,11 @@ public class BannerEditorGUI extends PanelGUI {
                         40,
                         new ItemBuilder(Material.LIME_DYE)
                                 .setName("&aAdd Layer")
-                                .addLore()
-                                .addLore("&eClick to add layer")
+                                .addTextBlockLore("""
+                                        Adds a new layer to the banner.
+                                        
+                                        &8◦ &eLeft-Click to add a layer
+                                        """)
                                 .asIcon(),
                         player -> new BannerEditorLayerGUI(player, this)
                 );
@@ -227,22 +231,26 @@ public class BannerEditorGUI extends PanelGUI {
 
         // Close button
         setPanelCloseMenu(PanelSlot.CENTER);
-        setPanelItem(6, new ItemBuilder(Material.WATER_BUCKET)
-                .setName("Reset")
-                .addLore()
-                .addSmartLore("Resets the banner editor.")
-                .addLore()
-                .addLore("&eClick to reset")
-                .asIcon(), player -> {
-            Main.getRegistry().bannerEditor.remove(player);
 
-            PlayerLib.playSound(player, Sound.ENTITY_VILLAGER_WORK_LEATHERWORKER, 2.0f);
+        // Clear button
+        setPanelItem(
+                6, new ItemBuilder(Material.WATER_BUCKET)
+                        .setName("Reset")
+                        .addTextBlockLore("""
+                                Resets the banner editor to the default state.
+                                
+                                &8◦ &eLeft-Click to reset
+                                """)
+                        .asIcon(), player -> {
+                    Main.getRegistry().bannerEditor.remove(player);
 
-            new BannerEditorGUI(player);
-        });
+                    PlayerLib.playSound(player, Sound.ENTITY_VILLAGER_WORK_LEATHERWORKER, 2.0f);
 
-        openInventory();
+                    new BannerEditorGUI(player);
+                }
+        );
     }
+
 
     private ItemStack makeMaxLayersItem(int layer) {
         return new ItemBuilder(Material.RED_DYE)

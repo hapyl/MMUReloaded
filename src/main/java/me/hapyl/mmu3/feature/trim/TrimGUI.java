@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.feature.trim;
 
-import me.hapyl.mmu3.utils.PanelGUI;
+import me.hapyl.mmu3.util.PanelGUI;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -18,11 +18,13 @@ public class TrimGUI extends PanelGUI {
 
         this.editor = editor;
 
-        updateInventory();
+        openInventory();
     }
 
     @Override
-    public void updateInventory() {
+    public void onUpdate() {
+        super.onUpdate();
+
         final ItemStack currentItem = editor.getCurrentItem();
         final TrimData data = editor.getData();
 
@@ -38,66 +40,71 @@ public class TrimGUI extends PanelGUI {
                 new ItemBuilder(Material.COMMAND_BLOCK).setName("&aRandomize")
                         .addTextBlockLore("""
                                 Randomize this armor piece's pattern and material of the trim!
-                                                                
+                                
                                 &eClick to randomize!
                                 """)
                         .asIcon(),
                 player -> {
                     editor.randomize();
-                    closeInventory();
+                    player.closeInventory();
                 }
         );
 
         final Color color = data.getColor();
 
         // Color
-        setItem(24, new ItemBuilder(Material.LEATHER_CHESTPLATE)
-                .setName("Set Armor Color")
-                .addTextBlockLore("""
-                        Change the color of this armor piece!
-                                                
-                        &8;;Changing the color of the armor will convert the item to leather if it isn't already.
-                                                
-                        &eClick to set color.
-                        """)
-                .setLeatherArmorColor(color)
-                .asIcon());
+        setItem(
+                24, new ItemBuilder(Material.LEATHER_CHESTPLATE)
+                        .setName("Set Armor Color")
+                        .addTextBlockLore("""
+                                Change the color of this armor piece!
+                                
+                                &8;;Changing the color of the armor will convert the item to leather if it isn't already.
+                                
+                                &eClick to set color.
+                                """)
+                        .setLeatherArmorColor(color)
+                        .asIcon()
+        );
 
-        setClick(24, player -> {
-            editor.tryColor();
-        }, ClickType.LEFT);
+        setAction(
+                24, player -> editor.tryColor(), ClickType.LEFT
+        );
 
         // Finalize
-        setPanelItem(6, new ItemBuilder(Material.DIAMOND)
-                .setName("&aFinalize!")
-                .addTextBlockLore("""
-                        Finalize this armor and get the items!
-                                                
-                        &eClick to finalize!
-                        """)
-                .asIcon(), player -> {
-            editor.remove();
-            closeInventory();
-        });
+        setPanelItem(
+                6, new ItemBuilder(Material.DIAMOND)
+                        .setName("&aFinalize!")
+                        .addTextBlockLore("""
+                                Finalize this armor and get the items!
+                                
+                                &eClick to finalize!
+                                """)
+                        .asIcon(), player -> {
+                    editor.remove();
+                    player.closeInventory();
+                }
+        );
 
         // Remove trim
-        setPanelItem(2, new ItemBuilder(Material.RED_DYE)
+        setPanelItem(
+                2, new ItemBuilder(Material.RED_DYE)
                         .setName("&cRemove Trim")
                         .addTextBlockLore("""
                                 Don't want the trim? Need a clean armor piece?
                                 Yep, this option is for you!
-                                                        
+                                
                                 &cClick to remove trim!
                                 """).asIcon(), player -> {
                     data.removeTrim();
                     data.update();
-                    closeInventory();
+
+                    player.closeInventory();
 
                     editor.sendInfo("Removed trim!");
                     editor.sendSound(Sound.BLOCK_ANVIL_DESTROY, 0.0f);
                 }
         );
-
-        openInventory();
     }
+
 }

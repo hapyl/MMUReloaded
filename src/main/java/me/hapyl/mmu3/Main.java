@@ -1,5 +1,6 @@
 package me.hapyl.mmu3;
 
+import me.hapyl.eterna.module.entity.Entities;
 import me.hapyl.mmu3.command.worldedit.WorldEditShortcutRegistry;
 import me.hapyl.mmu3.feature.Calculate;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreatorFeature;
@@ -28,6 +29,7 @@ public class Main extends JavaPlugin {
 
     private FeatureRegistry registry;
     private EternaAPI eternaAPI;
+    private Entities.EntityCache entityCache;
 
     public boolean hasWorldEdit;
 
@@ -37,6 +39,7 @@ public class Main extends JavaPlugin {
 
         // Initiate API
         eternaAPI = new EternaAPI(this, "4.1.1");
+        entityCache = new Entities.EntityCache();
 
         // Register Commands
         new CommandRegistry(this);
@@ -100,6 +103,10 @@ public class Main extends JavaPlugin {
 
     public static ItemCreatorFeature getItemCreator() {
         return instance.registry.itemCreator;
+    }
+
+    public static Entities.EntityCache entityCache() {
+        return instance.entityCache;
     }
 
     // End of feature static members

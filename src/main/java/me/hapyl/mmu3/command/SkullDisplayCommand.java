@@ -8,7 +8,7 @@ import me.hapyl.eterna.module.entity.Entities;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.util.Runnables;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.utils.Revertible;
+import me.hapyl.mmu3.util.Revertible;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;

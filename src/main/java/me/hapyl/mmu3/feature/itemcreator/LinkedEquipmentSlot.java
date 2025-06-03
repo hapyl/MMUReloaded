@@ -1,58 +1,92 @@
 package me.hapyl.mmu3.feature.itemcreator;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.EquipmentSlotGroup;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
+@SuppressWarnings("UnstableApiUsage")
+// honestly fuck paper for deprecating the old methods and adding experimental new methods, like fuck off?
 public enum LinkedEquipmentSlot {
 
-    ALL(null, Material.PUFFERFISH, "All Slots"),
+    ALL_SLOTS(
+            EquipmentSlotGroup.ANY, Material.PUFFERFISH, """
+            Applicable to any slot.
+            """
+    ),
 
-    HAND(EquipmentSlot.HAND, Material.STONE_SWORD, "Main Hand"),
-    OFF_HAND(EquipmentSlot.OFF_HAND, Material.SHIELD, "Off Hand"),
-    FEET(EquipmentSlot.FEET, Material.IRON_BOOTS, "Boots"),
-    LEGS(EquipmentSlot.LEGS, Material.IRON_LEGGINGS, "Leggings"),
-    CHEST(EquipmentSlot.CHEST, Material.IRON_CHESTPLATE, "Chestplate"),
-    HEAD(EquipmentSlot.HEAD, Material.IRON_HELMET, "Helmet"),
-    BODY(EquipmentSlot.BODY, Material.LEATHER_HORSE_ARMOR, "Body (Non-player)"),
-    ;
+    HAND(
+            EquipmentSlotGroup.HAND, Material.STONE_SWORD, """
+            Applicable only if in main hand.
+            """
+    ),
+    OFF_HAND(
+            EquipmentSlotGroup.OFFHAND, Material.SHIELD, """
+            Applicable only if in off hand.
+            """
+    ),
 
-    private final EquipmentSlot link;
+    HELMET(
+            EquipmentSlotGroup.HEAD, Material.IRON_HELMET, """
+            Applicable only if on head.
+            """
+    ),
+    CHESTPLATE(
+            EquipmentSlotGroup.CHEST, Material.IRON_CHESTPLATE, """
+            Applicable only if on chest.
+            """
+    ),
+    LEGGINGS(
+            EquipmentSlotGroup.LEGS, Material.IRON_LEGGINGS, """
+            Applicable only if on legs.
+            """
+    ),
+    BOOTS(
+            EquipmentSlotGroup.FEET, Material.IRON_BOOTS, """
+            Applicable only if on feet.
+            """
+    ),
+    BODY(
+            EquipmentSlotGroup.BODY, Material.LEATHER_HORSE_ARMOR, """
+            Applicable only on non-player body, like horse armor, llama carpet, wolf armor, etc.
+            """
+    ),
+    SADDLE(
+            EquipmentSlotGroup.SADDLE, Material.SADDLE, """
+            Applicable only on saddles.
+            """
+    );
+
+    private final EquipmentSlotGroup link;
     private final Material material;
-    private final String name;
+    private final String description;
 
-    LinkedEquipmentSlot(EquipmentSlot link, Material material, String name) {
+    LinkedEquipmentSlot(EquipmentSlotGroup link, Material material, String description) {
         this.link = link;
         this.material = material;
-        this.name = name;
+        this.description = description;
     }
 
-    public static LinkedEquipmentSlot fromLink(@Nullable EquipmentSlot slot) {
-        if (slot == null) {
-            return ALL;
-        }
-
-        return switch (slot) {
-            case HAND -> LinkedEquipmentSlot.HAND;
-            case OFF_HAND -> LinkedEquipmentSlot.OFF_HAND;
-            case FEET -> LinkedEquipmentSlot.FEET;
-            case LEGS -> LinkedEquipmentSlot.LEGS;
-            case CHEST -> LinkedEquipmentSlot.CHEST;
-            case HEAD -> LinkedEquipmentSlot.HEAD;
-            case BODY -> LinkedEquipmentSlot.BODY;
-        };
-    }
-
-    public EquipmentSlot getLink() {
+    public EquipmentSlotGroup getLink() {
         return link;
     }
 
-    public String getName() {
-        return name;
+    public String getDescription() {
+        return description;
     }
 
     public Material getMaterial() {
         return material;
+    }
+
+    @Nonnull
+    public static LinkedEquipmentSlot ofLink(@Nonnull EquipmentSlotGroup slotGroup) {
+        for (LinkedEquipmentSlot value : values()) {
+            if (value.link == slotGroup) {
+                return value;
+            }
+        }
+
+        throw new IllegalArgumentException("Unsupported slot: " + slotGroup);
     }
 }

@@ -2,10 +2,10 @@ package me.hapyl.mmu3.feature.itemcreator;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
-import me.hapyl.eterna.module.math.Numbers;
+import me.hapyl.mmu3.feature.itemcreator.gui.LoreSubGUI;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -15,30 +15,35 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * TODO for Item Creator
+ * - Add supports for components.
+ * - Bring back the Minecraft Command
+ * - Add save/load presets, maybe even copy/paste command
+ */
 public class ItemCreator {
-
-    private String name;
-    private Material material;
-    private int amount;
-    private int customModelData;
-    private String headTexture;
-    private Color armorColor;
 
     private final Player player;
     private final List<String> lore;
     private final Map<Enchantment, Integer> enchantMap;
     private final Map<Attribute, AttributeModifier> attributes;
 
+    public boolean hideFlags;
+
+    private String name;
+    private Material material;
+    private int amount;
+    private String headTexture;
+    private Color armorColor;
+
     public ItemCreator(Player player) {
         this.player = player;
         this.material = Material.GRASS_BLOCK;
         this.amount = 1;
-        this.customModelData = 0;
         this.name = null;
         this.lore = Lists.newArrayList();
         this.enchantMap = Maps.newHashMap();
@@ -61,12 +66,12 @@ public class ItemCreator {
         return name == null ? Chat.capitalize(material) : name;
     }
 
-    public boolean hasName() {
-        return name != null;
-    }
-
     public void setName(@Nullable String name) {
         this.name = name;
+    }
+
+    public boolean hasName() {
+        return name != null;
     }
 
     public Material getMaterial() {
@@ -90,53 +95,19 @@ public class ItemCreator {
     }
 
     public void setAmount(int amount) {
-        this.amount = Numbers.clamp(amount, 1, 64);
-    }
-
-    public String buildMinecraftGiveItem() {
-        final StringBuilder command = new StringBuilder("give @s %s{".formatted(material.getKey().getKey().toLowerCase()));
-
-        // display
-        if (name != null || !lore.isEmpty()) {
-            final StringBuilder display = new StringBuilder("display: {");
-
-            if (name != null) {
-                display.append("Name: '\"%s\"'".formatted(name));
-            }
-
-            if (!lore.isEmpty()) {
-                final StringBuilder loreBuilder = new StringBuilder("Lore: [");
-                if (name != null) {
-                    display.append(", ");
-                }
-
-                for (int i = 0; i < lore.size(); i++) {
-                    final String loreLine = lore.get(i);
-                    if (i != 0) {
-                        loreBuilder.append(", ");
-                    }
-
-                    loreBuilder.append("'\"%s\"'".formatted(loreLine));
-                }
-
-                display.append(loreBuilder.append("]"));
-            }
-
-            command.append(display.append("}"));
-        }
-
-        return command.append("}").toString();
+        this.amount = Math.clamp(amount, 1, 100);
     }
 
     public ItemStack buildPreviewItem() {
         final ItemBuilder builder = new ItemBuilder(buildFinalItem());
 
-        builder.addLore("&8&m                                   ");
-        builder.addLore();
-        builder.addSmartLore("This is a preview of your item! Click the button at the bottom to build your item.", "&7&o");
-        builder.addLore();
-        builder.addLore("&eClick to change material");
-        builder.addLore("&6Right Click to pick amount");
+        builder.addLore("&8&m ".repeat(42));
+        builder.addTextBlockLore("""
+                This is a preview of your item, click the button at the bottom to build your item!
+                
+                &8◦ &eLeft-Click to change material
+                &8◦ &6Right-Click to pick amount
+                """);
 
         return builder.toItemStack();
     }
@@ -164,6 +135,10 @@ public class ItemCreator {
 
         if (armorColor != null) {
             builder.setLeatherArmorColor(armorColor);
+        }
+
+        if (hideFlags) {
+            builder.hideFlags();
         }
 
         return builder.build();
@@ -196,6 +171,10 @@ public class ItemCreator {
     }
 
     public void addSmartLore(String string) {
+        if (lore.size() >= LoreSubGUI.MAX_LORE_LINES) {
+            return;
+        }
+
         this.lore.addAll(ItemBuilder.splitString(string, 30));
         Message.info(player, "Added smart lore.");
     }
@@ -206,30 +185,12 @@ public class ItemCreator {
         Message.info(player, "Set new smart lore.");
     }
 
-    public void setCustomModelData(int value) {
-        customModelData = value;
-    }
-
-    public int getCustomModelData() {
-        return customModelData;
-    }
-
     public void setAttribute(Attribute attribute, AttributeModifier modifier) {
         attributes.put(attribute, modifier);
     }
 
     public Map<Attribute, AttributeModifier> getAttributes() {
         return attributes;
-    }
-
-    @Nonnull
-    public AttributeModifier getAttributeModifierOrCompute(LinkedAttribute attribute) {
-        final Attribute link = attribute.getLink();
-        return attributes.computeIfAbsent(link, m -> new AttributeModifier(attribute.name(), 0.0d, AttributeModifier.Operation.ADD_NUMBER));
-    }
-
-    public void setArmorColor(Color color) {
-        armorColor = color;
     }
 
     public Color getOrCreateColor() {
@@ -244,12 +205,16 @@ public class ItemCreator {
         return armorColor;
     }
 
+    public void setArmorColor(Color color) {
+        armorColor = color;
+    }
+
     public net.md_5.bungee.api.ChatColor getArmorColorAsChatColor() {
         return armorColor ==
                 null ? net.md_5.bungee.api.ChatColor.DARK_GRAY : net.md_5.bungee.api.ChatColor.of(new java.awt.Color(
                 armorColor.getRed(),
-                armorColor.getBlue(),
-                armorColor.getGreen()
+                armorColor.getGreen(),
+                armorColor.getBlue()
         ));
     }
 }

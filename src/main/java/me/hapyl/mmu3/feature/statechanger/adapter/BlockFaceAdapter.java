@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
 import com.google.common.collect.Maps;
-import me.hapyl.mmu3.utils.Direction;
+import me.hapyl.mmu3.util.Direction;
 import me.hapyl.eterna.module.chat.Chat;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;

@@ -24,7 +24,8 @@ public class SearchItemGUI extends PlayerPageGUI<Material> {
 
         setCancelType(CancelType.NEITHER);
         setContents(result);
-        openInventory(0);
+
+        openInventory(1);
     }
 
     @Nonnull

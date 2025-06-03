@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.MultipleFacing;
@@ -13,7 +14,7 @@ public class AdapterMultipleFacing extends BlockFaceAdapter<MultipleFacing> {
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull MultipleFacing blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull MultipleFacing blockData, @Nonnull StateChangerData data) {
         for (BlockFace face : blockData.getAllowedFaces()) {
             if (isUnknownFace(face, player)) {
                 continue;

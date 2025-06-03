@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.block.data.Snowable;
 import org.bukkit.entity.Player;
@@ -12,7 +13,7 @@ public class AdapterSnowable extends Adapter<Snowable> {
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Snowable blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Snowable blockData, @Nonnull StateChangerData data) {
         final boolean isSnowy = blockData.isSnowy();
 
         gui.setItem(

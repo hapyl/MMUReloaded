@@ -13,7 +13,6 @@ import me.hapyl.mmu3.message.Message;
 import net.minecraft.world.entity.monster.EntityShulker;
 import net.minecraft.world.level.block.entity.TileEntityCommand;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.reflect.FieldUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.CommandBlock;
@@ -27,10 +26,13 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.util.Set;
 import java.util.UUID;
 
 public class CommandBlockPreview extends Feature implements Runnable, Listener {
+
+    private static boolean notifyWhatSomethingFuckingBroke;
 
     private final Set<String> commands;
 
@@ -58,8 +60,7 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
 
     @Override
     public void run() {
-        Bukkit
-                .getOnlinePlayers()
+        Bukkit.getOnlinePlayers()
                 .stream()
                 .filter(player -> player.isOp() && PersistentPlayerData.getData(player).isCommandPreview())
                 .forEach(this::execute);
@@ -114,14 +115,28 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
         final CommandBlock commandBlock = (CommandBlock) block.getState();
 
         try {
-            final TileEntityCommand tile = (TileEntityCommand) FieldUtils.readField(commandBlock, "tileEntity", true);
+            // What fucking paper magic is going on here, the field is 'tileEntity' on source but 'blockEntity' on runtime
+            final Class<?> superClass = commandBlock.getClass().getSuperclass();
+            final Field field = superClass.getDeclaredField("blockEntity");
+            field.setAccessible(true);
+
+            final TileEntityCommand tile = (TileEntityCommand) field.get(commandBlock);
+
             final boolean isAutomatic = tile.d();
 
             if (!isAutomatic) {
                 return ChatColor.WHITE;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            if (!notifyWhatSomethingFuckingBroke) {
+                Main.getMain().getLogger()
+                        .severe(
+                                "An error occurred in Command Block Preview feature! It's probably because mappings changed or paper broke something, either way report this if it isn't already! (%s)".formatted(
+                                        exception.getMessage())
+                        );
+
+                notifyWhatSomethingFuckingBroke = true;
+            }
         }
 
         return switch (type) {
@@ -176,10 +191,12 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
         Reflect.createEntity(entity, player);
         Reflect.updateMetadata(entity, player);
 
-        runTaskLater(() -> {
-            Reflect.destroyEntity(entity, player);
-            team.unregister();
-        }, 3L);
+        runTaskLater(
+                () -> {
+                    Reflect.destroyEntity(entity, player);
+                    team.unregister();
+                }, 3L
+        );
     }
 
     private Team fetchTeam(UUID uuid, Player player, ChatColor color) {

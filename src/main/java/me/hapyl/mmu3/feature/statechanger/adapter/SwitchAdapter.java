@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
@@ -23,15 +24,17 @@ public abstract class SwitchAdapter<T extends BlockData, V> extends Adapter<T> i
     public abstract BiConsumer<T, V> apply();
 
     @Override
-    public final void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull T blockData) {
+    public final void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull T blockData, @Nonnull StateChangerData data) {
         final int slot = getSlot();
         final V[] values = getValues(blockData);
         final V currentValue = getCurrentValue(blockData);
+
         final Material material = getMaterial();
+        final Material actualMaterial = material == null ? blockData.getMaterial() : material;
 
         gui.setSwitchItem(
                 this, slot,
-                values, currentValue, material == null ? blockData.getMaterial() : material,
+                values, currentValue, actualMaterial,
                 getName(),
                 getDescription()
         );

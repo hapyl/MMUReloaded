@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.utils.HexId;
+import me.hapyl.mmu3.util.HexId;
 import org.bukkit.GameMode;
 import org.bukkit.Input;
 import org.bukkit.block.Block;

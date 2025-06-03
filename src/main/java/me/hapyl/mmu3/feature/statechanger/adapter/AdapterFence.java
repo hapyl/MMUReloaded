@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Fence;
@@ -15,7 +16,7 @@ public class AdapterFence extends BlockFaceAdapter<Fence> {
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Fence blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Fence blockData, @Nonnull StateChangerData data) {
         final Set<BlockFace> allowedFaces = blockData.getAllowedFaces();
 
         for (BlockFace face : allowedFaces) {

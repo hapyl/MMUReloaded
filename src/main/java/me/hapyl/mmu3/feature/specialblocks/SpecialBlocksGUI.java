@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.feature.specialblocks;
 
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.utils.PanelGUI;
+import me.hapyl.mmu3.util.PanelGUI;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,11 +12,15 @@ import java.util.Set;
 public class SpecialBlocksGUI extends PanelGUI {
     public SpecialBlocksGUI(Player player) {
         super(player, "Special Blocks", Size.FIVE);
-        setPanelCloseMenu();
-        updateInventory();
+
+        openInventory();
     }
 
-    public void updateInventory() {
+
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
+
         final SpecialBlocks specialBlocks = Main.getSpecialBlocks();
 
         // Nature
@@ -30,8 +34,6 @@ public class SpecialBlocksGUI extends PanelGUI {
                     type.getSize()
             );
         }
-
-        openInventory();
     }
 
     private void createSubMenuItemAndSet(int slot, Material material, String name, String lore, Set<SpecialBlock> blocks, Size size) {
@@ -39,6 +41,6 @@ public class SpecialBlocksGUI extends PanelGUI {
     }
 
     private ItemStack createSubMenuItem(Material material, String name, String lore) {
-        return new ItemBuilder(material).setName("&a" + name).setSmartLore(lore).addLore().addLore("&eClick to open").build();
+        return new ItemBuilder(material).setName("&a" + name).setSmartLore(lore).addLore().addLore("&8◦ &eLeft-Click to open").build();
     }
 }

@@ -17,7 +17,31 @@ public class ConditionedMaterial {
     @Nonnull
     public Material getMaterial() {
         final Material material = materials[condition ? 0 : 1];
-        return material.isItem() ? material : Material.BEDROCK;
+
+        // If not an item, probably WALL block, so try to get the non-wall variant, or give up and use bedrock
+        if (!material.isItem()) {
+            final String name = material.name();
+
+            if (name.contains("WALL_")) {
+                final Material nonWallmMaterial = Material.getMaterial(name.replace("WALL_", ""));
+
+                if (nonWallmMaterial != null) {
+                    return nonWallmMaterial;
+                }
+            }
+
+            // Try placement material
+            final Material placementMaterial = material.createBlockData().getPlacementMaterial();
+
+            if (!placementMaterial.isAir()) {
+                return placementMaterial;
+            }
+
+            // Else just fucking give up
+            return Material.BEDROCK;
+        }
+
+        return material;
     }
 
     public boolean isCondition() {

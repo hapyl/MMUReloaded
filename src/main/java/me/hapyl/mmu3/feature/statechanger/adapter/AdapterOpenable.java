@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.Material;
 import org.bukkit.block.data.Openable;
@@ -13,7 +14,7 @@ public class AdapterOpenable extends Adapter<Openable> {
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Openable blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Openable blockData, @Nonnull StateChangerData data) {
         final boolean isOpen = blockData.isOpen();
 
         gui.setItem(this, 10, isOpen, Material.TRIAL_KEY, "Is Open", "Whenever this block is open.");

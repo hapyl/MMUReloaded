@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -14,7 +15,7 @@ public class AdapterPointedDripstone extends BlockFaceAdapter<PointedDripstone> 
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull PointedDripstone blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull PointedDripstone blockData, @Nonnull StateChangerData data) {
         final PointedDripstone.Thickness thickness = blockData.getThickness();
         final BlockFace verticalDirection = blockData.getVerticalDirection();
 

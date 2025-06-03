@@ -4,7 +4,7 @@ import io.papermc.paper.registry.RegistryKey;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.math.Numbers;
 import me.hapyl.eterna.module.util.BukkitUtils;
-import me.hapyl.mmu3.utils.SensitiveInput;
+import me.hapyl.mmu3.util.SensitiveInput;
 import org.apache.commons.lang.SerializationException;
 import org.bukkit.DyeColor;
 import org.bukkit.NamespacedKey;

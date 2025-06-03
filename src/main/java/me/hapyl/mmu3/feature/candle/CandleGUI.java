@@ -1,12 +1,13 @@
 package me.hapyl.mmu3.feature.candle;
 
-import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.utils.PanelGUI;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.inventory.gui.SlotPattern;
 import me.hapyl.eterna.module.inventory.gui.SmartComponent;
 import me.hapyl.eterna.module.player.PlayerLib;
+import me.hapyl.eterna.module.util.BukkitUtils;
+import me.hapyl.mmu3.Main;
+import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.util.PanelGUI;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -17,43 +18,55 @@ public class CandleGUI extends PanelGUI {
     private final Data data;
 
     public CandleGUI(Player player) {
-        super(player, "Candles", Size.FOUR);
+        super(player, "Candles", Size.FIVE);
+
         controller = Main.getRegistry().candleController;
         data = controller.getData(player);
-        updateInventory();
+
+        openInventory();
     }
 
     @Override
-    public void updateInventory() {
+    public void onUpdate() {
+        super.onUpdate();
+
         final boolean offset = data.isOffset();
+
+        fillRow(0, PANEL_ITEM);
 
         setPanelCloseMenu();
         setPanelItem(
                 PanelSlot.CENTER + 2,
                 new ItemBuilder(offset ? Material.LIME_DYE : Material.GRAY_DYE)
-                        .setName((offset ? "&a" : "&c") + "Random Offset")
-                        .setSmartLore("If enabled, armor stand head will have a random horizontal offset.")
-                        .build(), player -> {
+                        .setName("Random Offset " + BukkitUtils.checkmark(offset))
+                        .addTextBlockLore("""
+                                If enabled, the candle will have a randomized horizontal offset.
+                                
+                                &8◦ &eLeft-Click to toggle
+                                """)
+                        .asIcon(), player -> {
                     data.setOffset(!offset);
                     Message.sound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 2.0f);
-                    updateInventory();
+                    player.updateInventory();
                 }
         );
 
         final SmartComponent component = newSmartComponent();
 
         for (Candle value : Candle.values()) {
-            component.add(value.getItem(), player -> {
-                data.setCandle(value);
-                PlayerLib.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 2.0f);
-                if (!controller.hasItem(player)) {
-                    controller.giveItem(player);
-                }
-                closeInventory();
-            });
+            component.add(
+                    value.getItem(), player -> {
+                        data.setCandle(value);
+                        PlayerLib.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 2.0f);
+                        if (!controller.hasItem(player)) {
+                            controller.giveItem(player);
+                        }
+                        player.closeInventory();
+                    }
+            );
         }
 
-        component.fillItems(this, SlotPattern.CHUNKY, 1);
-        openInventory();
+        component.apply(this, SlotPattern.CHUNKY, 2);
     }
+
 }

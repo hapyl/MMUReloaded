@@ -33,7 +33,6 @@ public class CommandRegistry {
         register(new PersonalTimeCommandCommand("personalTime"));
         register(new PersonalWeatherCommand("personalWeather"));
         register(new ItemCommand("getItem"));
-        register(new GameCommand("game"));
         register(new SightBlockCommand("sightBlock"));
         register(new RawCommand("raw"));
         register(new LockCommand("lock"));
@@ -46,7 +45,6 @@ public class CommandRegistry {
         register(new PingCommand("ping"));
         register(new BrushCommand("mmuBrush"));
         register(new SelfTeleportCommand("self"));
-        register(new DesignerCommand("designer"));
         register(new SoundCommand("sound"));
         register(new NumericIdCommand("id"));
         register(new BukkitTagCommand("tags"));

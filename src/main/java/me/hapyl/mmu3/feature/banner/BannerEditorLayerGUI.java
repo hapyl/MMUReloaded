@@ -1,21 +1,25 @@
 package me.hapyl.mmu3.feature.banner;
 
 import com.google.common.collect.Lists;
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
-import me.hapyl.eterna.module.inventory.gui.GUI;
+import me.hapyl.eterna.module.inventory.gui.PlayerGUI;
 import me.hapyl.eterna.module.inventory.gui.SlotPattern;
 import me.hapyl.eterna.module.inventory.gui.SmartComponent;
 import me.hapyl.eterna.module.util.ColorConverter;
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.utils.PanelGUI;
+import me.hapyl.mmu3.util.PanelGUI;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -37,31 +41,37 @@ public class BannerEditorLayerGUI extends PanelGUI {
     }
 
     public BannerEditorLayerGUI(Player player, int index, BannerEditorGUI gui) {
-        super(player, GUI.menuArrowSplit(
-                "Banner Editor",
-                (index == ADD_INDEX ? "Add Layer" : "Edit Layer " + (index + 1))
-        ), Size.THREE);
+        super(
+                player, PlayerGUI.menuArrowSplit(
+                        "Banner Editor",
+                        (index == ADD_INDEX ? "Add Layer" : "Edit Layer " + (index + 1))
+                ), Size.THREE
+        );
 
         this.index = index;
         this.page = gui.page;
         this.data = Main.getRegistry().bannerEditor.getOrCreate(player);
         this.pattern = MutablePattern.of(data.getPattern(index));
 
-        updateInventory();
+        openInventory();
     }
 
+
     @Override
-    public void updateInventory() {
+    public void onUpdate() {
+        super.onUpdate();
+
+        final Registry<@NotNull PatternType> registry = RegistryAccess.registryAccess().getRegistry(RegistryKey.BANNER_PATTERN);
+
         setItem(
                 12,
                 data.builder()
                         .setPattern(pattern.asPattern())
                         .setName("Pattern: " + pattern.getPatternName())
                         .addLore()
-                        .addLore("&eClick to change")
+                        .addLore("&8◦ &eLeft-Click to change")
                         .build(),
-                // Jesus fuck name one person in the fucking world who asked for them to change them from being a fucking enum
-                player -> new SelectGUI<>("Select Pattern", Registry.BANNER_PATTERN.iterator(), Size.FIVE) {
+                player -> new SelectGUI<>("Select Pattern", registry.iterator(), Size.FIVE) {
                     @Nonnull
                     @Override
                     protected SelectResponse of(int index, @Nonnull PatternType type) {
@@ -69,9 +79,12 @@ public class BannerEditorLayerGUI extends PanelGUI {
                             @Nonnull
                             @Override
                             public ItemStack getItemStack(int i) {
+                                final NamespacedKey key = registry
+                                        .getKey(type);
+
                                 return data.builder()
                                         .setPattern(type, pattern.getColor())
-                                        .setName(Chat.capitalize(type.getKey().getKey()))
+                                        .setName(Chat.capitalize(key != null ? key.getKey() : "null"))
                                         .build();
                             }
 
@@ -89,7 +102,7 @@ public class BannerEditorLayerGUI extends PanelGUI {
                 new ItemBuilder(pattern.getColorAsItem())
                         .setName("Color: " + pattern.getColorName())
                         .addLore()
-                        .addLore("&eClick to change")
+                        .addLore("&8◦ &eLeft-Click to chang")
                         .asIcon(),
                 player -> new SelectGUI<>("Select Color", DyeColor.values(), Size.TWO) {
                     @Nonnull
@@ -105,7 +118,7 @@ public class BannerEditorLayerGUI extends PanelGUI {
                                 return new ItemBuilder(MutablePattern.colorToMaterial(color))
                                         .setName(nameColored)
                                         .addLore()
-                                        .addLore("&eClick to select")
+                                        .addLore("&8◦ &eLeft-Click to select")
                                         .build();
                             }
 
@@ -119,28 +132,29 @@ public class BannerEditorLayerGUI extends PanelGUI {
         );
 
         // Set buttons
-        setPanelItem(2, new ItemBuilder(Material.RED_GLAZED_TERRACOTTA)
-                .setName("&cCancel")
-                .addLore()
-                .addLore("&eClick to cancel")
-                .asIcon(), player -> new BannerEditorGUI(player, page)
+        setPanelItem(
+                2, new ItemBuilder(Material.RED_CARPET)
+                        .setName("&cCancel")
+                        .addLore()
+                        .addLore("&8◦ &eLeft-Click to cancel")
+                        .asIcon(), player -> new BannerEditorGUI(player, page)
         );
 
-        setPanelItem(6, new ItemBuilder(Material.GREEN_GLAZED_TERRACOTTA)
-                .setName("&aConfirm")
-                .addLore()
-                .addLore("&eClick to confirm")
-                .asIcon(), player -> {
-            if (index == ADD_INDEX) {
-                data.addPattern(pattern.asPattern());
-            }
-            else {
-                data.setPattern(index, pattern.asPattern());
-            }
-            new BannerEditorGUI(player, page);
-        });
-
-        openInventory();
+        setPanelItem(
+                6, new ItemBuilder(Material.LIME_CARPET)
+                        .setName("&aConfirm")
+                        .addLore()
+                        .addLore("&8◦ &eLeft-Click to confirm")
+                        .asIcon(), player -> {
+                    if (index == ADD_INDEX) {
+                        data.addPattern(pattern.asPattern());
+                    }
+                    else {
+                        data.setPattern(index, pattern.asPattern());
+                    }
+                    new BannerEditorGUI(player, page);
+                }
+        );
     }
 
     private interface SelectResponse {
@@ -171,35 +185,39 @@ public class BannerEditorLayerGUI extends PanelGUI {
             super(BannerEditorLayerGUI.this.player, name, size);
 
             this.list = List.of(iterable);
-            this.updateInventory();
+            openInventory();
         }
 
         public SelectGUI(String name, Iterator<E> iterable, Size size) {
             super(BannerEditorLayerGUI.this.player, name, size);
 
             this.list = iteratorToList(iterable);
-            this.updateInventory();
+            openInventory();
         }
 
         @Override
-        public void updateInventory() {
+        public void onUpdate() {
+            super.onUpdate();
+
             final SmartComponent component = newSmartComponent();
 
             for (int i = 0; i < list.size(); i++) {
                 final E e = list.get(i);
                 final SelectResponse response = of(i, e);
 
-                component.add(response.getItemStack(i), player -> {
-                    response.onClick(player);
+                component.add(
+                        response.getItemStack(i), player -> {
+                            response.onClick(player);
 
-                    // Update parent inventory right away
-                    BannerEditorLayerGUI.this.updateInventory();
-                });
+                            // Update parent inventory right away
+                            BannerEditorLayerGUI.this.openInventory();
+                        }
+                );
             }
 
             component.apply(this, SlotPattern.CHUNKY, 0);
-            this.openInventory();
         }
+
 
         @Nonnull
         protected abstract SelectResponse of(int index, @Nonnull E e);

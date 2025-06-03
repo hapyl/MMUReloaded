@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.Material;
 import org.bukkit.block.data.type.PistonHead;
@@ -13,7 +14,7 @@ public class AdapterPistonHead extends Adapter<PistonHead> {
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull PistonHead blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull PistonHead blockData, @Nonnull StateChangerData data) {
         final boolean isShort = blockData.isShort();
 
         gui.setItem(

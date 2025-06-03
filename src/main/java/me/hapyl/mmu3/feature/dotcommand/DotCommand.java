@@ -1,9 +1,9 @@
 package me.hapyl.mmu3.feature.dotcommand;
 
+import me.hapyl.eterna.module.inventory.gui.PlayerGUI;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.eterna.module.inventory.gui.GUI;
 import me.hapyl.eterna.module.util.Runnables;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -45,7 +45,7 @@ public class DotCommand extends Feature implements Listener {
         }
 
         final String finalStrippedMessage = strippedMessage;
-        Message.info(player, "Converted '%s' %s '/%s'.", message, GUI.ARROW_FORWARD, finalStrippedMessage);
+        Message.info(player, "Converted '%s' %s '/%s'.", message, PlayerGUI.ARROW_FORWARD, finalStrippedMessage);
 
         Runnables.runSync(() -> {
             Bukkit.dispatchCommand(player, finalStrippedMessage);

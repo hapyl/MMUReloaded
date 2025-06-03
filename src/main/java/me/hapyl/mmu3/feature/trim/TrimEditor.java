@@ -3,7 +3,7 @@ package me.hapyl.mmu3.feature.trim;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.itemcreator.ColorSignGUI;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.utils.HexId;
+import me.hapyl.mmu3.util.HexId;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.chat.LazyEvent;
 import me.hapyl.eterna.module.entity.Entities;

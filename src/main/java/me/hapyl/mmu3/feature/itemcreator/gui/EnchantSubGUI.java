@@ -1,12 +1,11 @@
 package me.hapyl.mmu3.feature.itemcreator.gui;
 
-import me.hapyl.mmu3.feature.itemcreator.ItemCreator;
-import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.utils.PanelGUI;
-import me.hapyl.mmu3.utils.StaticItemIcon;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.inventory.Enchant;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
+import me.hapyl.eterna.module.inventory.gui.PlayerPageGUI;
+import me.hapyl.mmu3.feature.itemcreator.ItemCreator;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
@@ -18,14 +17,22 @@ import java.util.Map;
 
 public class EnchantSubGUI extends ItemCreatorSubGUI {
 
+    private int start;
+
     public EnchantSubGUI(Player player) {
         super(player, "Enchantments", Size.FIVE);
-        updateInventory(0);
+
         openInventory();
     }
 
-    public void updateInventory(int start) {
-        clearSubGUI();
+    public void openInventory(int start) {
+        this.start = start;
+        openInventory();
+    }
+
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
 
         final ItemCreator creator = creator();
         final Map<Enchantment, Integer> presentEnchants = creator.getEnchantMap();
@@ -43,42 +50,43 @@ public class EnchantSubGUI extends ItemCreatorSubGUI {
                 setItem(
                         slot,
                         new ItemBuilder(enchant.getMaterial())
-                                .setName((isPresent ? "&a&l" : "&c") + enchantName)
+                                .setName((isPresent ? "&2" : "&c") + enchantName)
                                 .addSmartLore(enchant.getDescription())
                                 .addLore()
-                                .addLore("Max vanilla level: &b%s".formatted(enchant.getVanillaMaxLvl()))
+                                .addLore("Max Vanilla Level: &b%s".formatted(enchant.getVanillaMaxLvl()))
                                 .addLore()
-                                .addLore("&eClick to choose level")
-                                .addLoreIf("&eRight Click to remove enchant", isPresent)
+                                .addLore("&8◦ &eLeft-Click to enchant")
+                                .addLoreIf("&8◦ &6Right-Click to disenchant", isPresent)
                                 .predicate(isPresent, ItemBuilder::glow)
                                 .hideFlags()
                                 .build()
                 );
 
-                setClick(slot, player -> new AmountSubGUI(
+                setAction(slot, player -> new AmountSubGUI(
                         player,
                         "Enchant Level",
-                        "For " + enchantName,
-                        enchant.getMaterial(), 1000, new EnchantSubGUI(player)
+                        """
+                                For %s.
+                                """.formatted(enchantName),
+                        enchant.getMaterial(),
+                        1, 1000,
+                        this
                 ) {
                     @Override
                     public void onClose(int amount) {
                         presentEnchants.put(bukkitEnchant, amount);
-                        EnchantSubGUI.this.updateInventory(start);
-                        Message.sound(getPlayer(), Sound.ENTITY_PLAYER_LEVELUP, 2.0f);
-                    }
+                        Message.sound(player, Sound.ENTITY_PLAYER_LEVELUP, 2.0f);
 
-                    @Override
-                    public PanelGUI returnToGUI() {
-                        return new EnchantSubGUI(getPlayer());
+                        EnchantSubGUI.this.openInventory(start);
                     }
                 }, ClickType.LEFT);
 
                 if (isPresent) {
-                    setClick(slot, player -> {
+                    setAction(slot, player -> {
                         presentEnchants.remove(bukkitEnchant);
-                        Message.info(player, "Removed %s from enchants.", enchantName);
-                        updateInventory(start);
+                        Message.info(player, "Removed %s from enchants.".formatted(enchantName));
+
+                        openInventory(start);
                     }, ClickType.RIGHT);
                 }
 
@@ -92,31 +100,26 @@ public class EnchantSubGUI extends ItemCreatorSubGUI {
 
         // Page Arrows
         if (start >= 14) {
-            setItem(39, StaticItemIcon.PAGE_PREVIOUS, player -> updateInventory(start - 14));
+            setItem(39, PlayerPageGUI.ICON_PAGE_PREVIOUS, player -> openInventory(start - 14));
         }
 
         if (start < (enchants.length - start)) {
-            setItem(41, StaticItemIcon.PAGE_NEXT, player -> updateInventory(start + 14));
+            setItem(41, PlayerPageGUI.ICON_PAGE_NEXT, player -> openInventory(start + 14));
         }
-
-    }
-
-    @Override
-    public void updateInventory() {
-        updateInventory(0);
     }
 
     public ItemStack buildPreviewItem() {
-        final ItemBuilder builder = new ItemBuilder(Material.LAPIS_LAZULI).setName("Enchantments Preview:");
+        final ItemBuilder builder = new ItemBuilder(Material.ENCHANTED_BOOK).setName("&2Enchantments Preview");
+
         if (creator().getEnchantMap().isEmpty()) {
             builder.addLore("&8None!");
         }
         else {
             creator().getEnchantMap().forEach((enchant, lvl) -> {
-                builder.addLore(" &9%s &l%s".formatted(Chat.capitalize(enchant.getKey().getKey()), lvl));
+                builder.addLore(" &9%s %s".formatted(Chat.capitalize(enchant.getKey().getKey()), lvl));
             });
         }
-        return builder.addLore().addLore("&eClick to confirm").build();
+        return builder.addLore().addLore("&8◦ &eLeft-Click to open confirm").build();
     }
 
 }

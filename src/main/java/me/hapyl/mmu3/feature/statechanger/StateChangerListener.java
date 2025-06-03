@@ -2,7 +2,7 @@ package me.hapyl.mmu3.feature.statechanger;
 
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.utils.InjectListener;
+import me.hapyl.mmu3.util.InjectListener;
 import org.bukkit.GameMode;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

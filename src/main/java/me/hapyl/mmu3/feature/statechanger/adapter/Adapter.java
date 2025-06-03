@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import org.bukkit.ChatColor;
@@ -26,15 +27,16 @@ public abstract class Adapter<T extends BlockData> {
         this.className = String.join(" ", words);
     }
 
-    public abstract void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull T blockData);
+    public abstract void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull T blockData, @Nonnull StateChangerData data);
 
-    public void updateIfInstance(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull BlockData data) {
-        if (!clazz.isInstance(data)) {
+    public void updateIfInstance(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull BlockData blockData, @Nonnull StateChangerData data) {
+        if (!clazz.isInstance(blockData)) {
             return;
         }
 
-        final T blockData = clazz.cast(data);
-        update(gui, player, blockData);
+        final T instanceBlockData = clazz.cast(blockData);
+
+        update(gui, player, instanceBlockData, data);
     }
 
     @Override

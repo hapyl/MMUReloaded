@@ -112,7 +112,12 @@ public enum Message {
     }
 
     public static void debug(Object message, Object... replacements) {
-        Chat.broadcastOp((PREFIX_DEBUG + message).formatted(colorReplacements(ChatColor.GRAY, ChatColor.RED, replacements)));
+        final String toBroadcast = (PREFIX_DEBUG + message).formatted(colorReplacements(ChatColor.GRAY, ChatColor.RED, replacements));
+
+        Chat.broadcastOp(toBroadcast);
+
+        // Also console!
+        Chat.sendMessage(Bukkit.getConsoleSender(), toBroadcast);
     }
 
     public static void success(CommandSender sender, String message, Object... replacements) {
