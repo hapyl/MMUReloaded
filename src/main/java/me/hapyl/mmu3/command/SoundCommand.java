@@ -12,12 +12,15 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Objects;
 
 public class SoundCommand extends SimplePlayerAdminCommand {
 
-    private final Registry<Sound> registry = Registry.SOUNDS;
+    private final Registry<@NotNull Sound> registry = Registry.SOUNDS;
 
     public SoundCommand(String name) {
         super(name);
@@ -32,7 +35,7 @@ public class SoundCommand extends SimplePlayerAdminCommand {
         // sound command (Sound) (Pitch)
         if (args.length >= 1) {
             if (args[0].equalsIgnoreCase("command") && (args.length == 3)) {
-                final Sound sound = registry.get(NamespacedKey.minecraft(args[1]));
+                final Sound sound = registry.get(NamespacedKey.minecraft(args[1].toLowerCase()));
                 final float pitch = Math.clamp(Numbers.getFloat(args[2]), 0.0f, 2.0f);
 
                 if (sound == null) {
@@ -41,10 +44,12 @@ public class SoundCommand extends SimplePlayerAdminCommand {
                 }
 
                 // execute play at self location
+                final NamespacedKey key = key(sound);
+
                 Message.clickHover(
                         player,
                         LazyClickEvent.SUGGEST_COMMAND.of("execute as @a at @s run playsound %s record @s ~ ~ ~ 1 %s".formatted(
-                                sound.getKey().getKey(),
+                                key.getKey(),
                                 pitch
                         )),
                         LazyHoverEvent.SHOW_TEXT.of("&aClick to copy Minecraft command."),
@@ -60,7 +65,7 @@ public class SoundCommand extends SimplePlayerAdminCommand {
                     Message.clickHover(
                             player,
                             LazyClickEvent.SUGGEST_COMMAND.of("execute as @a at @s run playsound %s record @s %s %s %s 1 %s".formatted(
-                                    sound.getKey().getKey(),
+                                    key.getKey(),
                                     location.getBlockX(),
                                     location.getBlockY(),
                                     location.getBlockZ(),
@@ -127,8 +132,13 @@ public class SoundCommand extends SimplePlayerAdminCommand {
             return "null";
         }
 
-        final String value = sound.key().value();
+        final String value = key(sound).value();
         return Chat.capitalize(value.replace(".", " ").replace("_", " "));
+    }
+
+    @Nonnull
+    private NamespacedKey key(Sound sound) {
+        return Objects.requireNonNull(registry.getKey(sound), "Unkeyed sound!");
     }
 
     @Override
