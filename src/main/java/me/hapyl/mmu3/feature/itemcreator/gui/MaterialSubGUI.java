@@ -1,62 +1,80 @@
 package me.hapyl.mmu3.feature.itemcreator.gui;
 
 import com.google.common.collect.Lists;
-import me.hapyl.mmu3.PersistentPlayerData;
-import me.hapyl.mmu3.feature.itemcreator.Category;
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.inventory.Response;
 import me.hapyl.eterna.module.inventory.SignGUI;
-import me.hapyl.eterna.module.inventory.gui.Action;
+import me.hapyl.eterna.module.inventory.gui.PlayerPageGUI;
+import me.hapyl.mmu3.PersistentPlayerData;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nullable;
+import java.util.Comparator;
 import java.util.List;
 
 // Todo -> Btw Mojang broke something again duh, fix this.
 public class MaterialSubGUI extends ItemCreatorSubGUI {
 
+    private static final List<Material> allItems;
+
+    static {
+        allItems = Lists.newArrayList();
+
+        for (Material material : Material.values()) {
+            if (!material.isAir() && material.isItem()) {
+                allItems.add(material);
+            }
+        }
+
+        // Default sort by names, can't fucking sort by category anymore because, I'll give you one guess........ YES! MOJANG BROKE IT!
+        allItems.sort(Comparator.comparing(Material::name));
+    }
+
     private final int PAGE_ITEM_AMOUNT = 36;
     private final ItemStack PANEL_ITEM_GRAY = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName("&f").build();
 
     private final PersistentPlayerData data;
-    private Category category;
     private List<Material> items;
+    private int start;
 
-    public MaterialSubGUI(Player player, Category category) {
+    public MaterialSubGUI(Player player) {
         super(player, "Select Material", Size.FIVE);
-        this.category = category;
-        this.items = category.getItems();
+
         this.data = PersistentPlayerData.getData(player);
-        updateInventory();
+        this.items = Lists.newArrayList(allItems);
+
         openInventory();
     }
 
-    public void updateInventory(int start) {
-        final String query = data.getLastItemCreatorQuery();
-        fillItem(0, 8, PANEL_ITEM);
-        setPanelGoBack(0, "Item Creator", ItemCreatorGUI::new);
+    public void openInventory(int start) {
+        this.start = start;
 
-        if (query == null) {
-            items = category.getItems();
-        }
-        else {
-            sortByQuery();
-        }
+        openInventory();
+    }
+
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
+
+        final String query = data.getLastItemCreatorQuery();
+
+        sortByQuery();
 
         // set arrows
         if (start >= PAGE_ITEM_AMOUNT) {
-            setItem(0, new ItemBuilder(Material.ARROW).setName("&aPrevious Page").build());
-            setClick(0, player -> updateInventory(start - PAGE_ITEM_AMOUNT));
+            setItem(0, PlayerPageGUI.ICON_PAGE_PREVIOUS);
+            setAction(0, player -> openInventory(start - PAGE_ITEM_AMOUNT));
         }
 
         if (items.size() - start > PAGE_ITEM_AMOUNT) {
-            setItem(8, new ItemBuilder(Material.ARROW).setName("&aNext Page").build());
-            setClick(8, player -> updateInventory(start + PAGE_ITEM_AMOUNT));
+            setItem(8, PlayerPageGUI.ICON_PAGE_NEXT);
+            setAction(8, player -> openInventory(start + PAGE_ITEM_AMOUNT));
         }
 
         // Search
@@ -74,24 +92,25 @@ public class MaterialSubGUI extends ItemCreatorSubGUI {
                         .build()
         );
 
-        setClick(4, player -> new SignGUI(player, "Enter Query") {
-            @Override
-            public void onResponse(Response response) {
-                data.setLastItemCreatorQuery(response.getAsString());
-                sortByQuery();
-                runSync(() -> {
-                    updateInventory();
-                    openInventory();
-                });
-            }
-        }, ClickType.LEFT);
+        setAction(
+                4, player -> new SignGUI(player, "Enter Query") {
+                    @Override
+                    public void onResponse(Response response) {
+                        data.setLastItemCreatorQuery(response.getAsString());
+                        start = 0; // Reset pointer as well
+                        runSync(() -> openInventory());
+                    }
+                }, ClickType.LEFT
+        );
 
-        setClick(4, player -> {
-            data.setLastItemCreatorQuery(null);
-            items = category.getItems();
-            Message.sound(player, Sound.ENTITY_CAT_AMBIENT, 2.0f);
-            updateInventory();
-        }, ClickType.RIGHT);
+        setAction(
+                4, player -> {
+                    data.setLastItemCreatorQuery(null);
+                    items = Lists.newArrayList(allItems);
+                    Message.sound(player, Sound.ENTITY_CAT_AMBIENT, 2.0f);
+                    openInventory();
+                }, ClickType.RIGHT
+        );
 
         // Set items
         for (int i = 0; i < PAGE_ITEM_AMOUNT; i++) {
@@ -99,57 +118,34 @@ public class MaterialSubGUI extends ItemCreatorSubGUI {
             if (start + i < items.size()) {
                 final Material material = items.get(start + i);
                 setItem(slot, new ItemBuilder(material).setName("&a" + Chat.capitalize(material)).addLore("Click to select.").build());
-                setClick(slot, player -> {
-                    creator().setMaterial(material);
-                    new ItemCreatorGUI(player);
-                });
+                setAction(
+                        slot, player -> {
+                            creator().setMaterial(material);
+                            new ItemCreatorGUI(player);
+                        }
+                );
             }
             else {
-                setItem(slot, PANEL_ITEM_GRAY, (Action) null);
+                setItem(slot, PANEL_ITEM_GRAY);
             }
         }
 
-        // Set categories
-        int slot = 2;
-        for (Category value : Category.values()) {
-            final boolean selected = value == category;
-            setPanelItem(
-                    slot,
-                    new ItemBuilder(value.getMaterial())
-                            .setName("&a" + Chat.capitalize(value.name()))
-                            .addSmartLore(value.getString())
-                            .addLore()
-                            .addLore(selected ? "&eCurrently selected!" : "&eClick to select")
-                            .predicate(selected, ItemBuilder::glow)
-                            .toItemStack(),
-                    player -> {
-                        category = value;
-                        items = category.getItems();
-                        updateInventory(0);
-                    }
-            );
-            ++slot;
-        }
     }
 
     private void sortByQuery() {
-        final List<Material> items = Lists.newArrayList();
+        @Nullable final String query = data.getLastItemCreatorQuery();
 
-        for (Category value : Category.values()) {
-            final List<Material> categoryItems = value.getItems();
-            for (Material material : categoryItems) {
-                final String replace = material.name().replace("_", " ").toLowerCase();
-                if (replace.contains(data.getLastItemCreatorQuery().toLowerCase())) {
-                    items.add(material);
-                }
-            }
+        if (query == null) {
+            return;
         }
 
-        this.items = items;
+        this.items = allItems.stream()
+                .filter(material -> {
+                    final String materialName = material.name().replace("_", " ").toLowerCase();
+
+                    return materialName.contains(query.toLowerCase());
+                })
+                .toList();
     }
 
-    @Override
-    public void updateInventory() {
-        updateInventory(0);
-    }
 }

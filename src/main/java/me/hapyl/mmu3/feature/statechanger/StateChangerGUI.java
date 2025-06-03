@@ -1,22 +1,24 @@
 package me.hapyl.mmu3.feature.statechanger;
 
-import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.feature.statechanger.adapter.Adapter;
-import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.utils.PanelGUI;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.chat.LazyEvent;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.player.PlayerLib;
+import me.hapyl.eterna.module.util.BukkitUtils;
 import me.hapyl.eterna.module.util.CollectionUtils;
-import org.bukkit.ChatColor;
+import me.hapyl.mmu3.Main;
+import me.hapyl.mmu3.feature.statechanger.adapter.Adapter;
+import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.util.PanelGUI;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.Skull;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,28 +30,15 @@ public class StateChangerGUI extends PanelGUI {
 
     private static final String REPORT_MISSING_MODIFIER_URL = "https://github.com/hapyl/MMUReloaded/issues/new?template=replacer-missing-modifiers.md";
 
-    private final Data data;
+    private final StateChangerData data;
 
-    public StateChangerGUI(Player player, String name, Data data) {
-        super(player, name, Size.FIVE);
+    public StateChangerGUI(Player player, String name, StateChangerData data) {
+        super(player, name, Size.FOUR);
         this.data = data;
 
-        setBottomPanel();
-        updateInventory();
-    }
-
-    public void updateInventory() {
-        final BlockData blockData = data.getBlockData();
-
-        Main.getRegistry().stateChanger.getAdapters().forEach(adapter -> {
-            adapter.updateIfInstance(this, player, blockData);
-        });
-
-        // Open Inventory
         openInventory();
     }
 
-    // FIXME (hapyl): 012, Mar 12: Maybe add like auto adapters but like I kinda like that water is always in the same slot idk man
     public void setItem(Adapter<?> adapter, int slot, boolean condition, @Nonnull Material material, @Nonnull String name, @Nonnull String description, @Nullable Object... format) {
         setItem(adapter, slot, ConditionedMaterial.of(condition, material, material), name, description, format);
     }
@@ -67,77 +56,84 @@ public class StateChangerGUI extends PanelGUI {
         setItem(
                 slot,
                 new ItemBuilder(material.getMaterial())
-                        .setName((condition ? ChatColor.GREEN : ChatColor.RED) + name)
+                        .setName(name + " " + BukkitUtils.checkmark(condition))
                         .addLore(adapter.toString())
                         .addLore()
                         .addTextBlockLore(description.formatted(format))
                         .addLore()
-                        .addLore(ChatColor.GOLD + "Click to toggle!")
+                        .addLore("&8◦ &eLeft-Click to toggle")
                         .predicate(condition, ItemBuilder::glow)
                         .asIcon()
         );
     }
 
     public <T extends BlockData> void applyState(int slot, @Nonnull T data, @Nonnull Consumer<T> consumer) {
-        setClick(slot, player -> {
-            final Block block = this.data.getBlock();
+        setAction(
+                slot, player -> {
+                    final Block block = this.data.getBlock();
 
-            consumer.accept(data);
-            block.setBlockData(data, false);
-            playSoundAndUpdateInventory();
-        });
+                    consumer.accept(data);
+                    block.setBlockData(data, false);
+                    playSoundAndUpdateInventory();
+                }
+        );
     }
 
     public <T> void setSwitchItem(Adapter<?> adapter, int slot, @Nonnull T[] values, @Nonnull T currentValue, @Nonnull Material material, @Nonnull String name, @Nonnull String description, @Nullable Object... format) {
-        final ItemBuilder builder = new ItemBuilder(material).setName(name)
+        final ItemBuilder builder = new ItemBuilder(material)
+                .setName(name)
                 .addLore(adapter.toString())
                 .addLore()
                 .addTextBlockLore(description.formatted(format))
                 .addLore();
 
         for (T t : values) {
-            builder.addLore("&a" + (currentValue.equals(t) ? " ➥ &l" : "") + Chat.capitalize(t.toString()));
+            builder.addLore((currentValue.equals(t) ? "&b ➥ " : "&8 ") + Chat.capitalize(t.toString()));
         }
 
         builder.addLore();
-        builder.addLore("&eLeft Click to cycle.");
-        builder.addLore("&6Right Click to cycle backwards.");
+        builder.addLore("&8◦ &eLeft-Click to cycle");
+        builder.addLore("&8◦ &6Right-Click to cycle backwards");
 
         setItem(slot, builder.build());
     }
 
+    @Override
+    public void setItem(int slot, @Nullable ItemStack item) {
+        super.setItem(slot, item);
+
+        // This is really a hacky wacky fucky ducky mucky way of doing this by I ain't rewriting everything
+        // just because my stupid ass wants player heads to show their textures
+        fixBlockSpecificState(slot);
+    }
+
     public <T extends BlockData, V> void applySwitch(int slot, @Nonnull T blockData, @Nonnull V[] values, @Nonnull V currentValue, @Nonnull BiConsumer<T, V> consumer) {
-        setClick(
+        setAction(
                 slot,
-                player -> {
-                    applyState(blockData, d -> consumer.accept(d, CollectionUtils.getNextValue(values, currentValue)));
-                },
+                player -> applyState(blockData, d -> consumer.accept(d, CollectionUtils.getNextValue(values, currentValue))),
                 ClickType.LEFT
         );
 
-        setClick(
+        setAction(
                 slot,
-                player -> {
-                    applyState(blockData, d -> consumer.accept(d, CollectionUtils.getPreviousValue(values, currentValue)));
-                },
+                player -> applyState(blockData, d -> consumer.accept(d, CollectionUtils.getPreviousValue(values, currentValue))),
                 ClickType.RIGHT
         );
     }
 
-    public void setLevelableItem(Adapter<?> adapter, int slot, int level, int maxLevel, Material material, String name, String description, @Nullable Object... format) {
+    public void setLevelableItem(Adapter<?> adapter, int slot, int level, int maxLevel, Material material, String name, String description) {
         final ItemBuilder builder = new ItemBuilder(material).setName(name)
                 .setAmount(Math.max(level, 1))
                 .addLore(adapter.toString())
                 .addLore()
-                .addTextBlockLore(description.formatted(format));
+                .addTextBlockLore(description);
         final String nameLowercase = name.toLowerCase(Locale.ROOT);
 
         builder.addLore();
-        builder.addLore("&aCurrent %s: &l%s".formatted(name, level));
-        builder.addLore("&aMaximum %s: &l%s".formatted(name, maxLevel));
+        builder.addLore("Current %s: &a%s&8/&6%s".formatted(name, level, maxLevel));
         builder.addLore();
-        builder.addLore("&eLeft Click to increase %s.".formatted(nameLowercase));
-        builder.addLore("&6Right Click to decrease %s.".formatted(nameLowercase));
+        builder.addLore("&8◦ &eLeft-Click to increase %s".formatted(nameLowercase));
+        builder.addLore("&8◦ &6Right-Click to decrease %s".formatted(nameLowercase));
 
         setItem(slot, builder.build());
     }
@@ -147,16 +143,43 @@ public class StateChangerGUI extends PanelGUI {
     }
 
     public <T extends BlockData> void applyLevelable(int slot, T blockData, int minLevel, int level, int maxLevel, BiConsumer<T, Integer> consumer) {
-        setClick(
+        setAction(
                 slot,
                 player -> applyState(blockData, d -> consumer.accept(d, level + 1 > maxLevel ? minLevel : level + 1)),
                 ClickType.LEFT
         );
-        setClick(
+        setAction(
                 slot,
                 player -> applyState(blockData, d -> consumer.accept(d, level - 1 < minLevel ? maxLevel : level - 1)),
                 ClickType.RIGHT
         );
+    }
+
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
+
+        fillRow(0, PANEL_ITEM);
+        setBottomPanel();
+
+        final BlockData blockData = data.getBlockData();
+
+        Main.getRegistry().stateChanger.getAdapters().forEach(adapter -> {
+            adapter.updateIfInstance(this, player, blockData, data);
+        });
+    }
+
+    public void fixBlockSpecificState(int slot) {
+        // Fix skulls
+        if (data.getBlock().getState() instanceof Skull skull) {
+            final ItemStack item = getItem(slot);
+
+            if (item != null) {
+                ItemBuilder.modifyMeta(
+                        item, SkullMeta.class, meta -> meta.setPlayerProfile(skull.getPlayerProfile())
+                );
+            }
+        }
     }
 
     private void setBottomPanel() {
@@ -167,15 +190,18 @@ public class StateChangerGUI extends PanelGUI {
                 6,
                 new ItemBuilder(Material.MAP)
                         .setName("Missing Modifiers?")
-                        .setSmartLore("If this block is missing some modifiers, you can report it!")
-                        .addLore()
-                        .addLore("&6Click to get link!")
-                        .build(), player -> {
+                        .addTextBlockLore("""
+                                Is this block missing modifiers?
+                                Report it!
+                                
+                                &8◦ &eLeft-Click to get link
+                                """)
+                        .asIcon(), player -> {
                     Chat.sendClickableHoverableMessage(
                             player,
                             LazyEvent.openUrl(REPORT_MISSING_MODIFIER_URL),
                             LazyEvent.showText("&eClick to open the link!"),
-                            "&6&lCLICK HERE&f to report a missing modifier!"
+                            Message.PREFIX + "&6&lCLICK HERE&f to report a missing modifier!"
                     );
 
                     PlayerLib.plingNote(player, 2.0f);
@@ -187,17 +213,21 @@ public class StateChangerGUI extends PanelGUI {
         setPanelItem(
                 7,
                 new ItemBuilder(Material.COMMAND_BLOCK)
-                        .setName("&aRestore Block")
-                        .setSmartLore("Restores blocks to its original form before opening the menu.")
-                        .build(),
+                        .setName("Restore Block")
+                        .addTextBlockLore("""
+                                Restores this block to its original state before opening the menu.
+                                
+                                &8◦ &eLeft-Click to restore
+                                """)
+                        .asIcon(),
                 player -> {
                     data.restoreOriginalBlockData();
                     player.closeInventory();
-                    Message.success(player, "Restored.");
+                    Message.success(player, "Restored!");
                 }
         );
 
-        setItem(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName("&cNo Modifier").build(), 10, 19, 28, 16, 25, 34);
+        setItem(new ItemBuilder(Material.WHITE_STAINED_GLASS_PANE).setName("&cNo Modifier").build(), 10, 19, 28, 16, 25, 34);
     }
 
     private void setItem(ItemStack item, int... slots) {
@@ -215,8 +245,8 @@ public class StateChangerGUI extends PanelGUI {
     }
 
     private void playSoundAndUpdateInventory() {
-        PlayerLib.playSound(getPlayer(), Sound.BLOCK_NOTE_BLOCK_PLING, 2.0f);
-        updateInventory();
+        PlayerLib.playSound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 2.0f);
+        openInventory();
     }
 
 }

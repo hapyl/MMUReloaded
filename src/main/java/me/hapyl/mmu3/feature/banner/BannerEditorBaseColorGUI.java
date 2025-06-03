@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.feature.banner;
 
-import me.hapyl.mmu3.utils.PanelGUI;
+import me.hapyl.mmu3.util.PanelGUI;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.inventory.gui.SlotPattern;
@@ -15,11 +15,14 @@ public class BannerEditorBaseColorGUI extends PanelGUI {
         super(player, "Select Base Color", Size.TWO);
 
         this.data = data;
-        updateInventory();
+
+        openInventory();
     }
 
     @Override
-    public void updateInventory() {
+    public void onUpdate() {
+        super.onUpdate();
+
         final SmartComponent component = new SmartComponent();
 
         for (BaseBannerColor color : BaseBannerColor.values()) {
@@ -38,6 +41,6 @@ public class BannerEditorBaseColorGUI extends PanelGUI {
         }
 
         component.apply(this, SlotPattern.CHUNKY, 0);
-        openInventory();
     }
+
 }

@@ -1,15 +1,14 @@
 package me.hapyl.mmu3.feature.candle;
 
 import com.google.common.collect.Maps;
-import me.hapyl.eterna.module.registry.Key;
-import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.feature.Feature;
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.entity.Entities;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.inventory.ItemEventHandler;
-import me.hapyl.eterna.module.util.Nulls;
+import me.hapyl.eterna.module.registry.Key;
 import me.hapyl.eterna.module.util.ThreadRandom;
+import me.hapyl.mmu3.Main;
+import me.hapyl.mmu3.feature.Feature;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -20,29 +19,37 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
+import java.util.Comparator;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class CandleController extends Feature implements Listener {
+
+    private static final String candleTag = "__candle__";
 
     private final Map<UUID, Data> playerData;
 
     private final ItemStack CANDLE_ITEM = new ItemBuilder(Material.TORCH, Key.ofString("mmu3_candle"))
-            .setName("&aCandle")
-            .addSmartLore("Place on a block to create a candle. Left click to change candle texture.")
-            .addClickEvent(CandleGUI::new, Action.LEFT_CLICK_AIR, Action.LEFT_CLICK_BLOCK)
+            .setName("Candle")
+            .setItemModel(Material.CANDLE)
+            .addTextBlockLore("""
+                    Place on a block to create a candle.
+                    
+                    &8&o;;You can break the torch block of the candle to remove the candle.
+                    
+                    &8◦ &eLeft-Click on air to change texture
+                    """)
             .setEventHandler(new ItemEventHandler() {
                 @Override
                 public void onLeftClick(@Nonnull Player player, @Nonnull PlayerInteractEvent ev) {
+                    new CandleGUI(player);
+
                     ev.setCancelled(true);
                 }
 
@@ -56,17 +63,19 @@ public class CandleController extends Feature implements Listener {
                         location.setYaw(ThreadRandom.nextFloat() * 160.0f);
                     }
 
-                    // spawn armor stand
-                    Entities.ARMOR_STAND_MARKER.spawn(location.add(0.5d, -1.5d, 0.5d), self -> {
-                        self.setInvisible(true);
-                        self.setSilent(true);
-                        self.addScoreboardTag("__candle__");
-                        Nulls.runIfNotNull(self.getEquipment(), equipment -> equipment.setHelmet(data.getCandle().getItem()));
-                    }, Main.getPlugin());
+                    // Spawn armor stand
+                    Entities.ARMOR_STAND_MARKER.spawn(
+                            location.add(0.5d, -1.5d, 0.5d), self -> {
+                                self.setMarker(true);
+                                self.setInvisible(true);
+                                self.setSilent(true);
+                                self.addScoreboardTag(candleTag);
+                                self.getEquipment().setHelmet(data.getCandle().getItem());
+                            }, Main.entityCache()
+                    );
                 }
             })
             .glow()
-            .setCancelClicks(false)
             .build();
 
     public CandleController(Main mmu3plugin) {
@@ -83,22 +92,21 @@ public class CandleController extends Feature implements Listener {
             return;
         }
 
-        final Location location = block.getLocation();
+        final Location location = block.getLocation().add(0.5, 0, 0.5);
         final World world = location.getWorld();
-        if (world == null) {
-            return;
-        }
 
-        final Set<Entity> candles = world
-                .getNearbyEntities(location, 1.0d, 2.0d, 1.0d)
+        final Entity candle = world
+                .getNearbyEntities(location, 0.51, 2.0, 0.51)
                 .stream()
                 .filter(entity -> entity instanceof ArmorStand stand && stand.getScoreboardTags().contains("__candle__"))
-                .collect(Collectors.toSet());
+                .min(Comparator.comparingDouble(e -> e.getLocation().distanceSquared(location)))
+                .orElse(null);
 
-        if (!candles.isEmpty()) {
-            Message.info(player, "Removed %s candles.", candles.size());
+        if (candle != null) {
+            Message.info(player, "Removed the candle!");
             Message.sound(player, Sound.ITEM_SHIELD_BREAK, 2.0f);
-            candles.forEach(Entity::remove);
+
+            candle.remove();
         }
     }
 

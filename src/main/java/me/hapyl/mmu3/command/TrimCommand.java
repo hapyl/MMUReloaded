@@ -5,7 +5,7 @@ import me.hapyl.mmu3.feature.trim.EnumTrimMaterial;
 import me.hapyl.mmu3.feature.trim.EnumTrimPattern;
 import me.hapyl.mmu3.feature.trim.CachedTrimData;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.utils.HexId;
+import me.hapyl.mmu3.util.HexId;
 import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

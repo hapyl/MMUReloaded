@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.Axis;
 import org.bukkit.Material;
@@ -24,21 +25,21 @@ public class AdapterOrientable extends Adapter<Orientable> {
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Orientable blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Orientable blockData, @Nonnull StateChangerData data) {
         final Axis axis = blockData.getAxis();
 
         for (Axis axe : blockData.getAxes()) {
             final boolean isCurrentAxis = axis == axe;
-            final AxisData data = axisSlotMap.get(axe);
+            final AxisData axisData = axisSlotMap.get(axe);
 
-            if (data == null) {
+            if (axisData == null) {
                 continue;
             }
 
-            gui.setItem(this, data.slot, isCurrentAxis, data.material, "Axis", "Whenever this block is pointing towards the %s axis.", axe);
+            gui.setItem(this, axisData.slot, isCurrentAxis, axisData.material, "Axis", "Whenever this block is pointing towards the %s axis.", axe);
 
             if (!isCurrentAxis) {
-                gui.applyState(data.slot, blockData, d -> d.setAxis(axe));
+                gui.applyState(axisData.slot, blockData, d -> d.setAxis(axe));
             }
         }
 

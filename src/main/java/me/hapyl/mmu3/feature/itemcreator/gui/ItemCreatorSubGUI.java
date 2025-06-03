@@ -1,10 +1,13 @@
 package me.hapyl.mmu3.feature.itemcreator.gui;
 
+import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreator;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.utils.PanelGUI;
+import me.hapyl.mmu3.util.PanelGUI;
 import org.bukkit.entity.Player;
+
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 
 public abstract class ItemCreatorSubGUI extends PanelGUI {
 
@@ -18,30 +21,43 @@ public abstract class ItemCreatorSubGUI extends PanelGUI {
         super(player, "Item Creator %s %s".formatted(Message.ARROW, name), size);
 
         this.returnGUI = returnGUI == null ? new ItemCreatorGUI(player) : returnGUI;
-        this.clearSubGUI();
     }
 
-    public final void updateAndOpen() {
-        updateInventory();
-        openInventory();
+
+    @Override
+    @OverridingMethodsMustInvokeSuper
+    public void onUpdate() {
+        super.onUpdate();
+
+        fillItem(0, 8, PANEL_ITEM); // Fill top as well
+        setPanelGoBack(PanelSlot.CENTER, returnGUI.getName(), t -> openReturnGUI());
     }
 
-    public PanelGUI getPanelBack() {
-        return new ItemCreatorGUI(getPlayer());
+    protected void openReturnGUI() {
+        returnGUI.openInventory();
     }
 
-    public void clearSubGUI() {
-        clearEverything();
-        fillPanel();
+    public boolean willDiscardIfUsedGoBackButton() {
+        return false;
+    }
 
-        setPanelGoBack(PanelSlot.CENTER, returnGUI.getName(), (player) -> {
-            returnGUI.updateInventory();
-            returnGUI.openInventory();
-        });
+    @Override
+    public ItemBuilder goBackItemBuilder(String name) {
+        final ItemBuilder builder = super.goBackItemBuilder(name);
+
+        if (willDiscardIfUsedGoBackButton()) {
+            builder.addTextBlockLore("""
+                    
+                    &6&lCAREFUL!
+                    &eReturning back will discard any changed made.
+                    """);
+        }
+
+        return builder;
     }
 
     public final ItemCreator creator() {
-        return Main.getItemCreator().getCreator(getPlayer());
+        return Main.getItemCreator().getCreator(player);
     }
 
 }

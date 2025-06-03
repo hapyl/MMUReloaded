@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.entity.Player;
@@ -12,7 +13,7 @@ public class AdapterBisected extends Adapter<Bisected> {
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Bisected blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Bisected blockData, @Nonnull StateChangerData data) {
         final Bisected.Half half = blockData.getHalf();
         final boolean isTopHalf = half == Bisected.Half.TOP;
 

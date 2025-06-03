@@ -1,13 +1,14 @@
 package me.hapyl.mmu3.command;
 
-import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.feature.standeditor.Data;
-import me.hapyl.mmu3.feature.standeditor.StandEditor;
-import me.hapyl.mmu3.feature.standeditor.StandEditorGUI;
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
 import me.hapyl.eterna.module.util.BukkitUtils;
+import me.hapyl.mmu3.Main;
+import me.hapyl.mmu3.feature.standeditor.StandEditor;
+import me.hapyl.mmu3.feature.standeditor.StandEditorData;
+import me.hapyl.mmu3.feature.standeditor.StandEditorGUI;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
@@ -20,23 +21,35 @@ public class EditStandCommand extends SimplePlayerAdminCommand {
 
     @Override
     protected void execute(Player player, String[] args) {
-        final ArmorStand closest = (ArmorStand) BukkitUtils.getClosestEntityTo(
-                player.getNearbyEntities(10, 10, 10),
-                player.getLocation(),
-                EntityType.ARMOR_STAND
-        );
+        // Prioritise target armor stand
+        ArmorStand stand = null;
 
-        if (closest == null) {
-            Message.error(player, "No armor stands nearby that can be edited.");
+        Entity targetEntity = player.getTargetEntity(10, true);
+
+        // If not targeting entity or not armor stand, get the closest stand
+        if (!(targetEntity instanceof ArmorStand)) {
+            stand = (ArmorStand) BukkitUtils.getClosestEntityTo(
+                    player.getNearbyEntities(10, 10, 10),
+                    player.getLocation(),
+                    EntityType.ARMOR_STAND
+            );
+        }
+
+        if (stand == null) {
+            Message.error(player, "Neither target armor stand nor any nearby!");
             return;
         }
 
         final StandEditor editor = Main.getStandEditor();
-        if (!editor.isEditable(closest)) {
-            Message.error(player, "This armor stand is not editable!");
+
+        if (editor.isTaken(stand)) {
+            Message.error(player, "This armor stand is already being edited!");
             return;
         }
 
-        new StandEditorGUI(player, new Data(player, closest));
+        final StandEditorData data = editor.getData(player);
+        data.edit(stand);
+
+        new StandEditorGUI(player, data);
     }
 }

@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.feature.lastlocation;
 
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.utils.InjectListener;
+import me.hapyl.mmu3.util.InjectListener;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerTeleportEvent;

@@ -1,175 +1,233 @@
 package me.hapyl.mmu3.feature.itemcreator.gui;
 
-import com.google.common.collect.Maps;
-import me.hapyl.mmu3.feature.itemcreator.LinkedAttribute;
-import me.hapyl.mmu3.feature.itemcreator.LinkedEquipmentSlot;
-import me.hapyl.mmu3.message.Message;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.inventory.Response;
 import me.hapyl.eterna.module.inventory.SignGUI;
+import me.hapyl.eterna.module.registry.Key;
 import me.hapyl.eterna.module.util.Enums;
+import me.hapyl.mmu3.feature.itemcreator.ItemCreator;
+import me.hapyl.mmu3.feature.itemcreator.LinkedAttribute;
+import me.hapyl.mmu3.feature.itemcreator.LinkedEquipmentSlot;
+import me.hapyl.mmu3.message.Message;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
-import org.bukkit.inventory.EquipmentSlot;
 
 import java.util.Map;
+import java.util.UUID;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class AttributeModifySubGUI extends ItemCreatorSubGUI {
 
-    private final LinkedAttribute link;
-    private final Map<AttributeModifier.Operation, String> operationDescriptionMap;
+    private static final Map<AttributeModifier.Operation, String> operationDescriptionMap = Map.of(
+            AttributeModifier.Operation.ADD_NUMBER, "Adds the specified amount to the base value.",
+            AttributeModifier.Operation.ADD_SCALAR, "Adds this scaler of amount to the base value.",
+            AttributeModifier.Operation.MULTIPLY_SCALAR_1, "Multiplies the amount by this value after adding 1 to it."
+    );
 
-    private String name;
+    private final LinkedAttribute attribute;
+
+    private Key key;
     private AttributeModifier.Operation operation;
     private double amount;
-    private EquipmentSlot slot;
+    private LinkedEquipmentSlot slot;
 
-    public AttributeModifySubGUI(Player player, LinkedAttribute link) {
-        super(player, link.getName(), Size.FIVE, new AttributeSubGUI(player));
-        this.link = link;
+    public AttributeModifySubGUI(Player player, LinkedAttribute link, AttributeSubGUI gui) {
+        super(player, link.getName(), Size.FIVE, gui);
+        this.attribute = link;
 
-        this.operationDescriptionMap = Maps.newHashMap();
+        final ItemCreator creator = creator();
 
-        this.operationDescriptionMap.put(
-                AttributeModifier.Operation.ADD_NUMBER,
-                "Adds (or subtracts) the specified amount to the base value."
-        );
+        final Map<Attribute, AttributeModifier> attributes = creator.getAttributes();
+        final AttributeModifier modifier = attributes.get(link.getLink());
 
-        this.operationDescriptionMap.put(
-                AttributeModifier.Operation.ADD_SCALAR,
-                "Adds this scalar of amount to the base value."
-        );
+        // If the attribute present on creator means we're modifying it so read the data
+        if (modifier != null) {
+            this.key = Key.ofString(modifier.getKey().getKey());
+            this.operation = modifier.getOperation();
+            this.amount = modifier.getAmount();
+            this.slot = LinkedEquipmentSlot.ofLink(modifier.getSlotGroup());
+        }
+        // Else create a new instance, don't add it though
+        else {
+            this.key = randomKey(); // Random key by default
+            this.operation = AttributeModifier.Operation.ADD_NUMBER;
+            this.amount = 1;
+            this.slot = LinkedEquipmentSlot.ALL_SLOTS;
+        }
 
-        this.operationDescriptionMap.put(
-                AttributeModifier.Operation.MULTIPLY_SCALAR_1,
-                "Multiply amount by this value, after adding 1 to it."
-        );
-
-        final AttributeModifier modifier = creator().getAttributeModifierOrCompute(link);
-
-        this.name = modifier.getName();
-        this.amount = modifier.getAmount();
-        this.operation = modifier.getOperation();
-        this.slot = modifier.getSlot();
-
-        updateInventory();
+        openInventory();
     }
 
     @Override
-    public void updateInventory() {
-        setItem(13, ItemBuilder.of(link.getMaterial(), link.getName()).asIcon());
+    public boolean willDiscardIfUsedGoBackButton() {
+        return true;
+    }
 
-        // Name
-        setItem(28, ItemBuilder.of(
-                Material.FLOWER_BANNER_PATTERN,
-                "Name",
-                "Name of this modifier.",
-                "",
-                "Current Value: &e" + name,
-                "",
-                "&eClick to change"
-        ).asIcon(), player -> {
-            new SignGUI(player, "Enter Name") {
-                @Override
-                public void onResponse(Response response) {
-                    final String string = response.getAsString();
-                    if (string.isBlank() || string.isEmpty()) {
-                        Message.error(player, "Name cannot be empty.");
-                    }
-                    else {
-                        name = string;
-                    }
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
 
-                    runSync(AttributeModifySubGUI.this::updateInventory);
+        setItem(
+                13, new ItemBuilder(attribute.getMaterial())
+                        .setName(attribute.getName())
+                        .addTextBlockLore(attribute.getDescription())
+                        .addLore()
+                        .addLore("&8◦ &eLeft-Click to confirm")
+                        .asIcon(), player -> {
+                    creator().setAttribute(
+                            attribute.getLink(),
+                            new AttributeModifier(key.asNamespacedKey(), amount, operation, slot.getLink())
+                    );
+
+                    openReturnGUI();
                 }
-            };
-        });
+        );
+
+        // Key
+        setItem(
+                20,
+                new ItemBuilder(Material.NAME_TAG)
+                        .setName("Key")
+                        .addTextBlockLore("""
+                                A key of this modifier; modifiers with the same keys don't stack.
+                                
+                                Current Key: &f%s
+                                
+                                &8◦ &eLeft-Click to edit
+                                """.formatted(key.toString()))
+                        .asIcon(), player -> {
+                    new SignGUI(player, "Enter Key") {
+                        @Override
+                        public void onResponse(Response response) {
+                            final Key newKey = Key.ofStringOrNull(response.getAsString().toLowerCase());
+
+                            if (newKey == null) {
+                                Message.error(player, "Malformed key, must follow the %s pattern!".formatted(Key.PATTERN.toString()));
+                            }
+                            else {
+                                key = newKey;
+                            }
+
+                            runSync(AttributeModifySubGUI.this::openInventory);
+                        }
+                    };
+                }
+        );
 
         // Amount
         setItem(
                 30,
-                ItemBuilder.of(
-                        Material.OAK_SIGN,
-                        "Amount",
-                        "Amount by which this modifier will apply its Operation.",
-                        "",
-                        "Current Amount: &e" + amount,
-                        "",
-                        "&eClick to change amount"
-                ).asIcon(),
-                player -> {
-                    new SignGUI(player, "Enter Amount as Double") {
+                new ItemBuilder(Material.OAK_SIGN)
+                        .setName("Amount")
+                        .addTextBlockLore("""
+                                The amount by which this modifier will apply its operation.
+                                
+                                Current Amount: &e%.1f
+                                
+                                &8◦ &eLeft-Click to edit
+                                """.formatted(amount))
+                        .asIcon(), player -> {
+                    new SignGUI(player, "Enter Amount") {
                         @Override
                         public void onResponse(Response response) {
-                            final double aDouble = response.getDouble(0);
-                            if (aDouble < 0.0d) {
-                                Message.error(player, "Amount cannot be negative.");
+                            final double newAmount = response.getDouble(0);
+
+                            if (newAmount == 0.0) {
+                                Message.error(player, "Amount cannot be 0!");
+                            }
+                            else if (Math.abs(newAmount) > 1_000) {
+                                Message.error(player, "Amount out of range (-1000 to 1000)!");
                             }
                             else {
-                                amount = aDouble;
+                                amount = newAmount;
                             }
 
-                            runSync(AttributeModifySubGUI.this::updateInventory);
+                            runSync(AttributeModifySubGUI.this::openInventory);
                         }
                     };
                 }
         );
 
         // Operation
-        final ItemBuilder operationBuilder = ItemBuilder.of(Material.COMPARATOR, "Operation", "Operation this modifier will apply.", "");
-
-        for (AttributeModifier.Operation value : AttributeModifier.Operation.values()) {
-            operationBuilder.addLore("&b" + (value.equals(operation) ? " ➥ &l" : "") + Chat.capitalize(value));
-            if (value.equals(operation)) {
-                operationBuilder.addSmartLore(operationDescriptionMap.get(operation), "&3 ");
-            }
-        }
-
-        operationBuilder.addLore();
-        operationBuilder.addLore("&eClick to cycle");
-
-        setItem(32, operationBuilder.asIcon(), player -> {
-            operation = Enums.getNextValue(AttributeModifier.Operation.class, operation);
-            updateInventory();
-        });
-
-        // Slots
-        final ItemBuilder slotBuilder = ItemBuilder.of(
-                LinkedEquipmentSlot.fromLink(slot).getMaterial(),
-                "Equipment Slot",
-                "EquipmentSlot this Attribute Modifier is active on.",
-                ""
+        makeCycleItem(
+                32,
+                Material.COMPARATOR,
+                "Operation",
+                "Operation this modifier will perform.",
+                AttributeModifier.Operation.class,
+                operation,
+                operationDescriptionMap::get,
+                op -> operation = op
         );
 
-        for (LinkedEquipmentSlot value : LinkedEquipmentSlot.values()) {
-            final boolean isCurrent = value.getLink() == slot;
-            slotBuilder.addLore("&b" + (isCurrent ? " ➥ &l" : "") + Chat.capitalize(value));
+        // Slot
+        makeCycleItem(
+                24,
+                slot.getMaterial(),
+                "Equipment Slot",
+                "Equipment slot this attribute is active on.",
+                LinkedEquipmentSlot.class,
+                slot,
+                LinkedEquipmentSlot::getDescription,
+                sl -> slot = sl
+        );
+    }
 
+    private <E extends Enum<E>> void makeCycleItem(int slot, Material material, String name, String description, Class<E> enumClass, E current, Function<E, String> currentValueDescriptionFn, Consumer<E> applyAction) {
+        final ItemBuilder builder = new ItemBuilder(material)
+                .setName("" + name)
+                .addTextBlockLore(description)
+                .addLore();
+
+        final E[] values = enumClass.getEnumConstants();
+
+        for (E value : values) {
+            final boolean isCurrent = current.equals(value);
+            final String valueName = Chat.capitalize(value);
+
+            builder.addLore(
+                    isCurrent
+                            ? "&b ➥ " + valueName
+                            : "&8 " + valueName
+            );
+
+            // If the current value, display the description
             if (isCurrent) {
-                slotBuilder.addSmartLore(value.getName(), "&3 ");
+                builder.addTextBlockLore(currentValueDescriptionFn.apply(value), "&7&o ");
             }
         }
 
-        slotBuilder.addLore();
-        slotBuilder.addLore("&eClick to cycle forward");
-        slotBuilder.addLore("&6Right Click to cycle backwards");
+        builder.addLore();
+        builder.addLore("&8◦ &eLeft-Click to cycle");
+        builder.addLore("&8◦ &6Right-Click to cycle backwards");
 
-        setItem(34, slotBuilder.asIcon());
+        setItem(slot, builder.asIcon());
 
-        setClick(34, player -> {
-            slot = slot == null ? EquipmentSlot.HAND : slot == EquipmentSlot.HEAD ? null : Enums.getNextValue(EquipmentSlot.class, slot);
-            updateInventory();
-        }, ClickType.LEFT);
+        setAction(
+                slot, player -> {
+                    applyAction.accept(Enums.getNextValue(enumClass, current));
+                    openInventory();
+                }, ClickType.LEFT
+        );
 
-        setClick(34, player -> {
-            slot = slot == null ? EquipmentSlot.HEAD : slot == EquipmentSlot.HAND ? null : Enums.getPreviousValue(EquipmentSlot.class, slot);
-            updateInventory();
-        }, ClickType.RIGHT);
-
-        openInventory();
+        setAction(
+                slot, player -> {
+                    applyAction.accept(Enums.getPreviousValue(enumClass, current));
+                    openInventory();
+                }, ClickType.RIGHT
+        );
     }
+
+    private static Key randomKey() {
+        final String uuid = UUID.randomUUID().toString();
+
+        return Key.ofString(uuid.substring(0, uuid.indexOf("-")));
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.block.data.type.Piston;
 import org.bukkit.entity.Player;
@@ -12,7 +13,7 @@ public class AdapterPiston extends Adapter<Piston> {
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Piston blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Piston blockData, @Nonnull StateChangerData data) {
         final boolean isExtended = blockData.isExtended();
 
         gui.setItem(

@@ -1,23 +1,27 @@
 package me.hapyl.mmu3.feature.openinventory;
 
 import com.google.common.collect.Maps;
+import me.hapyl.eterna.module.inventory.gui.GUIEventListener;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.utils.PanelGUI;
+import me.hapyl.mmu3.util.PanelGUI;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.inventory.gui.CancelType;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
-public class OpenInventoryGUI extends PanelGUI {
+public class OpenInventoryGUI extends PanelGUI implements GUIEventListener {
 
     private static final ItemStack ICON_SPLIT = new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE)
             .setName("&a↑ Inventory")
@@ -53,27 +57,23 @@ public class OpenInventoryGUI extends PanelGUI {
     public OpenInventoryGUI(Player player, Player target) {
         super(player, target.getName() + "'s Inventory", Size.NO_PANEL);
         this.target = target;
+
         setCancelType(CancelType.NEITHER);
-        setEventListener((p, gui, ev) -> {
-            final int slot = ev.getRawSlot();
-            // dummy slots check since CancelType = NEITHER
-            if ((slot >= 27 && slot <= 35) || (slot == 45 || slot == 50 || slot == 53)) {
-                ev.setCancelled(true);
-            }
-        });
-        setCloseEvent(t -> updateTargetInventory());
-        updateInventory();
         openInventory();
     }
 
     @Override
-    public void openInventory() {
-        super.openInventory();
-        Message.sound(getPlayer(), Sound.BLOCK_CHEST_OPEN, 2.0f);
+    public void onClick(int slot, @Nonnull InventoryClickEvent event) {
+        // dummy slots check since CancelType = NEITHER
+        if ((slot >= 27 && slot <= 35) || (slot == 45 || slot == 50 || slot == 53)) {
+            event.setCancelled(true);
+        }
     }
 
     @Override
-    public void updateInventory() {
+    public void onUpdate() {
+        super.onUpdate();
+
         fillItem(27, 35, ICON_SPLIT);
         fillItem(45, 53, PANEL_ITEM);
         setItem(45, ICON_SPLIT_ARMOR_RIGHT);
@@ -94,6 +94,17 @@ public class OpenInventoryGUI extends PanelGUI {
 
         // Armor and Hand Items
         equipmentSlotMap.forEach((slot, i) -> setItem(i, nonNullItem(inventory.getItem(slot))));
+    }
+
+    @Override
+    public void onClose(@Nonnull InventoryCloseEvent event) {
+        updateTargetInventory();
+    }
+
+    @Override
+    public void openInventory() {
+        super.openInventory();
+        Message.sound(player, Sound.BLOCK_CHEST_OPEN, 2.0f);
     }
 
     public void updateTargetInventory() {

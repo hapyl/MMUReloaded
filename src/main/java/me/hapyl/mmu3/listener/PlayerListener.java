@@ -42,12 +42,12 @@ public class PlayerListener implements Listener {
         final Player player = ev.getPlayer();
 
         if (clickedBlock == null
-                || !player.isOp()
-                || !player.isSneaking()
-                || player.getGameMode() != GameMode.CREATIVE
-                || ev.getAction() == Action.LEFT_CLICK_BLOCK
-                || ev.getHand() == EquipmentSlot.OFF_HAND
-                || !player.getInventory().getItemInMainHand().getType().isAir()) {
+            || !player.isOp()
+            || !player.isSneaking()
+            || player.getGameMode() != GameMode.CREATIVE
+            || ev.getAction() != Action.RIGHT_CLICK_BLOCK
+            || ev.getHand() == EquipmentSlot.OFF_HAND
+            || !player.getInventory().getItemInMainHand().getType().isAir()) {
             return;
         }
 
@@ -56,23 +56,27 @@ public class PlayerListener implements Listener {
         //ev.setCancelled(true); // Not sure if cancelling is necessary.
 
         // The checks must be in this order, do not change.
-        if (blockData instanceof Lightable lightable) {
-            lightable.setLit(!lightable.isLit());
-            clickedBlock.setBlockData(lightable, false);
+        switch (blockData) {
+            case Lightable lightable -> {
+                lightable.setLit(!lightable.isLit());
+                clickedBlock.setBlockData(lightable, false);
 
-            Message.success(player, "%s is now %s.", Chat.capitalize(clickedBlock.getType()), lightable.isLit() ? "lit" : "unlit");
-        }
-        else if (blockData instanceof Openable openable) {
-            openable.setOpen(!openable.isOpen());
-            clickedBlock.setBlockData(openable, false);
+                Message.success(player, "%s is now %s.", Chat.capitalize(clickedBlock.getType()), lightable.isLit() ? "lit" : "unlit");
+            }
+            case Openable openable -> {
+                openable.setOpen(!openable.isOpen());
+                clickedBlock.setBlockData(openable, false);
 
-            Message.success(player, "%s is now %s.", Chat.capitalize(clickedBlock.getType()), openable.isOpen() ? "open" : "closed");
-        }
-        else if (blockData instanceof Powerable powerable) {
-            powerable.setPowered(!powerable.isPowered());
-            clickedBlock.setBlockData(powerable, false);
+                Message.success(player, "%s is now %s.", Chat.capitalize(clickedBlock.getType()), openable.isOpen() ? "open" : "closed");
+            }
+            case Powerable powerable -> {
+                powerable.setPowered(!powerable.isPowered());
+                clickedBlock.setBlockData(powerable, false);
 
-            Message.success(player, "%s is now %s.", Chat.capitalize(clickedBlock.getType()), powerable.isPowered() ? "on" : "off");
+                Message.success(player, "%s is now %s.", Chat.capitalize(clickedBlock.getType()), powerable.isPowered() ? "on" : "off");
+            }
+            default -> {
+            }
         }
     }
 
@@ -86,7 +90,7 @@ public class PlayerListener implements Listener {
             final int rawSlot = ev.getRawSlot();
 
             ev.setCancelled(true);
-            Message.info((Player) player, "&fClicked &l%s&f. &7(%s of %% 9)", rawSlot, rawSlot % 9);
+            Message.info(player, "&fClicked &l%s&f. &7(%s of %% 9)", rawSlot, rawSlot % 9);
         }
     }
 

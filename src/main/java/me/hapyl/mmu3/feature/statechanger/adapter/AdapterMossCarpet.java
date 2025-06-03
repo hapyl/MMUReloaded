@@ -1,9 +1,11 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.MossyCarpet;
+import org.bukkit.block.data.type.Wall;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
@@ -17,7 +19,7 @@ public class AdapterMossCarpet extends BlockFaceAdapter<MossyCarpet> {
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull MossyCarpet blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull MossyCarpet blockData, @Nonnull StateChangerData data) {
         final boolean isBottom = blockData.isBottom();
 
         // is bottom
@@ -27,14 +29,14 @@ public class AdapterMossCarpet extends BlockFaceAdapter<MossyCarpet> {
         // height
         for (BlockFace face : allowedFaces) {
             final int slot = getSlot(face, player);
-            final MossyCarpet.Height height = blockData.getHeight(face);
+            final Wall.Height height = blockData.getHeight(face);
 
             gui.setSwitchItem(
-                    this, slot, MossyCarpet.Height.values(), height, blockData.getMaterial(),
+                    this, slot, Wall.Height.values(), height, blockData.getMaterial(),
                     getFaceName(face), "The height of the moss on a specific face."
             );
 
-            gui.applySwitch(slot, blockData, MossyCarpet.Height.values(), height, (d, h) -> d.setHeight(face, h));
+            gui.applySwitch(slot, blockData, Wall.Height.values(), height, (d, h) -> d.setHeight(face, h));
         }
     }
 }

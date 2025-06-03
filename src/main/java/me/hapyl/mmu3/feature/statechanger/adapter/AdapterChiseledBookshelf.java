@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import org.bukkit.Material;
@@ -25,7 +26,7 @@ public class AdapterChiseledBookshelf extends Adapter<ChiseledBookshelf> {
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull ChiseledBookshelf blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull ChiseledBookshelf blockData, @Nonnull StateChangerData data) {
         for (int i = 0; i < 6; i++) {
             final int slot = slotsMap.get(i);
             final boolean isOccupied = blockData.isSlotOccupied(i);

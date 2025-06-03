@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.feature.trim;
 
-import me.hapyl.mmu3.utils.HexId;
+import me.hapyl.mmu3.util.HexId;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;

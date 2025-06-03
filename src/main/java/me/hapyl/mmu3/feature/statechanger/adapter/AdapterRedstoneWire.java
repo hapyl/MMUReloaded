@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -14,7 +15,7 @@ public class AdapterRedstoneWire extends BlockFaceAdapter<RedstoneWire> {
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull RedstoneWire blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull RedstoneWire blockData, @Nonnull StateChangerData data) {
         for (BlockFace face : blockData.getAllowedFaces()) {
             if (isUnknownFace(face, player)) {
                 continue;

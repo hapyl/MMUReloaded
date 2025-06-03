@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
@@ -21,7 +22,7 @@ public abstract class LevelledAdapter<T extends BlockData> extends Adapter<T> im
     public abstract int getMaxLevel(T t);
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull T blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull T blockData, @Nonnull StateChangerData data) {
         final int slot = getSlot();
         final int level = getLevel(blockData);
         final int minLevel = getMinLevel(blockData);

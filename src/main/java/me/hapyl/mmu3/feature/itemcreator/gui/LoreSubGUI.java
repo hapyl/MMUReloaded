@@ -1,8 +1,9 @@
 package me.hapyl.mmu3.feature.itemcreator.gui;
 
+import me.hapyl.eterna.module.inventory.gui.PlayerPageGUI;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreator;
 import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.utils.StaticItemIcon;
+import me.hapyl.mmu3.util.StaticItemIcon;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.chat.LazyClickEvent;
 import me.hapyl.eterna.module.chat.LazyHoverEvent;
@@ -19,15 +20,20 @@ import java.util.List;
 
 public class LoreSubGUI extends ItemCreatorSubGUI {
 
-    private static final int MAX_LORE_LINES = 21;
+    public static final int MAX_LORE_LINES = 21;
+
+    private int start;
 
     public LoreSubGUI(Player player) {
         super(player, "Modify Lore", Size.FIVE);
-        updateInventory(0);
+
         openInventory();
     }
 
-    public void updateInventory(int start) {
+    @Override
+    public void onUpdate() {
+        super.onUpdate();
+
         final ItemCreator creator = creator();
         final List<String> lore = creator.getLore();
 
@@ -36,35 +42,35 @@ public class LoreSubGUI extends ItemCreatorSubGUI {
             int index = start + i;
             if (lore.size() > index) {
                 final String currentLore = lore.get(index);
+
                 setItem(
                         slot,
                         new ItemBuilder(Material.FILLED_MAP)
-                                .setName("&aLine %s".formatted(index + 1))
+                                .setName("Line " + (index + 1))
                                 .setAmount(index + 1)
+                                .addLore()
                                 .addLore("&aCurrent Lore:")
                                 .addLore(currentLore)
                                 .addLore()
-                                .hideFlags()
-                                .addLore("&eLeft Click to change line.")
-                                .addLore("&6Right Click to remove line.")
-                                .build()
+                                .addLore("&8◦ &eLeft-Click to change line")
+                                .addLore("&8◦ &6Right-Click to remove line")
+                                .asIcon()
                 );
-                setClick(slot, player -> new SignGUI(player, "Enter Lore") {
-                    @Override
-                    public void onResponse(Response response) {
-                        lore.set(index, response.getAsString());
-                        response.runSync(() -> {
-                            updateInventory(start);
-                            openInventory();
-                        });
-                    }
-
-                }, ClickType.LEFT);
-                setClick(slot, player -> {
-                    lore.remove(index);
-                    updateInventory(start);
-                    openInventory();
-                }, ClickType.RIGHT);
+                setAction(
+                        slot, player -> new SignGUI(player, "Enter Lore") {
+                            @Override
+                            public void onResponse(Response response) {
+                                lore.set(index, response.getAsString());
+                                response.runSync(() -> openInventory(start));
+                            }
+                        }, ClickType.LEFT
+                );
+                setAction(
+                        slot, player -> {
+                            lore.remove(index);
+                            openInventory(start);
+                        }, ClickType.RIGHT
+                );
             }
             else {
                 boolean nextLine = index == lore.size();
@@ -75,7 +81,11 @@ public class LoreSubGUI extends ItemCreatorSubGUI {
                                 .setName("%sLine %s".formatted((nextLine ? "&e" : "&c"), index + 1))
                                 .hideFlags()
                                 .predicate(nextLine, ItemBuilder::glow)
-                                .addSmartLore("There is no lore yet. Click the flower to insert lore to next available slot.")
+                                .addTextBlockLore("""
+                                        &8There is no lore yet!
+                                        
+                                        Click a flower to insert a new line.
+                                        """)
                                 .build()
                 );
             }
@@ -87,48 +97,51 @@ public class LoreSubGUI extends ItemCreatorSubGUI {
 
         // Page Arrows
         if (start >= 7) {
-            setItem(18, StaticItemIcon.PAGE_PREVIOUS, player -> updateInventory(start - 7));
-        }
-        else {
-            setItem(18, null);
+            setItem(18, PlayerPageGUI.ICON_PAGE_PREVIOUS, player -> openInventory(start - 7));
         }
 
         if (start < MAX_LORE_LINES) {
-            setItem(26, StaticItemIcon.PAGE_NEXT, player -> updateInventory(start + 7));
-        }
-        else {
-            setItem(26, StaticItemIcon.LoreEditor.PAGE_LIMIT);
+            setItem(26, PlayerPageGUI.ICON_PAGE_NEXT, player -> openInventory(start + 7));
         }
 
         // Destroy Lore
-        setItem(29, StaticItemIcon.LoreEditor.CLEAR, player -> {
-            creator.getLore().clear();
-            Message.sound(player, Sound.ENTITY_CAT_HISS, 2.0f);
-            updateInventory(0);
-        });
+        setItem(
+                29, StaticItemIcon.LoreEditor.CLEAR, player -> {
+                    creator.getLore().clear();
+                    Message.sound(player, Sound.ENTITY_CAT_HISS, 2.0f);
+                    openInventory(0);
+                }
+        );
 
         // Add line
         if (lore.size() >= MAX_LORE_LINES) {
             setItem(
                     31,
-                    new ItemBuilder(Material.REDSTONE_BLOCK).setName("&cCannot add lore!").addSmartLore("Lore lines limit reached!").build()
+                    new ItemBuilder(Material.RED_DYE)
+                            .setName("&4Cannot Fit More!")
+                            .addTextBlockLore("""
+                                    You cannot add more lines because you've reached the limit!
+                                    """)
+                            .asIcon()
             );
         }
         else {
             setItem(
                     31,
                     new ItemBuilder(Material.POPPY)
-                            .setName("&aAdd Line")
-                            .addSmartLore("Adds a new line of lore to the item.")
-                            .addLore()
-                            .addLore("&eClick to add lore")
+                            .setName("Add Line")
+                            .addTextBlockLore("""
+                                    Adds a new line of lore to the item.
+                                    
+                                    &8◦ &eLeft-Click to add lore
+                                    """)
                             .build(),
                     player -> new SignGUI(player, "", "", "^^ Enter Lore ^^") {
                         @Override
                         public void onResponse(Response response) {
                             creator.getLore().add(response.getAsString());
                             runSync(() -> {
-                                updateInventory(start);
+                                openInventory(start);
                                 openInventory();
                             });
                         }
@@ -140,33 +153,42 @@ public class LoreSubGUI extends ItemCreatorSubGUI {
         if (lore.size() >= MAX_LORE_LINES) {
             setItem(
                     33,
-                    new ItemBuilder(Material.REDSTONE_BLOCK).setName("&cCannot add lore!").addSmartLore("Lore lines limit reached!").build()
+                    new ItemBuilder(Material.RED_DYE)
+                            .setName("&4Cannot Fit More!")
+                            .addTextBlockLore("""
+                                    You cannot add more lines because you've reached the limit!
+                                    """)
+                            .asIcon()
             );
         }
         else {
-            setItem(33, StaticItemIcon.LoreEditor.EDIT, player -> {
-                player.closeInventory();
-                Chat.sendClickableHoverableMessage(
-                        player,
-                        LazyClickEvent.SUGGEST_COMMAND.of("/ic addsmartlore "),
-                        LazyHoverEvent.SHOW_TEXT.of("&7Click to add smart lore!"),
-                        Message.PREFIX + "&e&lCLICK HERE &7to add smart lore."
-                );
-            });
+            setItem(
+                    33, StaticItemIcon.LoreEditor.EDIT, player -> {
+                        player.closeInventory();
+                        Chat.sendClickableHoverableMessage(
+                                player,
+                                LazyClickEvent.SUGGEST_COMMAND.of("/ic addsmartlore "),
+                                LazyHoverEvent.SHOW_TEXT.of("&7Click to add smart lore!"),
+                                Message.PREFIX + "&6&lCLICK HERE &7to add smart lore."
+                        );
+                    }
+            );
         }
-
     }
 
+    public void openInventory(int start) {
+        this.start = start;
+
+        openInventory();
+    }
+
+
     private ItemStack buildPreviewItem() {
-        final ItemBuilder builder = new ItemBuilder(Material.WRITTEN_BOOK).setName("&aLore Preview").hideFlags();
+        final ItemBuilder builder = new ItemBuilder(Material.WRITTEN_BOOK).setName("Lore Preview").hideFlags();
         for (String string : creator().getLore()) {
             builder.addLore(string);
         }
         return builder.toItemStack();
     }
 
-    @Override
-    public void updateInventory() {
-        updateInventory(0);
-    }
 }

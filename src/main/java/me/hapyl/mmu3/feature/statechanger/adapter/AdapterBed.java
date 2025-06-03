@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import me.hapyl.eterna.module.chat.Chat;
 import org.bukkit.block.data.type.Bed;
@@ -13,7 +14,7 @@ public class AdapterBed extends Adapter<Bed> {
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Bed blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Bed blockData, @Nonnull StateChangerData data) {
         final Bed.Part part = blockData.getPart();
 
         gui.setItem(25, createItem(blockData.getMaterial())

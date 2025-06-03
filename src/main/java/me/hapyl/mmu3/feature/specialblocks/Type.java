@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.feature.specialblocks;
 
-import me.hapyl.mmu3.utils.PanelGUI;
+import me.hapyl.mmu3.util.PanelGUI;
 import org.bukkit.Material;
 
 import javax.annotation.Nonnull;

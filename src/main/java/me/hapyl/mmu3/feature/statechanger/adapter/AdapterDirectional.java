@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
@@ -13,7 +14,7 @@ public class AdapterDirectional extends BlockFaceAdapter<Directional> {
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Directional blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Directional blockData, @Nonnull StateChangerData data) {
         final BlockFace facing = blockData.getFacing();
 
         for (BlockFace face : blockData.getFaces()) {

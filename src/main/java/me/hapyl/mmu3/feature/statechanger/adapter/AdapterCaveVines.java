@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.Material;
 import org.bukkit.block.data.type.CaveVines;
@@ -13,7 +14,7 @@ public class AdapterCaveVines extends Adapter<CaveVines> {
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull CaveVines blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull CaveVines blockData, @Nonnull StateChangerData data) {
         final boolean hasBerries = blockData.isBerries();
 
         gui.setItem(this, 10, hasBerries, Material.GLOW_BERRIES, "Berries", "Indicates whether the block has berries.");

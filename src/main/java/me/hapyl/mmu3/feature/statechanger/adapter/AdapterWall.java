@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -17,7 +18,7 @@ public class AdapterWall extends BlockFaceAdapter<Wall> {
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Wall blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Wall blockData, @Nonnull StateChangerData data) {
         final boolean isUp = blockData.isUp();
         final Material material = blockData.getMaterial();
 

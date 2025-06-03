@@ -1,5 +1,6 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.Material;
 import org.bukkit.block.data.type.Scaffolding;
@@ -25,13 +26,13 @@ public class AdapterScaffolding extends LevelledAdapter<Scaffolding> {
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Scaffolding blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Scaffolding blockData, @Nonnull StateChangerData data) {
         final boolean isBottom = blockData.isBottom();
 
         gui.setItem(this, 21, isBottom, Material.SPRUCE_SLAB, "Bottom", "Indicates whether the scaffolding is floating or not.");
         gui.applyState(21, blockData, d -> d.setBottom(!isBottom));
 
-        super.update(gui, player, blockData);
+        super.update(gui, player, blockData, data);
     }
 
     @Override

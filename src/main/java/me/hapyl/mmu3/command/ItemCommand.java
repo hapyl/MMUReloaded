@@ -189,6 +189,11 @@ public class ItemCommand extends SimplePlayerAdminCommand {
             return;
         }
 
+        if (!material.isItem()) {
+            Message.error(player, "%s isn't an item!".formatted(Chat.capitalize(material)));
+            return;
+        }
+
         final ItemBuilder builder = usingSelf ? new ItemBuilder(playerInventory.getItemInMainHand()) : ItemBuilder.of(material);
         builder.setAmount(amount);
 

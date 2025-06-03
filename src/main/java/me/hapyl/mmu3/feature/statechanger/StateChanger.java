@@ -77,7 +77,7 @@ public class StateChanger extends Feature {
             builder.append(blockName);
         }
 
-        new StateChangerGUI(player, builder.toString(), new Data(player, block));
+        new StateChangerGUI(player, builder.toString(), new StateChangerData(player, block));
     }
 
     public void giveItem(Player player) {
@@ -157,6 +157,8 @@ public class StateChanger extends Feature {
         registerAdapter(new AdapterLit());
         registerAdapter(new AdapterOrientable());
         registerAdapter(new AdapterMossCarpet());
+
+        registerAdapter(new AdapterSegmentable());
     }
 
     private void registerAdapter(@Nonnull Adapter<?> adapter) {

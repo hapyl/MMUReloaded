@@ -1,6 +1,7 @@
 package me.hapyl.mmu3.feature.statechanger.adapter;
 
 import me.hapyl.mmu3.feature.statechanger.ConditionedMaterial;
+import me.hapyl.mmu3.feature.statechanger.StateChangerData;
 import me.hapyl.mmu3.feature.statechanger.StateChangerGUI;
 import org.bukkit.Material;
 import org.bukkit.block.data.Lightable;
@@ -14,7 +15,7 @@ public class AdapterLit extends Adapter<Lightable> {
     }
 
     @Override
-    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Lightable blockData) {
+    public void update(@Nonnull StateChangerGUI gui, @Nonnull Player player, @Nonnull Lightable blockData, @Nonnull StateChangerData data) {
         final boolean isLit = blockData.isLit();
 
         gui.setItem(

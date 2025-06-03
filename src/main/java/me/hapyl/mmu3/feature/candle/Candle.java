@@ -26,7 +26,9 @@ public enum Candle {
     private final ItemStack item;
 
     Candle(String texture) {
-        this.item = ItemBuilder.playerHeadUrl(texture).setName("&aCandle (%s)".formatted(Chat.capitalize(name()))).build();
+        this.item = ItemBuilder.playerHeadUrl(texture)
+                .setName("Candle (%s)".formatted(Chat.capitalize(name())))
+                .asIcon();
     }
 
     public ItemStack getItem() {
