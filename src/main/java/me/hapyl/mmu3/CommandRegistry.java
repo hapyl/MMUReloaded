@@ -70,7 +70,6 @@ public class CommandRegistry {
         register(new WikiCommand("mmuWiki"));
         register(new BannerEditorCommand("bannerEditor"));
         register(new SkullDisplayCommand("skullDisplay"));
-        register(new MMUData("mdata"));
     }
 
     private void registerTestCommand(String command, BiConsumer<Player, String[]> consumer) {

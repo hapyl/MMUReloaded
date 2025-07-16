@@ -38,7 +38,7 @@ public class Main extends JavaPlugin {
         instance = this;
 
         // Initiate API
-        eternaAPI = new EternaAPI(this, "4.1.1");
+        eternaAPI = new EternaAPI(this, "4.13.1");
         entityCache = new Entities.EntityCache();
 
         // Register Commands
