@@ -9,7 +9,6 @@ import me.hapyl.eterna.module.chat.LazyEvent;
 import me.hapyl.eterna.module.entity.Entities;
 import me.hapyl.eterna.module.player.PlayerLib;
 import me.hapyl.eterna.module.util.Enums;
-import me.hapyl.eterna.module.util.ThreadRandom;
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -17,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.annotation.Nonnull;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class TrimEditor implements Editor {
 
@@ -202,7 +202,7 @@ public class TrimEditor implements Editor {
             return;
         }
 
-        final int shuffleTime = ThreadRandom.nextInt(6, 12);
+        final int shuffleTime = ThreadLocalRandom.current().nextInt(6, 12);
         final TrimData data = getData();
 
         lock = true;

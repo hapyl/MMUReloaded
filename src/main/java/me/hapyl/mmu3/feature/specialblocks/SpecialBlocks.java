@@ -2,10 +2,10 @@ package me.hapyl.mmu3.feature.specialblocks;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import me.hapyl.eterna.module.chat.Chat;
+import me.hapyl.eterna.module.util.Tuple;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
-import me.hapyl.eterna.module.block.BlockTag;
-import me.hapyl.eterna.module.chat.Chat;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Bisected;
@@ -30,12 +30,14 @@ public class SpecialBlocks extends Feature implements Listener {
     private final Map<Type, Set<SpecialBlock>> perType;
 
     private final Map<Material, Material> doorToTrapdoorMap;
+    private final List<Tuple<Material, Material>> coralMapped;
 
     public SpecialBlocks(Main mmu3plugin) {
         super(mmu3plugin);
         global = Maps.newHashMap();
         perType = Maps.newHashMap();
         doorToTrapdoorMap = Maps.newLinkedHashMap();
+        coralMapped = Lists.newArrayList();
 
         fillMaps();
         createItems();
@@ -102,6 +104,12 @@ public class SpecialBlocks extends Feature implements Listener {
         doorToTrapdoorMap.put(Material.CRIMSON_DOOR, Material.CRIMSON_TRAPDOOR);
         doorToTrapdoorMap.put(Material.WARPED_DOOR, Material.WARPED_TRAPDOOR);
         doorToTrapdoorMap.put(Material.IRON_DOOR, Material.IRON_TRAPDOOR);
+
+        coralMapped.add(Tuple.of(Material.TUBE_CORAL_BLOCK, Material.DEAD_TUBE_CORAL_BLOCK));
+        coralMapped.add(Tuple.of(Material.BUBBLE_CORAL_BLOCK, Material.DEAD_BUBBLE_CORAL_BLOCK));
+        coralMapped.add(Tuple.of(Material.BRAIN_CORAL_BLOCK, Material.DEAD_BRAIN_CORAL_BLOCK));
+        coralMapped.add(Tuple.of(Material.FIRE_CORAL_BLOCK, Material.DEAD_FIRE_CORAL_BLOCK));
+        coralMapped.add(Tuple.of(Material.HORN_CORAL_BLOCK, Material.DEAD_HORN_CORAL_BLOCK));
     }
 
     @SuppressWarnings("all")
@@ -240,32 +248,34 @@ public class SpecialBlocks extends Feature implements Listener {
         corals:
         {
             int row = 0;
-            for (BlockTag.Coral value : BlockTag.Coral.values()) {
+            for (Tuple<Material, Material> coral : coralMapped) {
                 int slot = 2;
-                for (final Material coral : value.getCorals()) {
-                    create(
-                            Type.CORAL,
-                            slot + (9 * row),
-                            coral,
-                            slot > 3 ? value.getCoralDeadBlock() : value.getCoralBlock(),
-                            Chat.capitalize(coral),
-                            1,
-                            (self, event) -> {
-                                final BlockData data = coral.createBlockData();
-                                if (data instanceof Waterlogged waterlogged) {
-                                    waterlogged.setWaterlogged(false);
-                                }
-                                self.setBlock(event.getBlockReplacedState(), data);
-                            },
-                            false
-                    );
-                    slot += slot == 3 ? 2 : 1;
-                }
+
+                final Material coralBlock = coral.a();
+                final Material coralBlockDead = coral.b();
+
+                create(
+                        Type.CORAL,
+                        slot + (9 * row),
+                        coralBlock,
+                        slot > 3 ? coralBlockDead : coralBlock,
+                        Chat.capitalize(coralBlock),
+                        1,
+                        (self, event) -> {
+                            final BlockData data = coralBlock.createBlockData();
+
+                            if (data instanceof Waterlogged waterlogged) {
+                                waterlogged.setWaterlogged(false);
+                            }
+                            self.setBlock(event.getBlockReplacedState(), data);
+                        },
+                        false
+                );
+
+                slot += slot == 3 ? 2 : 1;
                 row++;
             }
         }
-
-
     }
 
     private void create(Type type, int slot, Material icon, Material block, String name) {

@@ -5,7 +5,6 @@ import me.hapyl.eterna.module.entity.Entities;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.inventory.ItemEventHandler;
 import me.hapyl.eterna.module.registry.Key;
-import me.hapyl.eterna.module.util.ThreadRandom;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
 import me.hapyl.mmu3.message.Message;
@@ -28,6 +27,7 @@ import javax.annotation.Nonnull;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CandleController extends Feature implements Listener {
 
@@ -60,7 +60,7 @@ public class CandleController extends Feature implements Listener {
                     final Data data = getData(player);
 
                     if (data.isOffset()) {
-                        location.setYaw(ThreadRandom.nextFloat() * 160.0f);
+                        location.setYaw(ThreadLocalRandom.current().nextFloat() * 160.0f);
                     }
 
                     // Spawn armor stand
