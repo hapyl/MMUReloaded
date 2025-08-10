@@ -6,7 +6,6 @@ import me.hapyl.eterna.module.chat.Gradient;
 import me.hapyl.eterna.module.chat.gradient.Interpolators;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.registry.Key;
-import me.hapyl.eterna.module.util.ThreadRandom;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
 import me.hapyl.mmu3.feature.statechanger.adapter.*;
@@ -23,6 +22,7 @@ import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class StateChanger extends Feature {
 
@@ -176,9 +176,11 @@ public class StateChanger extends Feature {
 
     private static String randomColorName(Player player) {
         final Gradient gradient = new Gradient(player.getName()).makeBold();
+        final ThreadLocalRandom random = ThreadLocalRandom.current();
+
         return gradient.rgb(
-                new Color(ThreadRandom.nextInt(255), ThreadRandom.nextInt(255), ThreadRandom.nextInt(255)),
-                new Color(ThreadRandom.nextInt(255), ThreadRandom.nextInt(255), ThreadRandom.nextInt(255)),
+                new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)),
+                new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)),
                 Interpolators.LINEAR
         );
     }

@@ -1,7 +1,6 @@
 package me.hapyl.mmu3.feature.itemcreator.gui;
 
 import me.hapyl.eterna.module.chat.Chat;
-import me.hapyl.eterna.module.inventory.Enchant;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.inventory.gui.PlayerPageGUI;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreator;

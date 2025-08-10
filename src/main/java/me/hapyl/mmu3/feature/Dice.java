@@ -7,7 +7,6 @@ import me.hapyl.eterna.module.locaiton.LocationHelper;
 import me.hapyl.eterna.module.player.PlayerLib;
 import me.hapyl.eterna.module.util.BukkitUtils;
 import me.hapyl.eterna.module.util.Runnables;
-import me.hapyl.eterna.module.util.ThreadRandom;
 import me.hapyl.mmu3.Main;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -18,6 +17,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Dice {
 
@@ -71,7 +72,7 @@ public class Dice {
     }
 
     public int pickRandomNumber() {
-        return ThreadRandom.nextInt(DICE_TEXTURES.length);
+        return ThreadLocalRandom.current().nextInt(DICE_TEXTURES.length);
     }
 
     public void playAnimation() {
@@ -91,10 +92,12 @@ public class Dice {
 
                 // Rolling animation (kinda)
                 if (tick % 2 == 0) {
+                    final ThreadLocalRandom random = ThreadLocalRandom.current();
+
                     stand.setHeadPose(new EulerAngle(
-                            ThreadRandom.nextDouble(50),
-                            ThreadRandom.nextDouble(50),
-                            ThreadRandom.nextDouble(50)
+                            random.nextDouble(50),
+                            random.nextDouble(50),
+                            random.nextDouble(50)
                     ));
 
                     PlayerLib.playSound(location, Sound.BLOCK_WOOD_STEP, 0.0f);

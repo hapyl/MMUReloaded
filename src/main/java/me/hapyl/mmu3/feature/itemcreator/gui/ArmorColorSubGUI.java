@@ -7,7 +7,6 @@ import me.hapyl.eterna.module.inventory.SignGUI;
 import me.hapyl.eterna.module.inventory.gui.GUIEventListener;
 import me.hapyl.eterna.module.math.Numbers;
 import me.hapyl.eterna.module.player.PlayerLib;
-import me.hapyl.eterna.module.util.ThreadRandom;
 import me.hapyl.mmu3.feature.itemcreator.ColorSignGUI;
 import me.hapyl.mmu3.feature.itemcreator.ItemCreator;
 import org.bukkit.Color;
@@ -18,6 +17,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import javax.annotation.Nonnull;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ArmorColorSubGUI extends ItemCreatorSubGUI implements GUIEventListener {
 
@@ -138,10 +138,12 @@ public class ArmorColorSubGUI extends ItemCreatorSubGUI implements GUIEventListe
                                         &8◦ &eLeft-Click to randomize
                                         """).asIcon(),
                 player -> {
+                    final ThreadLocalRandom random = ThreadLocalRandom.current();
+
                     creator.setArmorColor(Color.fromRGB(
-                            ThreadRandom.nextInt(0, 255),
-                            ThreadRandom.nextInt(0, 255),
-                            ThreadRandom.nextInt(0, 255)
+                            random.nextInt(0, 255),
+                            random.nextInt(0, 255),
+                            random.nextInt(0, 255)
                     ));
                     openInventory();
                 }
