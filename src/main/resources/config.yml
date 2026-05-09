@@ -1,0 +1,49 @@
+######################################################################################################################################
+## MMUReloaded Configuration File                                                                                                   ##
+##  * Created:      05/05/2026                                                                                                      ##
+##  * Last Updated: 05/05/2026                                                                                                      ##
+##                                                                                                                                  ##
+## This file controls the features and their parameters when available. The config file is loaded on the server start,              ##
+## and must be manually reloaded via `/mmu reload` for the changes to take effect. Some changes may require a full server restart.  ##
+##                                                                                                                                  ##
+## Invalid key or values may cause plugin or server to break, make sure you know what you're doing!                                 ##
+######################################################################################################################################
+
+# Defines whether the banner editor feature is enabled; disabling prevents banner creation or importing.
+feature:
+  banner_editor:
+    enabled: true
+
+  # Defines whether the candle feature is enabled; disabling prevents placing or breaking existing candles.
+  candle:
+    enabled: true
+    # Defines a list of candle texture that can be placed via the plugin.
+    #  `key` - The name of the texture, must be unique.
+    #  `value` (string) - The url that points to the minecraft texture, without the url part, for example:
+    #                     `https://textures.minecraft.net/texture/787d835b543ed1b02415701ca7b3f8c8a0a112af1318f9cec5a5e91e4814a249` becomes `787d835b543ed1b02415701ca7b3f8c8a0a112af1318f9cec5a5e91e4814a249`
+    textures:
+      white: "787d835b543ed1b02415701ca7b3f8c8a0a112af1318f9cec5a5e91e4814a249"
+      black: "dafc4b045983e6895c5f40028e993d516732e936de1583ecba3f32fe15fcf03f"
+      blue: "6d96477f4052afc36bd88086643961de79879f2480d23df182620a6d0c7bf3c0"
+      brown: "31409f6d1df55fa59d627ec65cea0aedb43b982416d5d99b712e0f460ff73d38"
+      cyan: "39dc26ebaa256cfa024c8ffbd41dcc8edd9bf17a12837906967b7af194c77d32"
+      green: "d352fd535d6faa9199dcad1ac81fe1e91adbf393c2a031e2c908ff8daa86ec1d"
+      gray: "da664adbf375b58e98549469e9cb045d1d363feeea56086c844ed3ca59fc3636"
+      light_blue: "c38f7b89dd5b40df02c35deed41e85cd66ef7f2437e7396ca71fee0857dc98d0"
+      lime: "9297e86550fc2dc91c4617a33220fb6e14027d31de7f7b29bdd72f8154738568"
+      light_gray: "1e77ad525fba81434733ad586d956a7f3b6c619dc51b174341510353fba50115"
+      magenta: "e23f8a65639f6e26466c3518a1e818504b835afcbf6fd7096ee3bd977133ec01"
+      orange: "b6c0b317bdef00fabb904a990c75c4772b3beb16465c4fcec69a5d6b33ab96b0"
+      pink: "9f90ad608ab5f79bdb517ae634b4dc443df6fb6d0b176c11242bf8847b4eb8c"
+      purple: "53b47ba70c9c36aa04d45904ebf41b1fa94cc7401a676a86b25f1434edc368d8"
+      red: "a1388248ac1a905acfec801729293ce5eba78eb89a703a2b9d87c1e5ac110474"
+      yellow: "4e6ef891f3d249fd207f71ef5e29bab72b04c30967c8aeb5c29737f030826c10"
+      pumpkin: "8c54055ee8f9e7638830c79ff12de81e9c7c4e8f3ba3db555019a65872b9c6c"
+
+  # Defines whether the last location feature is enabled; disabling prevents saving and returning to the last location via `/mmu back`
+  last_location:
+    enabled: true
+
+  # Defines whether the player outline feature is enabled; disabling prevents outline rendering.
+  player_outline:
+    enabled: true

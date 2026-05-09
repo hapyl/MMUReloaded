@@ -9,7 +9,7 @@ import me.hapyl.eterna.module.registry.Key;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
 import me.hapyl.mmu3.feature.statechanger.adapter.*;
-import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.MMULogger;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -57,14 +57,14 @@ public class StateChanger extends Feature {
         final String blockName = Chat.capitalize(block.getType());
 
         if (isBannedBlock(block.getType())) {
-            Message.error(player, "%s is not allowed!", blockName);
-            Message.sound(player, Sound.ENTITY_VILLAGER_NO);
+            MMULogger.error(player, "%s is not allowed!", blockName);
+            MMULogger.sound(player, Sound.ENTITY_VILLAGER_NO);
             return;
         }
 
         if (!isAllowedBlock(block)) {
-            Message.error(player, "%s doesn't have any block data!", blockName);
-            Message.sound(player, Sound.ENTITY_VILLAGER_NO);
+            MMULogger.error(player, "%s doesn't have any block data!", blockName);
+            MMULogger.sound(player, Sound.ENTITY_VILLAGER_NO);
             return;
         }
 
@@ -83,8 +83,8 @@ public class StateChanger extends Feature {
     public void giveItem(Player player) {
         final PlayerInventory inventory = player.getInventory();
         if (inventory.firstEmpty() == -1) {
-            Message.error(player, "Not enough space in inventory!");
-            Message.sound(player, Sound.ENTITY_VILLAGER_NO);
+            MMULogger.error(player, "Not enough space in inventory!");
+            MMULogger.sound(player, Sound.ENTITY_VILLAGER_NO);
             return;
         }
 
@@ -93,7 +93,7 @@ public class StateChanger extends Feature {
                 .addLore("Created by almighty %s&7.".formatted(randomColorName(player)))
                 .toItemStack());
 
-        Message.success(player, "Success!");
+        MMULogger.success(player, "Success!");
     }
 
     public boolean isAllowedBlock(Block block) {

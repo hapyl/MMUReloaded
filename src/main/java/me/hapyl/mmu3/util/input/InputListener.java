@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.util.input;
 
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.MMULogger;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -19,12 +19,12 @@ public interface InputListener {
 
     @ApiStatus.NonExtendable
     default void startListening(@Nonnull Player player) {
-        Main.getRegistry().inputHandler.listen(player, this);
+        Main.featureRegistry().inputHandler.listen(player, this);
     }
 
     @ApiStatus.NonExtendable
     default void stopListening(@Nonnull Player player) {
-        Main.getRegistry().inputHandler.unlisten(player);
+        Main.featureRegistry().inputHandler.unlisten(player);
     }
 
     static void showUsage(@Nonnull Player player, @Nonnull String usage, @Nonnull InputType... inputs) {
@@ -40,6 +40,6 @@ public interface InputListener {
             }
         }
 
-        Message.info(player, "&f&l%s&8 &7&oto %s.".formatted(key, usage));
+        MMULogger.info(player, "&f&l%s&8 &7&oto %s.".formatted(key, usage));
     }
 }

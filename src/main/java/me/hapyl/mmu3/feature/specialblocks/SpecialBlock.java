@@ -5,7 +5,7 @@ import me.hapyl.eterna.module.inventory.ItemBuilder;
 import me.hapyl.eterna.module.inventory.ItemEventHandler;
 import me.hapyl.eterna.module.registry.Key;
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.MMULogger;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -144,14 +144,14 @@ public class SpecialBlock {
     public void giveItem(Player player) {
         final PlayerInventory inventory = player.getInventory();
         if (inventory.firstEmpty() == -1) {
-            Message.error(player, "You don't have enough space in your inventory!");
-            Message.sound(player, Sound.ENTITY_VILLAGER_NO);
+            MMULogger.error(player, "You don't have enough space in your inventory!");
+            MMULogger.sound(player, Sound.ENTITY_VILLAGER_NO);
             return;
         }
 
         inventory.addItem(this.itemReal);
-        Message.success(player, "Gave %s special block to you.", name);
-        Message.sound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 2.0f);
+        MMULogger.success(player, "Gave %s special block to you.", name);
+        MMULogger.sound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 2.0f);
     }
 
     private BlockData topOrBottom(Bisected data) {

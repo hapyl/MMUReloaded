@@ -8,8 +8,7 @@ import me.hapyl.eterna.module.math.Numbers;
 import me.hapyl.eterna.module.reflect.Reflect;
 import me.hapyl.eterna.module.util.Nulls;
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.PersistentPlayerData;
-import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.MMULogger;
 import net.minecraft.world.entity.monster.EntityShulker;
 import net.minecraft.world.level.block.entity.TileEntityCommand;
 import org.apache.commons.lang.StringUtils;
@@ -62,21 +61,21 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
     public void run() {
         Bukkit.getOnlinePlayers()
                 .stream()
-                .filter(player -> player.isOp() && PersistentPlayerData.getData(player).isCommandPreview())
+                .filter(player -> player.isOp() && PersistentPlayerData.dataOf(player).isCommandPreview())
                 .forEach(this::execute);
     }
 
     @EventHandler()
     public void handleCopyCommand(PlayerSwapHandItemsEvent ev) {
         final Player player = ev.getPlayer();
-        if (!player.isOp() || !PersistentPlayerData.getData(player).isCommandPreview()) {
+        if (!player.isOp() || !PersistentPlayerData.dataOf(player).isCommandPreview()) {
             return;
         }
 
         final String command = getCommand(player);
         if (command == null || command.isEmpty()) {
             if (command != null) {
-                Message.error(player, "This command block doesn't have any command!");
+                MMULogger.error(player, "This command block doesn't have any command!");
             }
             return;
         }
@@ -84,7 +83,7 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
         ev.setCancelled(true);
 
         final String commandShort = command.length() > 10 ? command.substring(0, 10) + "..." : command;
-        Message.clickHover(
+        MMULogger.clickHover(
                 player,
                 LazyEvent.copyToClipboard(command),
                 LazyEvent.showText("&eClick to copy!"),
@@ -167,7 +166,7 @@ public class CommandBlockPreview extends Feature implements Runnable, Listener {
             Chat.sendActionbar(player, colorCommand(command));
         }
 
-        Nulls.runIfNotNull(player.getTargetBlockExact(50), b -> outlineCommandBlock(player, b.getLocation(), getColor(player)));
+        Nulls.acceptNonNull(player.getTargetBlockExact(50), b -> outlineCommandBlock(player, b.getLocation(), getColor(player)));
     }
 
     private void outlineCommandBlock(Player player, Location location, ChatColor color) {

@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.feature.standeditor;
 
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.MMULogger;
 import me.hapyl.mmu3.util.InjectListener;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
@@ -38,8 +38,8 @@ public class StandEditorListener extends InjectListener {
             ev.setCancelled(true);
 
             if (editor.isTaken(stand)) {
-                Message.error(player, "%s is currently editing this armor stand!", editor.getTakerName(stand));
-                Message.sound(player, Sound.ENTITY_VILLAGER_NO);
+                MMULogger.error(player, "%s is currently editing this armor stand!", editor.getTakerName(stand));
+                MMULogger.sound(player, Sound.ENTITY_VILLAGER_NO);
                 return;
             }
 

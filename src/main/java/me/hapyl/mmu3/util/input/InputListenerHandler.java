@@ -3,7 +3,7 @@ package me.hapyl.mmu3.util.input;
 import com.google.common.collect.Maps;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
-import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.MMULogger;
 import org.bukkit.Input;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -121,7 +121,7 @@ public final class InputListenerHandler extends Feature implements Listener {
         unlisten(player);
 
         // Show usage
-        Message.success(player, "&2You've entered &6%s&2!".formatted(listener.name()));
+        MMULogger.success(player, "&2You've entered &6%s&2!".formatted(listener.name()));
 
         listener.showUsage(player);
         listener.listen(player, InputType.START_LISTENING);
@@ -134,7 +134,7 @@ public final class InputListenerHandler extends Feature implements Listener {
 
         if (data != null) {
             // Show that we left it
-            Message.success(player, "&2You've left &6%s&2!".formatted(data.listener.name()));
+            MMULogger.success(player, "&2You've left &6%s&2!".formatted(data.listener.name()));
 
             data.listener.listen(player, InputType.STOP_LISTENING);
             data.dispose();

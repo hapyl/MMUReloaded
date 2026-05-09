@@ -24,6 +24,6 @@ public class UndoManager extends Feature {
 
     @Nonnull
     public static BlockChangeQueue getUndoMap(@Nonnull UUID uuid) {
-        return Main.getRegistry().undoManager.undoMap.computeIfAbsent(uuid, fn -> new BlockChangeQueue());
+        return Main.featureRegistry().undoManager.undoMap.computeIfAbsent(uuid, fn -> new BlockChangeQueue());
     }
 }

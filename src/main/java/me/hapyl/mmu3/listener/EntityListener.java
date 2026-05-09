@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.listener;
 
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.MMULogger;
 import me.hapyl.mmu3.util.InjectListener;
 import me.hapyl.eterna.module.chat.Chat;
 import org.bukkit.entity.Entity;
@@ -25,7 +25,7 @@ public class EntityListener extends InjectListener {
 
         final String formatName = Chat.format(entityName);
         entity.setCustomName(formatName);
-        Message.broadcastAdmins("Formatted %s's custom name to: '%s'.", Chat.capitalize(entity.getType()), formatName);
+        MMULogger.broadcastAdmins("Formatted %s's custom name to: '%s'.", Chat.capitalize(entity.getType()), formatName);
     }
 
 }

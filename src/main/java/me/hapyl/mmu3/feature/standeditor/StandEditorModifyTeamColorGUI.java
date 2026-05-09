@@ -6,8 +6,9 @@ import me.hapyl.eterna.module.inventory.gui.GUIEventListener;
 import me.hapyl.eterna.module.inventory.gui.SlotPattern;
 import me.hapyl.eterna.module.inventory.gui.SmartComponent;
 import me.hapyl.eterna.module.util.BukkitUtils;
-import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.util.PanelGUI;
+import me.hapyl.mmu3.MMULogger;
+import me.hapyl.mmu3.util.menu.Menu;
+import me.hapyl.mmu3.util.menu.Size;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -23,7 +24,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 @SuppressWarnings("deprecation")
-public class StandEditorModifyTeamColorGUI extends PanelGUI implements GUIEventListener {
+public class StandEditorModifyTeamColorGUI extends Menu implements GUIEventListener {
 
     private static final Map<ChatColor, ItemStack> validColors = Map.ofEntries(
             Map.entry(ChatColor.WHITE, makeBanner(Material.WHITE_BANNER, null)),
@@ -58,7 +59,7 @@ public class StandEditorModifyTeamColorGUI extends PanelGUI implements GUIEventL
     private final Team team;
 
     public StandEditorModifyTeamColorGUI(Player player, StandEditorData data, Team team) {
-        super(player, "Modify Team Color", Size.TWO);
+        super(player, "Modify Team Color", Size.SIZE_2);
 
         this.data = data;
         this.team = team;
@@ -121,7 +122,7 @@ public class StandEditorModifyTeamColorGUI extends PanelGUI implements GUIEventL
 
                 smartComponent.add(
                         builder.asIcon(), player -> {
-                            Message.info(player, "Set team color to %s.", colorNameColorized);
+                            MMULogger.info(player, "Set team color to %s.", colorNameColorized);
 
                             team.setColor(color);
                             player.closeInventory();
@@ -131,7 +132,7 @@ public class StandEditorModifyTeamColorGUI extends PanelGUI implements GUIEventL
         }
 
         // Just a cancel button, yeah you can close the GUI but no one knows nor reads that
-        setItem(22, ITEM_GO_BACK, Player::closeInventory);
+        setItem(22, ITEM_GO_BACK, (menu, player, clickType, clickedSlot) -> player.closeInventory());
 
         smartComponent.apply(this, SlotPattern.CHUNKY, 0);
     }

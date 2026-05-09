@@ -1,7 +1,6 @@
 package me.hapyl.mmu3.listener;
 
-import me.hapyl.mmu3.PersistentPlayerData;
-import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.MMULogger;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -25,19 +24,19 @@ public class EntityRemovalListener implements Listener {
             return;
         }
 
-        if (isInstantRemove(type) || PersistentPlayerData.getData(player).isEntityRemoval()) {
+        if (isInstantRemove(type) || PersistentPlayerData.dataOf(player).isEntityRemoval()) {
             ev.setCancelled(true);
             ev.setDamage(0.0d);
             entity.remove();
-            Message.info(player, "Removed %s.", entity.getName());
+            MMULogger.info(player, "Removed %s.", entity.getName());
         }
     }
 
     @EventHandler()
     public void handlePlayerJoinEvent(PlayerJoinEvent ev) {
         final Player player = ev.getPlayer();
-        if (PersistentPlayerData.getData(player).isEntityRemoval()) {
-            Message.info(player, "Entity Removal is still enabled!");
+        if (PersistentPlayerData.dataOf(player).isEntityRemoval()) {
+            MMULogger.info(player, "Entity Removal is still enabled!");
         }
     }
 

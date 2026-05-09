@@ -42,13 +42,8 @@ public enum TrimArmor implements EnumTrim {
 
     @Override
     @Nonnull
-    public String getName() {
+    public String trimName() {
         return Chat.format(name());
     }
 
-    @Override
-    @Nonnull
-    public Material getMaterial() {
-        return materials[0];
-    }
 }

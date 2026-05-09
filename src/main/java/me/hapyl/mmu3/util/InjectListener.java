@@ -1,7 +1,6 @@
 package me.hapyl.mmu3.util;
 
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.feature.specialblocks.SpecialBlocks;
 import me.hapyl.mmu3.feature.standeditor.StandEditor;
 import me.hapyl.mmu3.feature.statechanger.StateChanger;
 import org.bukkit.event.Listener;

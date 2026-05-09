@@ -1,25 +1,24 @@
 package me.hapyl.mmu3.feature.trim;
 
-import me.hapyl.mmu3.util.HexId;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
 public class CachedTrimData {
 
-    private final HexId hexId;
+    private final int id;
     private final ItemStack[] items;
 
-    public CachedTrimData(ItemStack[] items) {
-        this.hexId = HexId.random();
+    CachedTrimData(int id, @NotNull ItemStack[] items) {
+        this.id = id;
         this.items = items;
     }
 
-    @Nonnull
-    public HexId getHexId() {
-        return hexId;
+    public int getId() {
+        return id;
     }
 
     @Nonnull

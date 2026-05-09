@@ -2,8 +2,7 @@ package me.hapyl.mmu3.util;
 
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public enum Direction {
 
@@ -12,7 +11,7 @@ public enum Direction {
     EAST,
     WEST;
 
-    @Nonnull
+    @NotNull
     public Direction getOpposite() {
         return switch (this) {
             case NORTH -> SOUTH;
@@ -22,7 +21,7 @@ public enum Direction {
         };
     }
 
-    @Nonnull
+    @NotNull
     public BlockFace getBlockFace() {
         return switch (this) {
             case NORTH -> BlockFace.NORTH;
@@ -32,8 +31,8 @@ public enum Direction {
         };
     }
 
-    @Nonnull
-    public static Direction getDirection(@Nonnull Location location) {
+    @NotNull
+    public static Direction getDirection(@NotNull Location location) {
         float yaw = location.getYaw();
         yaw = yaw < 0 ? yaw + 360 : yaw;
 

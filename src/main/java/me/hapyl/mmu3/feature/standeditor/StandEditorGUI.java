@@ -9,7 +9,7 @@ import me.hapyl.eterna.module.inventory.gui.GUIEventListener;
 import me.hapyl.eterna.module.inventory.gui.PlayerGUI;
 import me.hapyl.eterna.module.util.BukkitUtils;
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.MMULogger;
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -58,7 +58,7 @@ public class StandEditorGUI extends PlayerGUI implements GUIEventListener {
             return;
         }
 
-        Message.success(player, "Finished editing %s.", data.getStandName());
+        MMULogger.success(player, "Finished editing %s.", data.getStandName());
 
         // Make sure to call stopEditing() after referencing the stand, since it nullates it
         data.stopEditing();
@@ -176,8 +176,8 @@ public class StandEditorGUI extends PlayerGUI implements GUIEventListener {
                     data.await = StandEditorData.Await.NAME;
                     player.closeInventory();
 
-                    Message.info(player, "Provide a name for this armor stand, or leave blank to cancel.");
-                    Message.info(player, "Color codes (&) are supported!");
+                    MMULogger.info(player, "Provide a name for this armor stand, or leave blank to cancel.");
+                    MMULogger.info(player, "Color codes (&) are supported!");
 
                     new SignGUI(player, "Enter Name") {
                         @Override
@@ -185,13 +185,13 @@ public class StandEditorGUI extends PlayerGUI implements GUIEventListener {
                             final String string = response.getString(0);
 
                             if (string.isBlank()) {
-                                Message.info(player, "Cancelled adding name.");
+                                MMULogger.info(player, "Cancelled adding name.");
                             }
                             else {
                                 final String newName = Chat.format((string + " " + response.getString(1)).trim());
                                 stand.setCustomName(newName);
 
-                                Message.info(player, "Set %s as new name.", newName);
+                                MMULogger.info(player, "Set %s as new name.", newName);
                             }
 
                             runSync(() -> {
@@ -254,8 +254,8 @@ public class StandEditorGUI extends PlayerGUI implements GUIEventListener {
             if (click == ClickType.MIDDLE) {
                 data.nextAxis();
 
-                Message.info(player, "Switched Axis to %s.", Chat.capitalize(data.axis));
-                Message.sound(player, Sound.UI_BUTTON_CLICK, 1.75f);
+                MMULogger.info(player, "Switched Axis to %s.", Chat.capitalize(data.axis));
+                MMULogger.sound(player, Sound.UI_BUTTON_CLICK, 1.75f);
                 openInventory();
                 return;
             }
@@ -272,8 +272,8 @@ public class StandEditorGUI extends PlayerGUI implements GUIEventListener {
                     case 53 -> stand.setRightLegPose(zero);
                 }
 
-                Message.info(player, "Reset vectors.");
-                Message.sound(player, Sound.UI_BUTTON_CLICK, 1.75f);
+                MMULogger.info(player, "Reset vectors.");
+                MMULogger.sound(player, Sound.UI_BUTTON_CLICK, 1.75f);
                 openInventory();
                 return;
             }
@@ -289,7 +289,7 @@ public class StandEditorGUI extends PlayerGUI implements GUIEventListener {
 
             supplyPose(slot, Math.toRadians(scaled[0]), Math.toRadians(scaled[1]), Math.toRadians(scaled[2]));
 
-            Message.sound(player, Sound.UI_BUTTON_CLICK, 1.25f);
+            MMULogger.sound(player, Sound.UI_BUTTON_CLICK, 1.25f);
             openInventory();
             return;
         }
@@ -309,8 +309,8 @@ public class StandEditorGUI extends PlayerGUI implements GUIEventListener {
                 if (itemOnSlot != null && itemOnSlot.getType() != Material.GRAY_DYE) {
                     final PlayerInventory playerInventory = player.getInventory();
                     if (playerInventory.firstEmpty() == -1) {
-                        Message.error(player, "You don't have enough space in your inventory!");
-                        Message.sound(player, Sound.ENTITY_VILLAGER_NO);
+                        MMULogger.error(player, "You don't have enough space in your inventory!");
+                        MMULogger.sound(player, Sound.ENTITY_VILLAGER_NO);
                         return;
                     }
 
@@ -318,7 +318,7 @@ public class StandEditorGUI extends PlayerGUI implements GUIEventListener {
                     playerInventory.addItem(currentItem);
                     setStandItem(equipmentSlot, new ItemStack(Material.AIR));
 
-                    Message.sound(player, Sound.ENTITY_CHICKEN_EGG, 1.0f);
+                    MMULogger.sound(player, Sound.ENTITY_CHICKEN_EGG, 1.0f);
                     openInventory();
                     return;
                 }
@@ -339,7 +339,7 @@ public class StandEditorGUI extends PlayerGUI implements GUIEventListener {
             if (slot == 2) {
                 data.saveLoadout(hotbarButton);
 
-                Message.success(player, "Successfully saved loadout to slot %s.", hotbarButton + 1);
+                MMULogger.success(player, "Successfully saved loadout to slot %s.", hotbarButton + 1);
                 playSoundAndUpdate();
             }
             // Load
@@ -347,13 +347,13 @@ public class StandEditorGUI extends PlayerGUI implements GUIEventListener {
                 final StandLoadout loadout = data.getLoadout(hotbarButton);
 
                 if (loadout == null) {
-                    Message.error(player, "There is nothing in this slot!");
-                    Message.sound(player, Sound.ENTITY_VILLAGER_NO);
+                    MMULogger.error(player, "There is nothing in this slot!");
+                    MMULogger.sound(player, Sound.ENTITY_VILLAGER_NO);
                     return;
                 }
 
                 loadout.apply(data.stand());
-                Message.success(player, "Successfully loaded loadout from slot %s.", hotbarButton + 1);
+                MMULogger.success(player, "Successfully loaded loadout from slot %s.", hotbarButton + 1);
 
                 playSoundAndUpdate();
             }
@@ -371,7 +371,7 @@ public class StandEditorGUI extends PlayerGUI implements GUIEventListener {
 
             stand.teleport(location);
 
-            Message.success(player, "Rotated %s degrees %s.", speed, clockwise ? "clockwise" : "counter-clockwise");
+            MMULogger.success(player, "Rotated %s degrees %s.", speed, clockwise ? "clockwise" : "counter-clockwise");
             playSoundAndUpdate();
         }
     }
@@ -506,7 +506,7 @@ public class StandEditorGUI extends PlayerGUI implements GUIEventListener {
         }
 
         item.setAmount(0);
-        Message.sound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 2.0f);
+        MMULogger.sound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 2.0f);
     }
 
     private EquipmentSlot bySlot(int slot) {
@@ -669,7 +669,7 @@ public class StandEditorGUI extends PlayerGUI implements GUIEventListener {
     }
 
     private void playSoundAndUpdate() {
-        Message.sound(player, Sound.UI_BUTTON_CLICK, 2.0f);
+        MMULogger.sound(player, Sound.UI_BUTTON_CLICK, 2.0f);
         openInventory();
     }
 

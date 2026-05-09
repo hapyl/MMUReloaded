@@ -1,53 +1,38 @@
 package me.hapyl.mmu3.feature.trim;
 
-import me.hapyl.eterna.module.chat.Chat;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.trim.ArmorTrim;
+import me.hapyl.mmu3.util.ComponentHelper;
+import net.kyori.adventure.text.Component;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public enum EnumTrimMaterial implements EnumTrim {
 
-    QUARTZ(TrimMaterial.QUARTZ, Material.QUARTZ),
-    IRON(TrimMaterial.IRON, Material.IRON_INGOT),
-    NETHERITE(TrimMaterial.NETHERITE, Material.NETHERITE_INGOT),
-    REDSTONE(TrimMaterial.REDSTONE, Material.REDSTONE),
-    COPPER(TrimMaterial.COPPER, Material.COPPER_INGOT),
-    GOLD(TrimMaterial.GOLD, Material.GOLD_INGOT),
-    EMERALD(TrimMaterial.EMERALD, Material.EMERALD),
-    DIAMOND(TrimMaterial.DIAMOND, Material.DIAMOND),
-    LAPIS(TrimMaterial.LAPIS, Material.LAPIS_LAZULI),
-    AMETHYST(TrimMaterial.AMETHYST, Material.AMETHYST_SHARD),
-    RESIN(TrimMaterial.RESIN, Material.RESIN_CLUMP);
+    AMETHYST(TrimMaterial.AMETHYST),
+    COPPER(TrimMaterial.COPPER),
+    DIAMOND(TrimMaterial.DIAMOND),
+    EMERALD(TrimMaterial.EMERALD),
+    GOLD(TrimMaterial.GOLD),
+    IRON(TrimMaterial.IRON),
+    LAPIS(TrimMaterial.LAPIS),
+    NETHERITE(TrimMaterial.NETHERITE),
+    QUARTZ(TrimMaterial.QUARTZ),
+    REDSTONE(TrimMaterial.REDSTONE),
+    RESIN(TrimMaterial.RESIN);
 
     public final TrimMaterial bukkit;
-    public final Material material;
+    public final Component trimName;
 
-    EnumTrimMaterial(TrimMaterial bukkit, Material material) {
+    EnumTrimMaterial(@NotNull TrimMaterial bukkit) {
         this.bukkit = bukkit;
-        this.material = material;
+        this.trimName = ComponentHelper.capitalize(this);
     }
 
     @Override
     @Nonnull
-    public String getName() {
-        return Chat.format(name());
-    }
-
-    @Override
-    @Nonnull
-    public Material getMaterial() {
-        return material;
-    }
-
-    @Nullable
-    public static EnumTrimMaterial fromItem(ItemStack item) {
-        final ArmorTrim trim = EnumTrimPattern.getTrim(item);
-
-        return trim != null ? fromBukkit(trim.getMaterial()) : null;
+    public Component trimName() {
+        return trimName;
     }
 
     @Nonnull

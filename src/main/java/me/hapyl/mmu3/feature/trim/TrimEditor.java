@@ -2,8 +2,7 @@ package me.hapyl.mmu3.feature.trim;
 
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.itemcreator.ColorSignGUI;
-import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.util.HexId;
+import me.hapyl.mmu3.MMULogger;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.chat.LazyEvent;
 import me.hapyl.eterna.module.entity.Entities;
@@ -14,6 +13,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.ThreadLocalRandom;
@@ -29,7 +29,7 @@ public class TrimEditor implements Editor {
     private int slot;
     private boolean lock;
 
-    public TrimEditor(Player player) {
+    public TrimEditor(@NotNull Player player) {
         this.player = player;
         this.location = player.getLocation();
         this.trimData = new TrimData[4];
@@ -37,9 +37,9 @@ public class TrimEditor implements Editor {
         this.slot = 1;
 
         // Prepare location
-        location.add(0.0d, 0.1d, 0.0d);
-        location.setYaw(0.0f);
-        location.setPitch(0.0f);
+        location.add(0, 0.1, 0);
+        location.setYaw(0f);
+        location.setPitch(0f);
 
         // Prepare player
         playerSpeed = new float[] {
@@ -163,7 +163,7 @@ public class TrimEditor implements Editor {
 
     @Nonnull
     public final CachedTrimData remove() {
-        final TrimManager trimManager = Main.getRegistry().trimManager;
+        final TrimManager trimManager = Main.featureRegistry().trimManager;
         final ItemStack[] itemStack = new ItemStack[4];
 
         trimManager.exitEditor(player);
@@ -179,12 +179,15 @@ public class TrimEditor implements Editor {
             stand.remove();
         }
 
+        // Generate id and cache the trim
+        trimManager.cache(itemStack)
+
         final CachedTrimData cachedTrimData = new CachedTrimData(itemStack);
         final HexId hexId = cachedTrimData.getHexId();
 
-        Message.success(player, "Finished trim editing!");
-        Message.success(player, "Your trim code is &e" + hexId + "&a!");
-        Message.clickHover(
+        MMULogger.success(player, "Finished trim editing!");
+        MMULogger.success(player, "Your trim code is &e" + hexId + "&a!");
+        MMULogger.clickHover(
                 player,
                 LazyEvent.copyToClipboard(String.valueOf(hexId)),
                 LazyEvent.showText("&7Click to copy the code!"),
@@ -268,12 +271,12 @@ public class TrimEditor implements Editor {
 
     @Override
     public void showUsage(@Nonnull Player player) {
-        Message.info(player, "&a&lYou've entered the Trim Editor!");
-        Message.info(player, "&f&lW &8& &f&lS &7to cycle between armor slots.");
-        Message.info(player, "&f&lA &8& &f&lD &7to cycle between pattern/material.");
-        Message.info(player, "&f&lSPACE&7 to switch between pattern/material.");
-        Message.info(player, "&f&lRIGHT CLICK&7 with an item to replace editing item.");
-        Message.info(player, "&f&lSNEAK&7 to open the GUI.");
+        MMULogger.info(player, "&a&lYou've entered the Trim Editor!");
+        MMULogger.info(player, "&f&lW &8& &f&lS &7to cycle between armor slots.");
+        MMULogger.info(player, "&f&lA &8& &f&lD &7to cycle between pattern/material.");
+        MMULogger.info(player, "&f&lSPACE&7 to switch between pattern/material.");
+        MMULogger.info(player, "&f&lRIGHT CLICK&7 with an item to replace editing item.");
+        MMULogger.info(player, "&f&lSNEAK&7 to open the GUI.");
     }
 
     public void openGUI() {
@@ -285,7 +288,7 @@ public class TrimEditor implements Editor {
                 player,
                 ChatColor.GREEN + String.format(
                         String.valueOf(info),
-                        Message.colorReplacements("&a", "&f&l", format)
+                        MMULogger.colorReplacements("&a", "&f&l", format)
                 )
         );
     }

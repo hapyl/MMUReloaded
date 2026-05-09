@@ -2,7 +2,7 @@ package me.hapyl.mmu3.feature;
 
 import com.google.common.collect.Maps;
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.MMULogger;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.player.PlayerLib;
 import org.bukkit.GameMode;
@@ -83,7 +83,7 @@ public class DecorativePotFeature extends Feature implements Listener {
         final DecoratedPot.Side side = getSideFromFace(directional, clickedFace);
 
         if (side == null) {
-            Message.error(player, "Invalid side somehow? Report this!");
+            MMULogger.error(player, "Invalid side somehow? Report this!");
             return;
         }
 
@@ -98,7 +98,7 @@ public class DecorativePotFeature extends Feature implements Listener {
         decoratedPot.update(true, false);
 
         player.swingMainHand();
-        Message.success(player, "Set sherd to %s.", Chat.capitalize(type));
+        MMULogger.success(player, "Set sherd to %s.", Chat.capitalize(type));
         PlayerLib.playSound(player, Sound.BLOCK_DECORATED_POT_SHATTER, 0.0f);
     }
 

@@ -1,7 +1,7 @@
 package me.hapyl.mmu3.feature;
 
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.MMULogger;
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.chat.LazyClickEvent;
 import me.hapyl.eterna.module.chat.LazyHoverEvent;
@@ -29,7 +29,7 @@ public class Calculate extends Feature {
 
     public void buildStringAndEvaluate(Player player, String[] args) {
         if (args.length > 50) {
-            Message.TOO_MANY_ARGUMENTS_EXPECTED_NOT_MORE_THAN.send(player, 50);
+            MMULogger.TOO_MANY_ARGUMENTS_EXPECTED_NOT_MORE_THAN.send(player, 50);
             return;
         }
 
@@ -45,7 +45,7 @@ public class Calculate extends Feature {
         try {
             answer = evaluate(expression);
         } catch (RuntimeException e) {
-            Message.error(player, "Unable to evaluate! %s.", e.getMessage());
+            MMULogger.error(player, "Unable to evaluate! %s.", e.getMessage());
             return;
         }
 
@@ -54,13 +54,13 @@ public class Calculate extends Feature {
             expression = expression.replace(validArgument + "", argumentColor + validArgument + numberColor);
         }
 
-        Chat.sendMessage(player, Message.PREFIX + "&a→ &b" + expression.replace("%", "%%")); // I have java sometimes
+        Chat.sendMessage(player, MMULogger.PREFIX + "&a→ &b" + expression.replace("%", "%%")); // I have java sometimes
 
         Chat.sendClickableHoverableMessage(
                 player,
                 LazyClickEvent.SUGGEST_COMMAND.of(String.valueOf(answer)),
                 LazyHoverEvent.SHOW_TEXT.of("&7Click to copy!"),
-                Message.PREFIX + "&2← " + answer
+                MMULogger.PREFIX + "&2← " + answer
         );
     }
 

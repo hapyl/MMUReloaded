@@ -1,11 +1,12 @@
 package me.hapyl.mmu3.feature.specialblocks;
 
-import me.hapyl.mmu3.util.PanelGUI;
+import me.hapyl.mmu3.util.menu.Menu;
+import me.hapyl.mmu3.util.menu.Size;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
 
-public class SBSubGUI extends PanelGUI {
+public class SBSubGUI extends Menu {
 
     private final Collection<SpecialBlock> blocks;
 
@@ -27,7 +28,7 @@ public class SBSubGUI extends PanelGUI {
             final int slot = block.getSlot();
 
             setItem(slot, block.getIcon());
-            setAction(slot, block::giveItem);
+            setAction(slot, (menu, player, clickType, clickedSlot) -> block.giveItem(player));
         }
     }
 

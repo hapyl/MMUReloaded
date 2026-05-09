@@ -3,7 +3,7 @@ package me.hapyl.mmu3.feature.standeditor;
 import com.google.common.collect.Maps;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
-import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.MMULogger;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -76,7 +76,7 @@ public class StandEditor extends Feature {
                 continue;
             }
 
-            Message.error(data.player(), "An armor stand you were editing was destroyed%s!", killer == null ? "" : " by " + killer.getName());
+            MMULogger.error(data.player(), "An armor stand you were editing was destroyed%s!", killer == null ? "" : " by " + killer.getName());
 
             data.edit(null);
             data.player().closeInventory();

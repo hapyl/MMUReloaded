@@ -2,7 +2,7 @@ package me.hapyl.mmu3.feature.standeditor;
 
 import me.hapyl.eterna.module.chat.Chat;
 import me.hapyl.eterna.module.util.Enums;
-import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.MMULogger;
 import me.hapyl.mmu3.util.input.InputListener;
 import me.hapyl.mmu3.util.input.InputType;
 import org.bukkit.Sound;
@@ -151,9 +151,9 @@ public class StandEditorData {
                                 0
                         );
 
-                        Message.sound(player, Sound.UI_BUTTON_CLICK, 1.0F);
+                        MMULogger.sound(player, Sound.UI_BUTTON_CLICK, 1.0F);
                     }
-                    case START_LISTENING -> Message.sound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1.75f);
+                    case START_LISTENING -> MMULogger.sound(player, Sound.BLOCK_NOTE_BLOCK_PLING, 1.75f);
                 }
             }
         }.startListening(player);

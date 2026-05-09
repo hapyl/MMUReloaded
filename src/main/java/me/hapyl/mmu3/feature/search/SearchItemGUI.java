@@ -15,7 +15,7 @@ public class SearchItemGUI extends PlayerPageGUI<Material> {
     public SearchItemGUI(Player player, String query) {
         super(player, "Materials matching \"%s\"".formatted(query), 6);
 
-        final List<Material> result = Main.getRegistry().search.search(query);
+        final List<Material> result = Main.featureRegistry().search.search(query);
 
         final Properties properties = getProperties();
         properties.setAllowDrag(true);

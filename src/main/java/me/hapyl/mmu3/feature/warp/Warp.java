@@ -1,6 +1,6 @@
 package me.hapyl.mmu3.feature.warp;
 
-import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.MMULogger;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -38,8 +38,8 @@ public class Warp {
     public void teleport(Entity entity) {
         entity.teleport(location);
         if (entity instanceof Player player) {
-            Message.info(player, "Teleported to warp \"%s\".", name);
-            Message.sound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f);
+            MMULogger.info(player, "Teleported to warp \"%s\".", name);
+            MMULogger.sound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 1.0f);
         }
     }
 

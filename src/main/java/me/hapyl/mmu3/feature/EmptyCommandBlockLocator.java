@@ -2,7 +2,7 @@ package me.hapyl.mmu3.feature;
 
 import com.google.common.collect.Sets;
 import me.hapyl.mmu3.Main;
-import me.hapyl.mmu3.message.Message;
+import me.hapyl.mmu3.MMULogger;
 import me.hapyl.eterna.module.chat.LazyEvent;
 import me.hapyl.eterna.module.util.BukkitUtils;
 import org.bukkit.Bukkit;
@@ -43,7 +43,7 @@ public class EmptyCommandBlockLocator extends Feature implements Listener {
                 final Location location = block.getLocation();
                 if (emptyCommandBlocks.contains(location)) {
                     emptyCommandBlocks.remove(location);
-                    Message.info(player, "Removed %s from empty command blocks.", BukkitUtils.locationToString(location));
+                    MMULogger.info(player, "Removed %s from empty command blocks.", BukkitUtils.locationToString(location));
                 }
             }
         }
@@ -61,8 +61,8 @@ public class EmptyCommandBlockLocator extends Feature implements Listener {
         emptyCommandBlocks.addAll(blocks);
 
         Bukkit.getOnlinePlayers().stream().filter(Player::isOp).forEach(player -> {
-            Message.severe(player, "Found %s empty Command Blocks in your world!", blocks.size());
-            Message.clickHover(
+            MMULogger.severe(player, "Found %s empty Command Blocks in your world!", blocks.size());
+            MMULogger.clickHover(
                     player,
                     LazyEvent.runCommand("/findemptycommandblocks show"),
                     LazyEvent.showText("&aClick to find them!"),

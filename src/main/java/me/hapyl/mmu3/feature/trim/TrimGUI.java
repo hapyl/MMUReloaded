@@ -1,7 +1,8 @@
 package me.hapyl.mmu3.feature.trim;
 
-import me.hapyl.mmu3.util.PanelGUI;
+import me.hapyl.mmu3.util.menu.Menu;
 import me.hapyl.eterna.module.inventory.ItemBuilder;
+import me.hapyl.mmu3.util.menu.Size;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -9,12 +10,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
-public class TrimGUI extends PanelGUI {
+public class TrimGUI extends Menu {
 
     private final TrimEditor editor;
 
     public TrimGUI(Player player, TrimEditor editor) {
-        super(player, "Trim GUI", Size.FOUR);
+        super(player, "Trim GUI", Size.SIZE_4);
 
         this.editor = editor;
 
@@ -44,7 +45,7 @@ public class TrimGUI extends PanelGUI {
                                 &eClick to randomize!
                                 """)
                         .asIcon(),
-                player -> {
+                (menu, player, clickType, clickedSlot) -> {
                     editor.randomize();
                     player.closeInventory();
                 }

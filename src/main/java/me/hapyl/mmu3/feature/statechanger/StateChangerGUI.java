@@ -8,8 +8,9 @@ import me.hapyl.eterna.module.util.BukkitUtils;
 import me.hapyl.eterna.module.util.CollectionUtils;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.statechanger.adapter.Adapter;
-import me.hapyl.mmu3.message.Message;
-import me.hapyl.mmu3.util.PanelGUI;
+import me.hapyl.mmu3.MMULogger;
+import me.hapyl.mmu3.util.menu.Menu;
+import me.hapyl.mmu3.util.menu.Size;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -26,14 +27,14 @@ import java.util.Locale;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class StateChangerGUI extends PanelGUI {
+public class StateChangerGUI extends Menu {
 
     private static final String REPORT_MISSING_MODIFIER_URL = "https://github.com/hapyl/MMUReloaded/issues/new?template=replacer-missing-modifiers.md";
 
     private final StateChangerData data;
 
     public StateChangerGUI(Player player, String name, StateChangerData data) {
-        super(player, name, Size.FOUR);
+        super(player, name, Size.SIZE_4);
         this.data = data;
 
         openInventory();
@@ -69,7 +70,7 @@ public class StateChangerGUI extends PanelGUI {
 
     public <T extends BlockData> void applyState(int slot, @Nonnull T data, @Nonnull Consumer<T> consumer) {
         setAction(
-                slot, player -> {
+                slot, (menu, player, clickType, clickedSlot) -> {
                     final Block block = this.data.getBlock();
 
                     consumer.accept(data);
@@ -159,12 +160,12 @@ public class StateChangerGUI extends PanelGUI {
     public void onUpdate() {
         super.onUpdate();
 
-        fillRow(0, PANEL_ITEM);
+        fillRow(0, ITEM_PANEL);
         setBottomPanel();
 
         final BlockData blockData = data.getBlockData();
 
-        Main.getRegistry().stateChanger.getAdapters().forEach(adapter -> {
+        Main.featureRegistry().stateChanger.getAdapters().forEach(adapter -> {
             adapter.updateIfInstance(this, player, blockData, data);
         });
     }
@@ -201,7 +202,7 @@ public class StateChangerGUI extends PanelGUI {
                             player,
                             LazyEvent.openUrl(REPORT_MISSING_MODIFIER_URL),
                             LazyEvent.showText("&eClick to open the link!"),
-                            Message.PREFIX + "&6&lCLICK HERE&f to report a missing modifier!"
+                            MMULogger.PREFIX + "&6&lCLICK HERE&f to report a missing modifier!"
                     );
 
                     PlayerLib.plingNote(player, 2.0f);
@@ -223,7 +224,7 @@ public class StateChangerGUI extends PanelGUI {
                 player -> {
                     data.restoreOriginalBlockData();
                     player.closeInventory();
-                    Message.success(player, "Restored!");
+                    MMULogger.success(player, "Restored!");
                 }
         );
 

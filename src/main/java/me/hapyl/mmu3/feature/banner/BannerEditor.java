@@ -1,39 +1,21 @@
 package me.hapyl.mmu3.feature.banner;
 
-import com.google.common.collect.Maps;
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
 import me.hapyl.mmu3.Main;
 import me.hapyl.mmu3.feature.Feature;
-import me.hapyl.mmu3.message.Message;
-import org.bukkit.entity.Player;
-
-import java.util.Map;
-import java.util.UUID;
+import me.hapyl.mmu3.feature.FeatureKey;
+import org.bukkit.Registry;
+import org.bukkit.block.banner.PatternType;
+import org.jetbrains.annotations.NotNull;
 
 public class BannerEditor extends Feature {
-
+    
+    public static final Registry<PatternType> REGISTRY = RegistryAccess.registryAccess().getRegistry(RegistryKey.BANNER_PATTERN);
     public static final int MAX_PATTERNS = 16;
-
-    private final Map<UUID, BannerData> playerData;
-
-    public BannerEditor(Main mmu3plugin) {
-        super(mmu3plugin);
-
-        this.playerData = Maps.newHashMap();
+    
+    public BannerEditor(@NotNull Main plugin) {
+        super(FeatureKey.create("banner_editor"), plugin);
     }
-
-    public BannerData getOrCreate(Player player) {
-        return playerData.computeIfAbsent(player.getUniqueId(), p -> new BannerData());
-    }
-
-    public void remove(Player player) {
-        final UUID uuid = player.getUniqueId();
-
-        if (!playerData.containsKey(uuid)) {
-            return;
-        }
-
-        playerData.remove(uuid);
-        Message.success(player, "Reset banner editor!");
-    }
-
+    
 }

@@ -1,88 +1,64 @@
 package me.hapyl.mmu3;
 
-import me.hapyl.eterna.module.command.CommandProcessor;
-import me.hapyl.eterna.module.command.SimpleCommand;
-import me.hapyl.eterna.module.command.SimplePlayerAdminCommand;
+import com.google.common.collect.Maps;
 import me.hapyl.mmu3.command.*;
-import me.hapyl.mmu3.command.brush.BrushCommand;
-import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.function.BiConsumer;
+import java.util.Map;
 
-public class CommandRegistry {
-
-    private final CommandProcessor processor;
-
-    public CommandRegistry(Main plugin) {
-        this.processor = new CommandProcessor(plugin);
-        registerCommands();
+public final class CommandRegistry {
+    
+    public final Map<String, MMUOperation> operations;
+    
+    public CommandRegistry() {
+        // Since the plugin going public, we now use /mmu (operation)
+        Bukkit.getCommandMap().register("mmu", new MMUCommand("mmu", this));
+        
+        // Register operations
+        operations = Maps.newHashMap();
+        
+        register(
+                new MMUOperationArmorStandEditor(),
+                new MMUOperationBack(),
+                new MMUOperationBannerEditor(),
+                new MMUOperationCalculate(),
+                new MMUOperationCandle(),
+                new MMUOperationCenter(),
+                new MMUOperationColor(),
+                new MMUOperationCommandBlockPreview(),
+                new MMUOperationEntityRemover(),
+                new MMUOperationHat(),
+                new MMUOperationLineOfSight(),
+                new MMUOperationLockContainer(),
+                new MMUOperationNightVision(),
+                new MMUOperationOutline(),
+                new MMUOperationParticle(),
+                new MMUOperationPersonalTime(),
+                new MMUOperationPersonalWeather(),
+                new MMUOperationPing(),
+                new MMUOperationRelative(),
+                new MMUOperationReload(),
+                new MMUOperationRemoveEntity(),
+                new MMUOperationRoll(),
+                new MMUOperationSightBlock(),
+                new MMUOperationSkullDisplay(),
+                new MMUOperationStateChanger(),
+                new MMUOperationTrim(),
+                new MMUOperationWiki()
+        );
     }
-
-    private void registerCommands() {
-        register(new StateChangerCommand("stateChanger"));
-        register(new EditStandCommand("editStand"));
-        register(new SpecialBlocksCommand("specialBlocks"));
-        register(new CalculateCommand("calculate"));
-        register(new BackCommand("back"));
-        register(new CenterCommand("center"));
-        register(new ItemCreatorCommand("itemCreator"));
-        register(new EntityRemovalCommand("entityRemoval"));
-        register(new GameModeCommand("gm"));
-        register(new OpenInventoryCommand("openInventory"));
-        register(new RollCommand("roll"));
-        register(new PersonalTimeCommandCommand("personalTime"));
-        register(new PersonalWeatherCommand("personalWeather"));
-        register(new ItemCommand("getItem"));
-        register(new SightBlockCommand("sightBlock"));
-        register(new RawCommand("raw"));
-        register(new LockCommand("lock"));
-        register(new HatCommand("hat"));
-        register(new SpeedCommand("speed"));
-        register(new CandleCommand("candle"));
-        register(new ActionCommand("action"));
-        register(new PacketCommand("playerpacket"));
-        register(new CalculateRelative("relative"));
-        register(new PingCommand("ping"));
-        register(new BrushCommand("mmuBrush"));
-        register(new SelfTeleportCommand("self"));
-        register(new SoundCommand("sound"));
-        register(new NumericIdCommand("id"));
-        register(new BukkitTagCommand("tags"));
-        register(new CommandBlockPreviewCommand("commandBlockPreview"));
-        register(new ParticleCommand("particles"));
-        register(new FindEmptyCommandBlocksCommand("findEmptyCommandBlocks"));
-        register(new TeleportShortcutCommand(">"));
-        register(new NightVisionCommand("nightvision"));
-        register(new WatcherCommand("watcher"));
-        register(new WarpCommand("warp"));
-        register(new LineOfSightCommand("los"));
-        register(new ActivityCommand("suppressBlockUpdates"));
-        register(new BoundingBoxCommand("boundingBox"));
-        register(new SpawnCommand("spawn"));
-        register(new DeleteCommand("delete"));
-        register(new FillNearCommand("fillNear"));
-        register(new ColorCommand("color"));
-        register(new MmuUndoCommand("mmuUndo"));
-        register(new FixTreeOrientationCommand("fixTreeOrientation"));
-        register(new SearchCommand("search"));
-        register(new TrimCommand("trim"));
-        register(new WaterlogCommand("waterlog"));
-        register(new WikiCommand("mmuWiki"));
-        register(new BannerEditorCommand("bannerEditor"));
-        register(new SkullDisplayCommand("skullDisplay"));
-    }
-
-    private void registerTestCommand(String command, BiConsumer<Player, String[]> consumer) {
-        register(new SimplePlayerAdminCommand("_test" + command) {
-            @Override
-            protected void execute(Player player, String[] strings) {
-                consumer.accept(player, strings);
+    
+    private void register(@NotNull MMUOperation... operations) {
+        for (MMUOperation operation : operations) {
+            final String operationName = operation.name();
+            
+            if (this.operations.containsKey(operationName)) {
+                throw new IllegalArgumentException("Duplicate operation registration: %s!".formatted(operationName));
             }
-        });
+            
+            this.operations.put(operationName.toLowerCase(), operation);
+        }
     }
-
-    private void register(SimpleCommand command) {
-        processor.registerCommand(command);
-    }
-
+    
 }

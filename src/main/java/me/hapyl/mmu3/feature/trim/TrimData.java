@@ -21,9 +21,9 @@ public class TrimData {
 
     private boolean current;
 
-    private Color color;
-    private EnumTrimPattern pattern;
-    private EnumTrimMaterial material;
+    @Nullable private Color color;
+    @Nullable private EnumTrimPattern pattern;
+    @Nullable private EnumTrimMaterial material;
 
     public TrimData(TrimType type, ArmorStand stand) {
         this.type = type;
@@ -65,8 +65,10 @@ public class TrimData {
 
         // If no pattern, copy the item's pattern
         if (pattern == null && material == null) {
-            pattern = EnumTrimPattern.fromItem(item);
-            material = EnumTrimMaterial.fromItem(item);
+            final EnumTrim.Trim trim = EnumTrim.trimFromItemStack(item);
+
+            pattern = trim != null ? trim.pattern() : null;
+            material = trim != null ? trim.material() : null;
         }
     }
 
